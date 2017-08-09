@@ -21,13 +21,13 @@ namespace XCS
 			Configuration.NoiseWidth = 0;
 			Configuration.ASName = "CS";
 			Configuration.L = 8;
-			Configuration.ExploitEnv = new MultiplexerEnvironment( 6 );
-			Environment Env = new MultiplexerEnvironment( 6 );
+			//Configuration.ExploitEnv = new MultiplexerEnvironment( 6 );
+			Environment Env = new ReadCsvEnvironment( );
 			Configuration.Theta_sub = 20;
 			Configuration.ExpThreshold = 20;
-			Configuration.DifferenceSigma = 75;
+			Configuration.DifferenceSigma = 0.1;//for real data  0~1.0
 			Configuration.LookBackSigma = 15;
-			Configuration.DifferenceEpsilon = 75;
+			Configuration.DifferenceEpsilon = 0.1;//for real data 0.0~1.0
 			Configuration.LookBackEpsilon = 15;
 			Configuration.P_sharp = 0.35;
 		    Configuration.CoverPersentage = 0;//重なる部分の許す範囲
@@ -111,7 +111,7 @@ namespace XCS
 				{
 					// situation(Condition)の長さ
 					Configuration.L = int.Parse( args[++i] );
-					Configuration.ExploitEnv = new MultiplexerEnvironment( Configuration.L );
+					//Configuration.ExploitEnv = new MultiplexerEnvironment( Configuration.L );
 				}
 
 				if( args[i] == "--ps" | args[i] == "--Ps" | args[i] == "--PSharp" )
@@ -225,8 +225,8 @@ namespace XCS
 			Configuration.Beta = 0.2;
 			// 報酬
 			Configuration.Rho = 1000;
-			// Fitnessの計算パラメータ
-			Configuration.Epsilon_0 =0.01;
+			// Fitnessの計算パラメータ 下駄　1/1000
+			Configuration.Epsilon_0 =0.001;
 			Configuration.Alpha = 0.1;
 			Configuration.Nyu = 5;
 			// 包摂
@@ -289,19 +289,23 @@ namespace XCS
 			Configuration.ZeroList = new List<double>();
 			Configuration.OneList = new List<double>();
 
-			// 提案手法　Condition毎の分散
-			Configuration.Stdlist = new StdList[( int )Math.Pow( 4, Configuration.L ) ];
-            // 収束した　VTの値を保存する　　ちょう
-            Configuration.ConvergentedVT = new StdList[(int)Math.Pow(4, Configuration.L) ];
+            List<string> DataList = Env.GetDataList();
+            List<string> DistinctDataList = DataList.Distinct().ToList();
 
-            for (int i = 0; i < (int)Math.Pow(4, Configuration.L); i++)
+            int DistinctDataNum = DistinctDataList.Count();
+            // 提案手法　入力データ個数分の分散
+            Configuration.Stdlist = new StdList[DistinctDataNum];
+            // 収束した　VTの値を保存する　　ちょう
+            Configuration.ConvergentedVT = new StdList[DistinctDataNum];
+
+            for (int i = 0; i < DistinctDataNum; i++)
             {
-              Configuration.ConvergentedVT[i] = new StdList(i, '0');
+              Configuration.ConvergentedVT[i] = new StdList(DistinctDataList[i], '0');
                 //Configuration.ConvergentedVT[i * 4 + 1] = new StdList(i, '1');
             }
-			for( int i = 0; i < ( int )Math.Pow( 4, Configuration.L ); i++ )
+			for( int i = 0; i < DistinctDataNum; i++ )
 			{
-				Configuration.Stdlist[i] = new StdList( i, '0' );
+				Configuration.Stdlist[i] = new StdList(DistinctDataList[i], '0' );
 				//Configuration.Stdlist[i * 4 + 1] = new StdList( i, '1' );
 			}
             
@@ -321,9 +325,10 @@ namespace XCS
                 if (!Configuration.IsConvergenceVT)
                 {
                     bool flag = true;
+                    //入力データのSLが収束すれば、VTが収束とみなす。
                     foreach (StdList SL in Configuration.Stdlist)
                     {
-                        
+                            
                             if (flag && !SL.IsConvergenceSigma())
                             {
                                 flag = false;
@@ -336,15 +341,15 @@ namespace XCS
                     {
                         Configuration.IsConvergenceVT = true;
                         //収束したVTを保存する
-                        for (int i = 0; i < (int)Math.Pow(4, Configuration.L); i++)
+                        for (int i = 0; i < DistinctDataList.Count; i++)
                         {
-                            Configuration.ConvergentedVT[i].M = Configuration.Stdlist[i*2].M;
+                            Configuration.ConvergentedVT[i].M = Configuration.Stdlist[i].M;
                             //Configuration.ConvergentedVT[i * 4+1].M = Configuration.Stdlist[i * 2+1].M;
 
-                            Configuration.ConvergentedVT[i ].S = Configuration.Stdlist[i * 2].S;
+                            Configuration.ConvergentedVT[i ].S = Configuration.Stdlist[i].S;
                             //Configuration.ConvergentedVT[i * 4 + 1].S = Configuration.Stdlist[i*2+1].S;
 
-                            Configuration.ConvergentedVT[i ].T = Configuration.Stdlist[i * 2].T;
+                            Configuration.ConvergentedVT[i ].T = Configuration.Stdlist[i].T;
                             //Configuration.ConvergentedVT[i * 4 + 1].T = Configuration.Stdlist[i * 2 + 1].T;
                         }
 
@@ -383,6 +388,7 @@ namespace XCS
                 
                 
 				State S = Env.GetState();
+
 
                 
 				// MatchSet生成
@@ -601,6 +607,8 @@ namespace XCS
 
 			
 
+
+
 			Onesw.WriteLine( "Performance,dummy," + Configuration.StartTime );
 
 			for( int i = 0; i < Configuration.OneList.Count() - Configuration.SMA; i++ )
@@ -619,15 +627,6 @@ namespace XCS
 			}
 
 			Onesw.Close();
-
-
-
-			foreach( StdList SL in Configuration.Stdlist )
-			{
-				//Console.WriteLine( SL.C + " " + SL.A + " " + SL.T + " " + SL.M + " " + SL.S );
-			}
-
-            
 
 			Configuration.ESW.Close();
 			//Configuration.Problem.Close();

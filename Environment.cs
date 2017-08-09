@@ -60,6 +60,6 @@ namespace XCS
 		/// <returns>正解:1, 不正解:0</returns>
 		abstract public int ActionExploit( char act );
 
-	    //public abstract double GetReward();
+        abstract public List<string> GetDataList();
 	}
 }

@@ -220,6 +220,7 @@ namespace XCS
 	    /// <returns></returns>
 	    public static bool IsConvergenceVT { set; get; }
 
+
         /// <summary>
         /// VT 収束したものを保存する
         /// </summary>

@@ -94,6 +94,11 @@ namespace XCS
             }
         }
 
+        public override List<string> GetDataList()
+        {
+            return DataList;
+        }
+
         /// <summary>
         /// ガウシアンノイズ生成
         /// </summary>

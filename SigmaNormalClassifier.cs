@@ -66,7 +66,11 @@ namespace XCS
 			this.Ts = C.Ts;
 			this.As = C.As;
 			this.Kappa = C.Kappa;
-			this.Epsilon_0 = C.Epsilon_0;
+            
+           
+            this.Epsilon_0 = C.Epsilon_0;
+            
+			
 			this.St = C.St;
 			this.M = C.M;
 			this.S = C.S;

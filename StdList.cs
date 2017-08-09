@@ -76,17 +76,19 @@ namespace XCS
 		/// </summary>
 		/// <param name="State">条件部(10進数)</param>
 		/// <param name="Action">行動部(2進数)</param>
-		public StdList( int State, char Action )
+		public StdList( string State, char Action )
 		{
             //2進数に変換する、state はint 型
             //string S = Convert.ToString( State,4);
-            string S = RadixConvert.ToString(State, 4, false);
+            //string S = RadixConvert.ToString(State, 4, false);
 
-			while( S.Length < Configuration.L )
-			{
-				S = "0" + S;
-			}
-			this.C = S;
+			//while( S.Length < Configuration.L )
+			//{
+				//S = "0" + S;
+			//}
+
+
+			this.C = State;
 			this.A = Action;
 			this.T = 0;
 			this.M = 0;

@@ -21,19 +21,13 @@ namespace XCS
 
 	    public override void Show()
 		{
-            StreamWriter sw = new StreamWriter("./ActionSet_" + Configuration.T /*+ "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-				+ "AS_" + Configuration.ASName + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-				+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon */+ ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
-            //StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-            //	+ "AS_" + "CS" + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-            //	+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
+            StreamWriter sw = new StreamWriter("./ActionSet_" + Configuration.T + ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
             if (Configuration.ASName != "CS" && Configuration.ASName != "MaxCS" && Configuration.ASName != "Max" && Configuration.ASName != "Updatee0CS")
             {
                 sw.WriteLine("state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
                 foreach (Classifier C in this.CList)
                 {
-                    //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-                    //Console.WriteLine();
+                    
 
                     sw.WriteLine(C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
@@ -43,18 +37,14 @@ namespace XCS
                 sw.WriteLine("time,state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
                 foreach (SigmaNormalClassifier C in this.CList)
                 {
-                    //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-                    //Console.WriteLine();
+                    
 
                     sw.WriteLine(Configuration.T + "," + C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + ","
                         + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
                 }
             }
             sw.Close();
-            //foreach( Classifier C in this.CList )
-            //{
-            //    Console.WriteLine( C.C.state + ": " + C.A );
-            //}
+            
 		}
 
 		public override void Update( Population Pop, double P, StdList Sigma )
@@ -75,25 +65,13 @@ namespace XCS
 				if( C.Exp < 1 /Configuration.Beta )
 				{
 					C.P += ( P - C.P ) / C.Exp;
-				}
+                    C.As += (SumNumerosity - C.As) / C.Exp;
+                }
 				else
 				{
 					C.P += Configuration.Beta * ( P - C.P );
-				}
-
-				
-
-                //if( C.Exp < Configuration.Beta )  // 9-23 張　ここscript は exp < 1/beta
-                if (C.Exp < Configuration.Beta)
-				{
-					C.As += ( SumNumerosity - C.As ) / C.Exp;
-				}
-				else
-				{
-					C.As += Configuration.Beta * ( SumNumerosity - C.As );
-				}
-
-				
+                    C.As += Configuration.Beta * (SumNumerosity - C.As);
+                }
 
 				// 標準偏差計算
 				C.St++;
@@ -118,22 +96,13 @@ namespace XCS
 					SNC.EpsilonList[0] = Math.Sqrt(C.S / (C.St - 1));
 
 
-                    //if (C.C.state == "1000##")
-                    //{
-                    //   // SigmaNormalClassifier SNC = (SigmaNormalClassifier)C;
-
-                    //    Configuration.Problem.WriteLine(Configuration.T + "," + SNC.C.state + "," + Sigma.C + "," + Sigma.S + "," + P + "," + SNC.P + ","/*+ C.A + ","*/ + C.F + "," + C.Kappa + ","
-                    //                + C.Epsilon + "," + C.Epsilon_0 + "," 
-                    //                +C.St+","+C.M+","+C.S+","+ SNC.EpsilonList[0] + ","
-                    //                + C.N + ","  + (SNC.IsConvergenceEpsilon() ? 1 : 0));
-
-                    //}
+                   
 
 					
 
 #region　分類子が照合する全状態のVTの分散と平均を使って　e0 を推測　　chou 160107
                     //分類子が照合する全状態のVTの分散と平均を使って　e0 を推測　　chou 160107
-                    if (Configuration.IsConvergenceVT)
+                    if (Configuration.IsConvergenceVT) 
                     {
                         if (C.Exp > 2 )//0120 cho 
                         {
@@ -164,13 +133,12 @@ namespace XCS
 
                         foreach (var std in Configuration.ConvergentedVT)
                         {
-                            if (std.C.Substring(0, 4) != "0000")
-                            {
+                            
                                 if (std.IsIncluded(C.C.state))
                                 {
                                     cpStdLists.Add(std.Clone()); //クローンメソット　　
                                 }
-                            }
+                            
                         }
                         if (cpStdLists.Count == 1)
                         {
@@ -180,11 +148,16 @@ namespace XCS
                         {
                             foreach (var std in cpStdLists)
                             {
+                                //St 出現回数
                                 cl0.St += std.T;
                                 cl0.M += std.M*std.T;
                                 
                             }
 
+
+
+
+                            //ここst= 0 , cl0.M がNULLになる
                             cl0.M = cl0.M/cl0.St;
 
                             foreach (var std in cpStdLists)
@@ -194,7 +167,8 @@ namespace XCS
 
                             cl0.S = Math.Sqrt(cl0.S/cl0.St);
 
-                            C.Epsilon_0 = cl0.S + Configuration.Epsilon_0;
+
+                        C.Epsilon_0 = cl0.S + Configuration.Epsilon_0;
 
                         }
 
@@ -283,6 +257,8 @@ namespace XCS
 			foreach( Classifier C in this.CList )
 			{
                SigmaNormalClassifier SNC = ( SigmaNormalClassifier )C;
+
+
                /* if (C.Epsilon_0 > Configuration.Rho * 0.4 && SNC.IsConvergenceEpsilon())
                 {
                     C.Kappa = 0; //分散が大きいものを排除したい 10-15 1-6 out
@@ -336,7 +312,7 @@ namespace XCS
                    }
                    else //またがらない分類子は 通常のやり方
                    {
-                       if (C.Epsilon < C.Epsilon_0)
+                       if (C.Epsilon <= C.Epsilon_0)
                        {
                            C.Kappa = 1;
                        }
@@ -355,15 +331,24 @@ namespace XCS
 
                else //1000 回以下の場合 
                {
-                   if (C.Epsilon < C.Epsilon_0)
+
+                   if (C.Epsilon <= C.Epsilon_0)
                    {
                        C.Kappa = 1;
                    }
                    else
                    {
-                       C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
+                        
+                        //ここC.Epsilon_0 == 0, kappa の計算がおかしいから, SNC.epsilon_0 下駄を足す
+                        C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / SNC.Epsilon_0, -Configuration.Nyu);
                    }
-                   AccuracySum += C.Kappa * C.N;
+                    if (double.IsNaN(C.Kappa))
+                    {
+                        Console.WriteLine("kappa =NaN");
+                        Console.ReadLine();
+                    }
+                    AccuracySum += C.Kappa * C.N;
+                    
                }
             }
 
