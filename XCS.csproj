@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionSet.cs" />
+    <Compile Include="EpsilonGreedyPredictionArray.cs" />
     <Compile Include="IntergralState.cs" />
     <Compile Include="BinaryState.cs" />
     <Compile Include="Classifier.cs" />

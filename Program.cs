@@ -197,10 +197,10 @@ namespace XCS
 				Configuration.N = 2000;
 			}
             // situation(Condition)の種類(進数)
-            //Configuration.Type = "Binary";
+            Configuration.Type = "Binary";
             // Covering閾値(行動の数)
-            //Configuration.Theta_mna = 2;
-            Configuration.Theta_mna = 0;
+            Configuration.Theta_mna = 2;
+            //Configuration.Theta_mna = 0;
 
             // Covering時の#に変化させる割合
 
@@ -243,7 +243,7 @@ namespace XCS
 			// GA時親に包摂
 			Configuration.DoGASubsumption = true;//9-8 chou
 			// 試行回数
-			Configuration.Iteration = 100000;
+			Configuration.Iteration = 1000000;
 			//Configuration.Iteration = 50000;
 			//Configuration.Iteration = 500000;	//150116// int型に変換
 			// 単純移動平均
@@ -321,91 +321,33 @@ namespace XCS
             #region main roop
             while ( Configuration.T < Configuration.Iteration )
 			{
-                // VTの収束
-                if (!Configuration.IsConvergenceVT)
-                {
-                    bool flag = true;
-                    //入力データのSLが収束すれば、VTが収束とみなす。
-                    foreach (StdList SL in Configuration.Stdlist)
-                    {
-                            
-                            if (flag && !SL.IsConvergenceSigma())
-                            {
-                                flag = false;
-                                break;
-                            }
-                        
-                        
-                    }
-                    if (flag)	// 初めてTrue
-                    {
-                        Configuration.IsConvergenceVT = true;
-                        //収束したVTを保存する
-                        for (int i = 0; i < DistinctDataList.Count; i++)
-                        {
-                            Configuration.ConvergentedVT[i].M = Configuration.Stdlist[i].M;
-                            //Configuration.ConvergentedVT[i * 4+1].M = Configuration.Stdlist[i * 2+1].M;
-
-                            Configuration.ConvergentedVT[i ].S = Configuration.Stdlist[i].S;
-                            //Configuration.ConvergentedVT[i * 4 + 1].S = Configuration.Stdlist[i*2+1].S;
-
-                            Configuration.ConvergentedVT[i ].T = Configuration.Stdlist[i].T;
-                            //Configuration.ConvergentedVT[i * 4 + 1].T = Configuration.Stdlist[i * 2 + 1].T;
-                        }
-
-
-                        // [P]の全てを新しい基準で再評価
-                        foreach (Classifier C in P.CList)
-                        {
-                            // 加重平均
-                            double ST = 0;
-                            int SumT = 0;
-                            foreach (StdList SL in Configuration.Stdlist)
-                            {
-                                
-
-                                    if (SL.IsIncluded(C.C.state))
-                                    {
-                                        ST += SL.S*SL.T;
-                                        SumT += SL.T;
-                                    }
-                                
-                            }
-                            ST /= SumT;
-
-                            SigmaNormalClassifier SNC = (SigmaNormalClassifier)C;
-                            C.Epsilon_0 = ST + Configuration.Epsilon_0;
-                            if (C.Exp > 2)
-                            {
-                                C.Epsilon = SNC.EpsilonList[0];
-                            }
-                        }
-                    }
-                }
-
-                //nsole.WriteLine( Configuration.T + " : " + P.CountNumerosity() + " : " + P.CList.Count() );
-                // situation取得
-                
                 
 				State S = Env.GetState();
+                // MatchSet生成
 
 
-                
-				// MatchSet生成
-				MatchSet M = new NormalMatchSet( S, P );
+                MatchSet M = new NormalMatchSet( S, P );
 				
-				// ActionSetはただMをコピーするだけ,アクションがないから
-				ActionSet AS;
-				if( Configuration.ASName == "CS" )
-				{
-					AS = new ConditionSigmaActionSet( M.CList);
-				}
+				
+
+                // PredictionArray取得
+                PredictionArray PA = new EpsilonGreedyPredictionArray(M);
+                // Action決定
+                char Action = PA.SelectAction();
+
+
+                // ActionSetはただMをコピーするだけ,アクションがないから
+                ActionSet AS;
+
+                if (Configuration.ASName == "CS")
+                {
+                    AS = new ConditionSigmaActionSet(M.CList, Action);
+                }
                 else
-				{
-				    AS = new NormalActionSet(M.CList);/*M.MatchAction(Action))*/;
+                {
+                    AS = new NormalActionSet(M , Action);
                 }
 
-                char Action = '0';//action ないから、全部０にする
                 double Rho = Env.ExecuteAction(Action);
 
                 //Configuration.Problem.WriteLine(S.state + "," + Configuration.T + "," + Rho);
@@ -518,7 +460,7 @@ namespace XCS
 				Configuration.T++;
                 Console.WriteLine(Configuration.T);
 
-                if (Configuration.T % 10000 == 0)
+                if (Configuration.T % 100000 == 0)
                 {
                     
                     P.Show();

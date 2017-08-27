@@ -9,10 +9,10 @@ namespace XCS
 	// (従来手法)
 	class NormalActionSet : ActionSet
 	{
-		public NormalActionSet( List<Classifier> actSet )
+		public NormalActionSet( MatchSet M,char act)
 		{
-			this.CList = actSet;
-		}
+            CList = M.MatchAction(act);
+        }
 
 		public override void Show()
 		{
@@ -36,6 +36,7 @@ namespace XCS
 			{
 				C.Exp++;
 
+                //update the prediction 
 				if( C.Exp < 1 / Configuration.Beta )
 				{
 					C.P += ( P - C.P ) / C.Exp;
@@ -44,8 +45,8 @@ namespace XCS
 				{
 					C.P += Configuration.Beta * ( P - C.P );
 				}
-
-				if( C.Exp < Configuration.Beta )
+                //update the prediciton error 
+				if( C.Exp < 1/ Configuration.Beta )
 				{
 					C.Epsilon += ( Math.Abs( P - C.P ) - C.Epsilon ) / C.Exp;
 				}
@@ -53,8 +54,8 @@ namespace XCS
 				{
 					C.Epsilon += Configuration.Beta * ( Math.Abs( P - C.P ) - C.Epsilon );
 				}
-
-				if( C.Exp < Configuration.Beta )
+                //update the action size c.As
+				if( C.Exp < 1/ Configuration.Beta )
 				{
 					C.As += ( SumNumerosity - C.As ) / C.Exp;
 				}

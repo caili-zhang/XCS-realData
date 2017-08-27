@@ -15,7 +15,7 @@ namespace XCS
 
         // データ
         private List<string> DataList = new List<string>();
-        private List<double> RewardList = new List<double>();
+        private List<char> ActionList = new List<char>();
 
         private int IndexCount = -1;    // 現在読んでいる点
 
@@ -26,7 +26,7 @@ namespace XCS
             this.Number = 4;    // 進数
 
             // csv読み込み
-            string file = "入居者A_201009_201010.csv";
+            string file = "all_data_forXCS.csv";
             StreamReader reader = new StreamReader(file, Encoding.GetEncoding("Shift_JIS"));
             while (reader.Peek() >= 0)
             {
@@ -34,13 +34,15 @@ namespace XCS
                 string data = "";
 
                 int i = 0;
+
+
                 for (; i < this.Length; i++)
                 {
                     data += cols[i + 1];
                 }
 
                 DataList.Add(data);
-                RewardList.Add(Double.Parse(cols[i + 1]));
+                ActionList.Add(char.Parse(cols[i + 1]));
             }
         }
 
@@ -53,15 +55,16 @@ namespace XCS
             this.s = new IntegralState(this.DataList[IndexCount]);
             State state = this.s.GetState();    // 実質カウントするだけ(でも0)
 
-            this.Action = '0';  // 仮
+            this.Action = ActionCalculation(IndexCount);  // 仮
 
             return state;
         }
 
         // 答え(仮)算出 ここではアクションがないので、便利上全部０にする
-        override protected char ActionCalculation(string S)
+        override protected char ActionCalculation(int index)
         {
-            return '0';
+            
+            return ActionList[index];
         }
 
         // Actionに対するReward ばらつき幅同じ
@@ -71,7 +74,7 @@ namespace XCS
             this.Eop = true;
             if (this.Action == act)
             {
-                return RewardList[this.IndexCount];
+                return 1000.0;
             }
             else
             {

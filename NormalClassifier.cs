@@ -9,12 +9,12 @@ namespace XCS
 	class NormalClassifier : Classifier
 	{
 		// Covering
-		public NormalClassifier( State S/*, List<char> Actions*/ )
+		public NormalClassifier( State S, List<char> Actions )
 		{
 			// Covering済みConditionセット
 			this.C = S;
 			// MatchSetにない行動をランダムに選ぶ
-			//this.A = Actions[Configuration.MT.Next( Actions.Count - 1 )];
+			this.A = Actions[Configuration.MT.Next( Actions.Count - 1 )];
 
 			this.P = Configuration.P_I;
 			this.Epsilon = Configuration.Epsilon_I;
@@ -35,7 +35,7 @@ namespace XCS
 		public NormalClassifier( NormalClassifier C )
 		{
 			this.C = new BinaryState( C.C );
-			//this.A = C.A;
+			this.A = C.A;
 			this.P = C.P;
 			this.Epsilon = C.Epsilon;
 			this.F = C.F;
@@ -147,16 +147,16 @@ namespace XCS
 		// 包摂条件判定
 		public override bool DoesSubsume( Classifier C )
 		{
-			/*if( this.A == C.A )
-			{*/
-				if( this.CouldSubsume() )
-				{
-					if( this.IsMoreGeneral( C ) )
-					{
-						return true;
-					}
-				}
-			//}
+            if (this.A == C.A)
+            {
+                if (this.CouldSubsume())
+                {
+                    if (this.IsMoreGeneral(C))
+                    {
+                        return true;
+                    }
+                }
+            }
 			return false;
 		}
 	}

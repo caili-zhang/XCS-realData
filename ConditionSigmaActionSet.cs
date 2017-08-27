@@ -11,9 +11,11 @@ namespace XCS
 {
 	class ConditionSigmaActionSet : ActionSet 
 	{
-		public ConditionSigmaActionSet( List<Classifier> actSet )
+		public ConditionSigmaActionSet( List<Classifier> actSet,char act)
 		{
-			this.CList = actSet;
+            foreach (Classifier cl in actSet){
+                if(cl.A == act) this.CList.Add(cl);
+            }
 
 		}
 
