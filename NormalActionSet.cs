@@ -64,11 +64,7 @@ namespace XCS
 					C.As += Configuration.Beta * ( SumNumerosity - C.As );
 				}
 
-				//if( C.C.state == "11####" && C.A == '0' )
-				//{
-				//	Configuration.ESW.WriteLine( Configuration.T + "," + C.F + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.Epsilon + "," + C.Exp + "," + Math.Sqrt( C.S / ( C.St - 1 ) ) );
-				//	//Console.WriteLine( Configuration.T + " " + this.Exp );
-				//}
+				
 
 				// 標準偏差計算
 				C.St++;

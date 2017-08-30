@@ -42,19 +42,15 @@ namespace XCS
         // すべてのClassifier表示(確認用)
         public override void Show()
         {
-            StreamWriter sw = new StreamWriter("./Population_" + Configuration.T /*+ "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-				+ "AS_" + Configuration.ASName + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-				+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon */+ ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
-            //StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-            //	+ "AS_" + "CS" + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-            //	+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
+            StreamWriter sw = new StreamWriter("./Population_" + Configuration.T + ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
+            
             if (Configuration.ASName != "CS" && Configuration.ASName != "MaxCS" && Configuration.ASName != "Max" && Configuration.ASName != "Updatee0CS")
             {
-                sw.WriteLine("state,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
+                sw.WriteLine("state,act,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
                 foreach (Classifier C in this.CList)
                 {
 
-                    sw.WriteLine(C.C.state + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
+                    sw.WriteLine(C.C.state + "," + C.A + ","+ C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
             }
             else
@@ -62,9 +58,7 @@ namespace XCS
                 sw.WriteLine("time,state,prediction,mean,epsilon,average,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
                 foreach (SigmaNormalClassifier C in this.CList)
                 {
-                    //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-                    //Console.WriteLine();
-
+                   
                     sw.WriteLine(Configuration.T + "," + C.C.state + "," + C.P + "," + C.M + "," + C.Epsilon + "," + Configuration.RewardAverage + "," + C.F + ","
                         + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
                 }
@@ -251,13 +245,9 @@ namespace XCS
                             //}
                             // else//有意差がない　統合しでもよい ただ　特殊化ルールどう識別するか
                             //{
-                            if (/*Math.Abs(Cl.M - C.M) < 10 &&*/
-                                // Math.Abs(Cl.Epsilon_0 - C.Epsilon_0)< 10&&
-                                // Cl.Kappa == 1 
-                                //&& Snc_oya.Epsilon < Snc_ko.Epsilon
+                            if (
                               (Cl.Epsilon_0 < C.Epsilon_0 || Math.Abs(Cl.Epsilon_0 - C.Epsilon_0) < Cl.Epsilon_0 / 10)
-                               //&& Math.Abs(Cl.Epsilon_0 - C.Epsilon_0) < 10//case 1 +- 10
-                               // Cl.Epsilon < C.Epsilon
+                               
                                && Snc_ko.IsConvergenceEpsilon()
                             && Snc_oya.IsConvergenceEpsilon()
 
