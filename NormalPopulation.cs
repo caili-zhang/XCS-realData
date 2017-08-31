@@ -230,34 +230,12 @@ namespace XCS
                     {
                         if (Cl.IsMoreGeneral(C))
                         {
-                            SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
-                            SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Cl;
-                            //10の数字は適当　可変にするか？ 1/10にする　10－7 あんまり変わらない
-                            //分散が同じの判断基準　他に？？t test を使う　予定  特殊化がでない
-                            //
-                            //double t = (Snc_oya.M - Snc_ko.M)/Math.Sqrt(Snc_oya.S/30 + Snc_ko.S/30);
-
-                            //double studentT = StudentT.InvCDF(0, 1, 60, 0.005);
-
-                            //if (t < studentT || t > Math.Abs(studentT))//t test で有意差がある 包摂しない
-                            //{
-
-                            //}
-                            // else//有意差がない　統合しでもよい ただ　特殊化ルールどう識別するか
-                            //{
-                            if (
-                              (Cl.Epsilon_0 < C.Epsilon_0 || Math.Abs(Cl.Epsilon_0 - C.Epsilon_0) < Cl.Epsilon_0 / 10)
-                               
-                               && Snc_ko.IsConvergenceEpsilon()
-                            && Snc_oya.IsConvergenceEpsilon()
-
-                                ) //  
-                            {
+                            
+                            
                                 Cl.N += C.N;
                                 // 包摂された、削除したいClassifier C　をCLに登録
                                 CL.Add(C);
-                            }
-                            // }
+                            
 
                         }
                     }

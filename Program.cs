@@ -571,7 +571,7 @@ namespace XCS
 			Onesw.Close();
 
 			Configuration.ESW.Close();
-			//Configuration.Problem.Close();
+			
 
 
 			System.IO.Directory.SetCurrentDirectory( "../");
