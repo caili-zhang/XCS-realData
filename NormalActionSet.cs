@@ -9,9 +9,9 @@ namespace XCS
 	// (従来手法)
 	class NormalActionSet : ActionSet
 	{
-		public NormalActionSet( List<Classifier> actSet,char act )
+		public NormalActionSet( MatchSet M,char act )
 		{
-			this.CList = actSet;
+			this.CList = M.MatchAction(act);
 		}
 
 		public override void Show()

@@ -30,6 +30,6 @@ namespace XCS
 		/// </summary>
 		/// <param name="Action">選択行動</param>
 		/// <returns>Actionに一致するClassifierの集合</returns>
-		//public abstract List<Classifier> MatchAction( char Action );
+		public abstract List<Classifier> MatchAction( char Action );
 	}
 }

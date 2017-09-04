@@ -400,11 +400,11 @@ namespace XCS
 
                 if (Configuration.ASName == "CS")
                 {
-                    AS = new ConditionSigmaActionSet(M.CList, Action);
+                    AS = new ConditionSigmaActionSet(M, Action);
                 }
                 else
                 {
-                    AS = new NormalActionSet(M, Action,Action);
+                    AS = new NormalActionSet(M,Action);
                 }
 
                 double Rho = Env.ExecuteAction(Action);

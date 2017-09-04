@@ -130,20 +130,20 @@ namespace XCS
 			}
 		}
 
-		// ActionSet用にActionに合うものを返す
-		//public override List<Classifier> MatchAction( char Action )
-		//{
-			/*List<Classifier> Actionset = new List<Classifier>();
+        // ActionSet用にActionに合うものを返す
+        public override List<Classifier> MatchAction(char Action)
+        {
+            List<Classifier> Actionset = new List<Classifier>();
 
-			foreach( Classifier C in this.CList )
-			{
-				if( C.A == Action )
-				{
-					Actionset.Add( C );
-				}
-			}
+            foreach( Classifier C in this.CList )
+            {
+                if( C.A == Action )
+                {
+                    Actionset.Add( C );
+                }
+            }
 
-			return Actionset;*/
-		//}
-	}
+            return Actionset;
+        }
+    }
 }
