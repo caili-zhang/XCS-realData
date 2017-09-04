@@ -9,7 +9,7 @@ namespace XCS
 	// (従来手法)
 	class NormalActionSet : ActionSet
 	{
-		public NormalActionSet( List<Classifier> actSet )
+		public NormalActionSet( List<Classifier> actSet,char act )
 		{
 			this.CList = actSet;
 		}

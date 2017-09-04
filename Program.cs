@@ -388,27 +388,31 @@ namespace XCS
 
 				// MatchSet生成
 				MatchSet M = new NormalMatchSet( S, P );
-				
-				// ActionSetはただMをコピーするだけ,アクションがないから
-				ActionSet AS;
-				if( Configuration.ASName == "CS" )
-				{
-					AS = new ConditionSigmaActionSet( M.CList);
-				}
+
+                // PredictionArray取得
+                PredictionArray PA = new epsilongreedyPA(M);
+                // Action決定
+                char Action = PA.SelectAction();
+
+
+                // ActionSetはただMをコピーするだけ,アクションがないから
+                ActionSet AS;
+
+                if (Configuration.ASName == "CS")
+                {
+                    AS = new ConditionSigmaActionSet(M.CList, Action);
+                }
                 else
-				{
-				    AS = new NormalActionSet(M.CList);/*M.MatchAction(Action))*/;
+                {
+                    AS = new NormalActionSet(M, Action,Action);
                 }
 
-                act = epsilongreedyPA(AS);
-                //char Action = '0';//action ないから、全部０にする
-                double Rho = Env.ExecuteAction(act);
-
+                double Rho = Env.ExecuteAction(Action);
                 //Configuration.Problem.WriteLine(S.state + "," + Configuration.T + "," + Rho);
-                
 
 
-				StdList Sigma = null;
+
+                StdList Sigma = null;
 
 				// 提案手法　分散の計算
 				foreach( StdList SL in Configuration.Stdlist )
