@@ -18,36 +18,36 @@ namespace XCS
 		// situationに合うものをPopulationから取り、足りないときはCovering
 		protected override void Covering( State S, Population P )
 		{
-		    while (this.CList.Count == 0)
-		    {
-		        // situationにあうものをPopulationから探す
-		        this.CList = P.MatchSituation(S);
+		    //while (this.CList.Count == 0)
+		    //{
+		    //    // situationにあうものをPopulationから探す
+		    //    this.CList = P.MatchSituation(S);
 
-		        if (CList.Count == 0)
-		        {
-                    // 一部を変化させたCondition
-                    State state = new IntegralState(S);
-                    state.Covering();
+		    //    if (CList.Count == 0)
+		    //    {
+      //              // 一部を変化させたCondition
+      //              State state = new IntegralState(S);
+      //              state.Covering();
 		            
-                    Classifier CC;
+      //              Classifier CC;
 
-                    if (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS")
-                    {
-                        CC = new SigmaNormalClassifier(state, Configuration.ExpThreshold);
-                    }
-                    else
-                    {
-                        CC = new NormalClassifier(state);
-                    }
+      //              if (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS")
+      //              {
+      //                  CC = new SigmaNormalClassifier(state, Configuration.ExpThreshold);
+      //              }
+      //              else
+      //              {
+      //                  CC = new NormalClassifier(state);
+      //              }
 
-                    P.Add(CC);
-                    // 整理
-                    P.Delete();
-                    this.CList = new List<Classifier>();
-                }
-		    }
+      //              P.Add(CC);
+      //              // 整理
+      //              P.Delete();
+      //              this.CList = new List<Classifier>();
+      //          }
+		    //}
 
-		    /*while( this.CList.Count == 0 )
+		    while( this.CList.Count == 0 )
 			{
 				// situationにあうものをPopulationから探す
 				this.CList = P.MatchSituation( S );
@@ -89,7 +89,7 @@ namespace XCS
 					P.Delete();
 					this.CList = new List<Classifier>();
 				}
-			}*/
+			}
 		}
 
 		public override void Show()
