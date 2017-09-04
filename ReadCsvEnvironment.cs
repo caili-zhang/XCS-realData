@@ -16,7 +16,7 @@ namespace XCS
         // データ
         private List<string> DataList = new List<string>();
         private List<double> RewardList = new List<double>();
-
+        private List<double> ActionList = new List<double>();
         private int IndexCount = -1;    // 現在読んでいる点
 
         // Environment作成
@@ -40,7 +40,7 @@ namespace XCS
                 }
 
                 DataList.Add(data);
-                RewardList.Add(Double.Parse(cols[i + 1]));
+                ActionList.Add(char.Parse(cols[i + 1]));
             }
         }
 
