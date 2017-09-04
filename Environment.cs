@@ -44,7 +44,7 @@ namespace XCS
 		/// </summary>
 		/// <param name="S">situation</param>
 		/// <returns>situationに対する正解Action</returns>
-		abstract protected char ActionCalculation( string S );
+		abstract protected char ActionCalculation( int index);
 
 		/// <summary>
 		/// Actionを受け取りRhoを返す
