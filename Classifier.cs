@@ -15,7 +15,7 @@ namespace XCS
 		/// <summary>
 		/// Action
 		/// </summary>
-		//public char A { protected set; get; }
+		public char A { protected set; get; }
 		/// <summary>
 		/// Prediction
 		/// </summary>

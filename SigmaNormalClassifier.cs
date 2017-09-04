@@ -21,12 +21,12 @@ namespace XCS
 		public int ConvergenceTime = -1;
 
 		// Covering
-		public SigmaNormalClassifier( State S,/* List<char> Actions,*/ int ExpThreshold )
+		public SigmaNormalClassifier( State S, List<char> Actions, int ExpThreshold )
 		{
 			// Covering済みConditionセット
 			this.C = S;
 			// MatchSetにない行動をランダムに選ぶ
-			//this.A = Actions[Configuration.MT.Next( Actions.Count - 1 )];
+			this.A = Actions[Configuration.MT.Next( Actions.Count - 1 )];
 
 			this.P = Configuration.P_I;
 			this.Epsilon = Configuration.Epsilon_I;
