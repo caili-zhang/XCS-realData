@@ -400,8 +400,9 @@ namespace XCS
 				    AS = new NormalActionSet(M.CList);/*M.MatchAction(Action))*/;
                 }
 
-                char Action = '0';//action ないから、全部０にする
-                double Rho = Env.ExecuteAction(Action);
+                act = epsilongreedyPA(AS);
+                //char Action = '0';//action ないから、全部０にする
+                double Rho = Env.ExecuteAction(act);
 
                 //Configuration.Problem.WriteLine(S.state + "," + Configuration.T + "," + Rho);
                 
