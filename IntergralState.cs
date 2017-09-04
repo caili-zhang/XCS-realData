@@ -8,18 +8,77 @@ namespace XCS
 {
     class IntegralState : State
     {
+        //private IDictionary<string, string> sharpTable = new Dictionary<string, string>();
+
+        //public void  SetSharp(string s)
+        //{
+        //    switch (s) {
+        //        case "5":
+        //            sharpTable.Add("5", "12");
+        //            break;
+        //        case "6":
+        //            sharpTable.Add("6", "13");
+        //            break;
+        //        case "7":
+        //            sharpTable.Add("7", "14");
+        //            break;
+        //        case "8":
+        //            sharpTable.Add("8", "23");
+        //            break;
+        //        case "9":
+        //            sharpTable.Add("9", "24");
+        //            break;
+        //        case "A":
+        //            sharpTable.Add("A", "34");
+        //            break;
+        //        case "B":
+        //            sharpTable.Add("B", "123");
+        //            break;
+        //        case "C":
+        //            sharpTable.Add("C", "124");
+        //            break;
+        //        case "D":
+        //            sharpTable.Add("D", "134");
+        //            break;
+        //        case "E":
+        //            sharpTable.Add("E", "234");
+        //            break;
+        //        case "F":
+        //            sharpTable.Add("F", "1234");
+        //            break;
+               
+        //    }
+        //}
+
         // 長さと種類をそろえる(GetStateと統合可?)
         public IntegralState(int Length, int Base)
         {
-            this.Length = Length;
+            this.Length = Length*Base;
             Number = Base;
         }
 
         // すべてをリストアップ用
         public IntegralState(string S)
         {
-            this.state = S;
-            this.Length = S.Length;
+            //８＊４のビット列にする
+            string state="";
+            for (int i = 0; i < S.Length; i++)
+            {
+                for(int j = 0; j < 4; j++)
+                {
+                    if(j== Convert.ToInt32(S.Substring(i,1)))
+                    {
+                        state = state + "0";
+                    }
+                    else
+                    {
+                        state = state + "*";
+                    }
+                }
+                
+            }
+            this.state = state;
+            this.Length = state.Length;
             this.NumberOfSharp = 0;
         }
 
@@ -42,17 +101,25 @@ namespace XCS
         // 確率的に#に変える
         public override void Covering()
         {
-            string S = this.state;
-            string CoveredState = "";
+            string S = this.state;//長さはstate＝＞８＊４
+            string CoveredState = "";//長さは　８＊４
+            
             for (int i = 0; i < S.Length; i++)
             {
-                if (Configuration.MT.NextDouble() < Configuration.P_sharp)
-                {
-                    CoveredState += '#';
+                if (S[i] =='*')
+                {//covering
+                    if (Configuration.MT.NextDouble() < Configuration.P_sharp)
+                    {
+                        CoveredState += "0";
+                    }
+                    else
+                    {
+                        CoveredState += "*";
+                    }
                 }
                 else
                 {
-                    CoveredState += S[i];
+                    CoveredState += "0";
                 }
             }
             this.state = CoveredState;

@@ -53,7 +53,7 @@ namespace XCS
 
 			for( int i = 0; i < this.state.Length; i++ )
 			{
-				if( ( this.state[i] != S.state[i] ) && ( this.state[i] != '#' ) && ( S.state[i] != '#' ) )
+				if( ( this.state[i] != S.state[i] ) && ( this.state[i] != '0' ) && ( S.state[i] != '0' ) )
 				{
 					return false;
 				}
@@ -123,7 +123,8 @@ namespace XCS
 			int n = 0;
 			for( int i = 0; i < this.state.Length; i++ )
 			{
-				if( this.state[i] == '#' )
+                //対応のビットは０
+				if( this.state[i] == '0' )
 				{
 					n++;
 				}

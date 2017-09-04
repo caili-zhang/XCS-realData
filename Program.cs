@@ -383,14 +383,9 @@ namespace XCS
                     }
                 }
 
-                //nsole.WriteLine( Configuration.T + " : " + P.CountNumerosity() + " : " + P.CList.Count() );
-                // situation取得
-                
-                
+                //8 bit の入力データを読み込む
 				State S = Env.GetState();
 
-
-                
 				// MatchSet生成
 				MatchSet M = new NormalMatchSet( S, P );
 				

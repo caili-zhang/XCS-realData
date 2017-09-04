@@ -115,7 +115,7 @@ namespace XCS
 
 			do
 			{
-				if( this.C.state[i] != '#' && this.C.state[i] != Spec.C.state[i] )
+				if( this.C.state[i] != '0' && this.C.state[i] != Spec.C.state[i] )
 				{
 					return false;
 				}
@@ -158,13 +158,13 @@ namespace XCS
 				if( Configuration.MT.NextDouble() < Configuration.Myu )
 				{
 					// #とstateの切り替え
-					if( this.C.state[i] == '#' )
+					if( this.C.state[i] == '0' )
 					{
 						state += S.state[i];
 					}
 					else
 					{
-						state += '#';
+						state += '*';
 					}
 				}
 				else
