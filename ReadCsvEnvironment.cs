@@ -57,11 +57,11 @@ namespace XCS
 
             return state;
         }
-
         // 答え(仮)算出 ここではアクションがないので、便利上全部０にする
-        override protected char ActionCalculation(string S)
+        override protected char ActionCalculation(int index)
         {
-            return '0';
+
+            return ActionList[index];
         }
 
         // Actionに対するReward ばらつき幅同じ
@@ -71,14 +71,14 @@ namespace XCS
             this.Eop = true;
             if (this.Action == act)
             {
-                return RewardList[this.IndexCount];
+                return 1000.0;
             }
             else
             {
                 return 0.0;
             }
         }
-
+        
         // Actionの正解･不正解
         public override int ActionExploit(char act)
         {
