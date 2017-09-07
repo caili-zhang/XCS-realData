@@ -197,10 +197,10 @@ namespace XCS
 				Configuration.N = 2000;
 			}
             // situation(Condition)の種類(進数)
-            //Configuration.Type = "Binary";
+            Configuration.Type = "4";
             // Covering閾値(行動の数)
             //Configuration.Theta_mna = 2;
-            Configuration.Theta_mna = 0;
+            Configuration.Theta_mna = 4;
 
             // Covering時の#に変化させる割合
 

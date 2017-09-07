@@ -44,7 +44,7 @@ namespace XCS
             }
         }
 
-        // Populationに(ランダムな)Stateを答えを算出してから渡
+        // PopulationにStateを答えを算出してから渡
         override public State GetState()
         {
             // 読み込む場所決定

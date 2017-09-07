@@ -57,14 +57,21 @@ namespace XCS
 			string CoveredState = "";
 			for( int i = 0; i < S.Length; i++ )
 			{
-				if( Configuration.MT.NextDouble() < Configuration.P_sharp )
-				{
-					CoveredState += '#';
-				}
-				else
-				{
-					CoveredState += S[i];
-				}
+                if (S[i] == '0') {
+                    CoveredState += '0';
+                }
+                else
+                {
+                    if (Configuration.MT.NextDouble() < Configuration.P_sharp)
+                    {
+                        CoveredState += '0';
+                    }
+                    else
+                    {
+                        CoveredState += S[i];
+                    }
+                }
+				
 			}
 			this.state = CoveredState;
 			this.CountSharp();

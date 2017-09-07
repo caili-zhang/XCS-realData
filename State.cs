@@ -44,16 +44,16 @@ namespace XCS
 		/// </summary>
 		/// <param name="S">比較対象</param>
 		/// <returns>一致(true)</returns>
-		public bool Match( State S )
+		public bool Match( State classifier)
 		{
-			if( this.state.Length != S.state.Length )
+			if( this.state.Length != classifier.state.Length )
 			{
 				return false;
 			}
 
 			for( int i = 0; i < this.state.Length; i++ )
 			{
-				if( ( this.state[i] != S.state[i] ) && ( this.state[i] != '0' ) && ( S.state[i] != '0' ) )
+				if( ( this.state[i] != classifier.state[i] ) && (classifier.state[i] != '0' ) )
 				{
 					return false;
 				}
