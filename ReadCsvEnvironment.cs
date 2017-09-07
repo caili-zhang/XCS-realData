@@ -26,7 +26,7 @@ namespace XCS
             this.Number = 4;    // 進数
 
             // csv読み込み
-            string file = "divided_XCS_1.csv";
+            string file = "all_data_forXCS.csv";
             StreamReader reader = new StreamReader(file, Encoding.GetEncoding("Shift_JIS"));
             while (reader.Peek() >= 0)
             {
@@ -51,7 +51,7 @@ namespace XCS
             IndexCount = (++IndexCount) % DataList.Count;
             // 読み込みデータにする
             this.s = new IntegralState(this.DataList[IndexCount]);
-            State state = this.s.GetState();    // 実質カウントするだけ(でも0)
+            State state = this.s.GetState();    
 
             this.Action = ActionCalculation(IndexCount);  // 仮
 
@@ -98,7 +98,10 @@ namespace XCS
         {
             return DataList;
         }
-
+        public override List<char> GetActionList()
+        {
+            return ActionList;
+        }
         /// <summary>
         /// ガウシアンノイズ生成
         /// </summary>

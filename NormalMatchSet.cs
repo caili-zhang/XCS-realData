@@ -57,17 +57,16 @@ namespace XCS
 				int NumberOfActions = 0;
 
 				// Multiplexer(2進数)
-				if( Configuration.Type == "4" )
+				if( Configuration.Type == "Binary" )
 				{
 					Actions.Add( '0' );
 					Actions.Add( '1' );
-                    Actions.Add('2');
-                    Actions.Add('3');
+                    
                     foreach ( Classifier C in this.CList )
 					{
 						Actions.Remove( C.A );
 					}
-					NumberOfActions = 4 - Actions.Count;
+					NumberOfActions = 2 - Actions.Count;
 				}
 				
 				// MatchSetにある行動が少ないとき

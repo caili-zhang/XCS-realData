@@ -61,5 +61,7 @@ namespace XCS
 		abstract public int ActionExploit( char act );
 
         abstract public List<string> GetDataList();
-	}
+        abstract public List<char> GetActionList();
+
+    }
 }

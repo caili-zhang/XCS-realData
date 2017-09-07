@@ -82,13 +82,31 @@ namespace XCS
             //string S = Convert.ToString( State,4);
             //string S = RadixConvert.ToString(State, 4, false);
 
-			//while( S.Length < Configuration.L )
-			//{
-				//S = "0" + S;
-			//}
+            //while( S.Length < Configuration.L )
+            //{
+            //S = "0" + S;
+            //}
 
+            //XCSI 表現に変える
 
-			this.C = State;
+            string XCSI_state = "";
+            for (int i = 0; i < State.Length; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (j == Convert.ToInt32(State.Substring(i, 1)))
+                    {
+                        XCSI_state = XCSI_state+ "0";
+                    }
+                    else
+                    {
+                        XCSI_state = XCSI_state+ "*";
+                    }
+                }
+
+            }
+
+            this.C = XCSI_state;
 			this.A = Action;
 			this.T = 0;
 			this.M = 0;
@@ -156,17 +174,17 @@ namespace XCS
 		}
 
 		// 被包摂か
-		public bool IsIncluded(String State)
+		public bool IsIncluded(String State, char Action)
 		{
-			/*if(this.A != Action)
+			if(this.A != Action)
 			{
 				return false;
-			}*/
+			}
 
 			int i = 0;
 			do
 			{
-				if( State[i] != '#' && this.C[i] != State[i] )
+				if( State[i] != '0' && this.C[i] != State[i] )
 				{
 					return false;
 				}

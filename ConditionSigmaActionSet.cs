@@ -134,7 +134,7 @@ namespace XCS
                         foreach (var std in Configuration.ConvergentedVT)
                         {
                             
-                                if (std.IsIncluded(C.C.state))
+                                if (std.IsIncluded(C.C.state,C.A))
                                 {
                                     cpStdLists.Add(std.Clone()); //クローンメソット　　
                                 }
