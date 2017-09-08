@@ -18,80 +18,83 @@ namespace XCS
 		// situationに合うものをPopulationから取り、足りないときはCovering
 		protected override void Covering( State S, Population P )
 		{
-		    //while (this.CList.Count == 0)
-		    //{
-		    //    // situationにあうものをPopulationから探す
-		    //    this.CList = P.MatchSituation(S);
+            //action がない場合
+            while (this.CList.Count == 0)
+            {
+                // situationにあうものをPopulationから探す
+                this.CList = P.MatchSituation(S);
 
-		    //    if (CList.Count == 0)
-		    //    {
-      //              // 一部を変化させたCondition
-      //              State state = new IntegralState(S);
-      //              state.Covering();
-		            
-      //              Classifier CC;
+                if (CList.Count == 0)
+                {
+                    // 一部を変化させたCondition
+                    State state = new IntegralState(S);
+                    state.Covering();
 
-      //              if (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS")
-      //              {
-      //                  CC = new SigmaNormalClassifier(state, Configuration.ExpThreshold);
-      //              }
-      //              else
-      //              {
-      //                  CC = new NormalClassifier(state);
-      //              }
+                    Classifier CC;
 
-      //              P.Add(CC);
-      //              // 整理
-      //              P.Delete();
-      //              this.CList = new List<Classifier>();
-      //          }
-		    //}
+                    if (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS")
+                    {
+                        CC = new SigmaNormalClassifier(state, Configuration.ExpThreshold);
+                    }
+                    else
+                    {
+                        CC = new NormalClassifier(state);
+                    }
 
-		    while( this.CList.Count == 0 )
-			{
-				// situationにあうものをPopulationから探す
-				this.CList = P.MatchSituation( S );
+                    P.Add(CC);
+                    // 整理
+                    P.Delete();
+                    this.CList = new List<Classifier>();
+                }
+            }
 
-				// Actionの種類
-				List<char> Actions = new List<char>();
-				int NumberOfActions = 0;
 
-				// Multiplexer(2進数)
-				if( Configuration.Type == "Binary" )
-				{
-					Actions.Add( '0' );
-					Actions.Add( '1' );
-                    
-                    foreach ( Classifier C in this.CList )
-					{
-						Actions.Remove( C.A );
-					}
-					NumberOfActions = 2 - Actions.Count;
-				}
-				
-				// MatchSetにある行動が少ないとき
-				if( NumberOfActions < Configuration.Theta_mna )
-				{
-					// 一部を変化させたCondition
-					State state = new BinaryState( S );
-					state.Covering();
+            //action がある場合
+            //   while( this.CList.Count == 0 )
+            //{
+            //	// situationにあうものをPopulationから探す
+            //	this.CList = P.MatchSituation( S );
 
-					Classifier CC;
-					if( Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS" )
-					{
-						CC = new SigmaNormalClassifier( state, Actions, Configuration.ExpThreshold );
-					}
-					else
-					{
-						CC = new NormalClassifier( state, Actions );
-					}
-					P.Add( CC );
-					// 整理
-					P.Delete();
-					this.CList = new List<Classifier>();
-				}
-			}
-		}
+            //	// Actionの種類
+            //	List<char> Actions = new List<char>();
+            //	int NumberOfActions = 0;
+
+            //	// Multiplexer(2進数)
+            //	if( Configuration.Type == "Binary" )
+            //	{
+            //		Actions.Add( '0' );
+            //		Actions.Add( '1' );
+
+            //                 foreach ( Classifier C in this.CList )
+            //		{
+            //			Actions.Remove( C.A );
+            //		}
+            //		NumberOfActions = 2 - Actions.Count;
+            //	}
+
+            //	// MatchSetにある行動が少ないとき
+            //	if( NumberOfActions < Configuration.Theta_mna )
+            //	{
+            //		// 一部を変化させたCondition
+            //		State state = new BinaryState( S );
+            //		state.Covering();
+
+            //		Classifier CC;
+            //		if( Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS" )
+            //		{
+            //			CC = new SigmaNormalClassifier( state, Actions, Configuration.ExpThreshold );
+            //		}
+            //		else
+            //		{
+            //			CC = new NormalClassifier( state, Actions );
+            //		}
+            //		P.Add( CC );
+            //		// 整理
+            //		P.Delete();
+            //		this.CList = new List<Classifier>();
+            //	}
+            //}
+        }
 
 		public override void Show()
 		{

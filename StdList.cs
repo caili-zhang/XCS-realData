@@ -174,22 +174,22 @@ namespace XCS
 		}
 
 		// 被包摂か
-		public bool IsIncluded(String State, char Action)
+		public bool IsIncluded(String classifier, char Action)
 		{
-			if(this.A != Action)
-			{
-				return false;
-			}
+			//if(this.A != Action)
+			//{
+			//	return false;
+			//}
 
 			int i = 0;
 			do
 			{
-				if( State[i] != '0' && this.C[i] != State[i] )
+				if(classifier[i] != '0' && this.C[i] != classifier[i] )
 				{
 					return false;
 				}
 				i++;
-			} while( i < State.Length );
+			} while( i < classifier.Length );
 
 			return true;
 		}

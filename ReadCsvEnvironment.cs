@@ -26,7 +26,7 @@ namespace XCS
             this.Number = 4;    // 進数
 
             // csv読み込み
-            string file = "all_data_forXCS.csv";
+            string file = "all_data.csv";
             StreamReader reader = new StreamReader(file, Encoding.GetEncoding("Shift_JIS"));
             while (reader.Peek() >= 0)
             {
@@ -40,7 +40,8 @@ namespace XCS
                 }
 
                 DataList.Add(data);
-                ActionList.Add(char.Parse(cols[i + 1]));
+                RewardList.Add(double.Parse(cols[i + 1]));
+                ActionList.Add('0');
             }
         }
 
@@ -61,7 +62,7 @@ namespace XCS
         override protected char ActionCalculation(int index)
         {
 
-            return ActionList[index];
+            return '0';
         }
 
         // Actionに対するReward ばらつき幅同じ
@@ -77,7 +78,17 @@ namespace XCS
             //{
             //    return 0.0;
             //}
-            return RewardList
+            // シングルステップ問題
+            this.Eop = true;
+            if (this.Action == act)
+            {
+                return RewardList[this.IndexCount];
+            }
+            else
+            {
+                return 0.0;
+            }
+            
         }
         
         // Actionの正解･不正解

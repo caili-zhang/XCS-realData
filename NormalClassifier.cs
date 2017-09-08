@@ -9,13 +9,13 @@ namespace XCS
 	class NormalClassifier : Classifier
 	{
 		// Covering
-		public NormalClassifier( State S, List<char> Actions )
+		public NormalClassifier( State S )
 		{
 			// Covering済みConditionセット
 			this.C = S;
-			// MatchSetにない行動をランダムに選ぶ
-			this.A = Actions[Configuration.MT.Next( Actions.Count - 1 )];
-
+            // MatchSetにない行動をランダムに選ぶ
+            //this.A = Actions[Configuration.MT.Next( Actions.Count - 1 )];
+            this.A = '0';
 			this.P = Configuration.P_I;
 			this.Epsilon = Configuration.Epsilon_I;
 			this.F = Configuration.F_I;
