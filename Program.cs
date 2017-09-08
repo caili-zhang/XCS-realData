@@ -197,7 +197,8 @@ namespace XCS
                 Configuration.N = 2000;
             }
             // situation(Condition)の種類(進数)
-            Configuration.Type = "Binary";
+            //Configuration.Type = "Binary";
+            Configuration.Type = "noaction";
             // Covering閾値(行動の数)
             //Configuration.Theta_mna = 2;
             Configuration.Theta_mna = 2;
@@ -366,14 +367,11 @@ namespace XCS
                             int SumT = 0;
                             foreach (StdList SL in Configuration.Stdlist)
                             {
-
-
                                 if (SL.IsIncluded(C.C.state,C.A))
                                 {
                                     ST += SL.S * SL.T;
                                     SumT += SL.T;
                                 }
-
                             }
                             ST /= SumT;
 

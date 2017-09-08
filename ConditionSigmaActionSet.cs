@@ -13,9 +13,10 @@ namespace XCS
 	{
 		public ConditionSigmaActionSet( MatchSet M ,char act)
 		{
-			this.CList =M.MatchAction(act);
+            //this.CList =M.MatchAction(act);
+            this.CList = M.CList;
 
-		}
+        }
 
 	   
 

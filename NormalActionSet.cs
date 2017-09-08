@@ -11,7 +11,8 @@ namespace XCS
 	{
 		public NormalActionSet( MatchSet M,char act )
 		{
-			this.CList = M.MatchAction(act);
+            //this.CList = M.MatchAction(act);
+            this.CList = M.CList;
 		}
 
 		public override void Show()

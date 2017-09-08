@@ -68,15 +68,16 @@ namespace XCS
         public override double ExecuteAction(char act)
         {
             // シングルステップ問題
-            this.Eop = true;
-            if (this.Action == act)
-            {
-                return 1000.0;
-            }
-            else
-            {
-                return 0.0;
-            }
+            //this.Eop = true;
+            //if (this.Action == act)
+            //{
+            //    return 1000.0;
+            //}
+            //else
+            //{
+            //    return 0.0;
+            //}
+            return RewardList
         }
         
         // Actionの正解･不正解
