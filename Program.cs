@@ -316,6 +316,7 @@ namespace XCS
 			}
 
             Configuration.Problem.WriteLine("time" +"," + "reward");
+            StreamWriter sw11002001 = new StreamWriter("./prob11002001.csv");
 
             // メインループ
             #region main roop
@@ -345,6 +346,7 @@ namespace XCS
                         {
                             Configuration.ConvergentedVT[i].M = Configuration.Stdlist[i].M;
                             //Configuration.ConvergentedVT[i * 4+1].M = Configuration.Stdlist[i * 2+1].M;
+
 
                             Configuration.ConvergentedVT[i ].S = Configuration.Stdlist[i].S;
                             //Configuration.ConvergentedVT[i * 4 + 1].S = Configuration.Stdlist[i*2+1].S;
@@ -391,11 +393,19 @@ namespace XCS
 
 
                 
-				// MatchSet生成
-				MatchSet M = new NormalMatchSet( S, P );
-				
-				// ActionSetはただMをコピーするだけ,アクションがないから
-				ActionSet AS;
+                // MatchSet生成
+                MatchSet M = new NormalMatchSet( S, P );
+                foreach (Classifier cl in M.CList)
+                {
+                    if (cl.C.state == "11002001")
+                    {
+
+                        sw11002001.WriteLine(cl.C.state + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.M + "," + cl.GenerateTime);
+                    }
+                }
+                
+                // ActionSetはただMをコピーするだけ,アクションがないから
+                ActionSet AS;
 				if( Configuration.ASName == "CS" )
 				{
 					AS = new ConditionSigmaActionSet( M.CList);
@@ -405,6 +415,14 @@ namespace XCS
 				    AS = new NormalActionSet(M.CList);/*M.MatchAction(Action))*/;
                 }
 
+                foreach (Classifier cl in AS.CList)
+                {
+                    if (cl.C.state == "11002001")
+                    {
+
+                        sw11002001.WriteLine(cl.C.state + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.M + "," + cl.GenerateTime);
+                    }
+                }
                 char Action = '0';//action ないから、全部０にする
                 double Rho = Env.ExecuteAction(Action);
 
@@ -526,8 +544,8 @@ namespace XCS
 
             }
             #endregion 
+            sw11002001.Close();
 
-           
             Configuration.Problem.Close();
             P.Compact();
             //P.Show();
