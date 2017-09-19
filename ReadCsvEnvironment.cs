@@ -26,7 +26,7 @@ namespace XCS
             this.Number = 4;    // 進数
 
             // csv読み込み
-            string file = "all_data.csv";
+            string file = "divided_4.csv" ;
             StreamReader reader = new StreamReader(file, Encoding.GetEncoding("Shift_JIS"));
             while (reader.Peek() >= 0)
             {
@@ -56,8 +56,24 @@ namespace XCS
 
             this.Action = ActionCalculation(IndexCount);  // 仮
 
+
+
+            if (Configuration.IsConvergenceVT == true) {
+                //弾く　＋ーepsilonの入力
+                foreach(StdList sl in Configuration.Stdlist) {
+                    if (state.state == sl.C) {
+                        //チェックする、＋ー２σ以内ですか, 外れ値だったら、弾く
+                        if (sl.IsOutlier(RewardList[IndexCount])) {
+                            return GetState();
+                        }
+                    }
+                }
+            }
+
             return state;
         }
+
+
         // 答え(仮)算出 ここではアクションがないので、便利上全部０にする
         override protected char ActionCalculation(int index)
         {

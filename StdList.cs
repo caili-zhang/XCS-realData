@@ -194,6 +194,16 @@ namespace XCS
 			return true;
 		}
 
+        public bool IsOutlier(double reward) {
+
+            if ((reward > M + 2 * S) || (reward < M - 2 * S))
+            { return true; }
+            else {
+                return false;
+            }
+            
+        }
+
         //　自分の状態と　他の状態　2つの　分散と平均を用いて　e0 を推測機構
         //public void EstimateEpssilon0(StdList other)
         //{
