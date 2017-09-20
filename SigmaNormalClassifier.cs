@@ -93,7 +93,7 @@ namespace XCS
 				if( this.IsConvergenceEpsilon() )
 				{
 					Configuration.FlagEpsilon = true;
-					if( this.Epsilon < this.Epsilon_0 )
+					if( this.Epsilon < this.Epsilon_0||(this.Epsilon==0 &&this.Epsilon_0==0) )
 					{
 						//Console.WriteLine( this.C.state + ":" + this.A + ":" + this.EpsilonList[0] );
 						return true;
@@ -188,7 +188,7 @@ namespace XCS
 				{
 					if( this.IsMoreGeneral( C ) )
 					{
-                        if (this.Epsilon_0 < C.Epsilon_0)//chou 10-5 GA subsumption 
+                        if (this.Epsilon_0 <= C.Epsilon_0)//chou 10-5 GA subsumption 
 
                         { return true; }
 					}

@@ -390,7 +390,9 @@ namespace XCS
                 
                 
 				State S = Env.GetState();
-
+    //            if (S.state == "01000001") {
+    //                Console.ReadLine();
+    //            }
 
                 
                 // MatchSet生成
@@ -480,8 +482,10 @@ namespace XCS
 					double p = Rho;
 					AS.Update( P, p, Sigma );
 					AS.RunGA( S, P );//komine
-                    
-					PreviousAS = null;
+
+
+
+                    PreviousAS = null;
 				}
 				else
 				{
