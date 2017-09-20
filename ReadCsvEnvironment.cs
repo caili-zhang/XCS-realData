@@ -58,17 +58,17 @@ namespace XCS
 
 
 
-            if (Configuration.IsConvergenceVT == true) {
-                //弾く　＋ーepsilonの入力
-                foreach(StdList sl in Configuration.Stdlist) {
-                    if (state.state == sl.C) {
-                        //チェックする、＋ー２σ以内ですか, 外れ値だったら、弾く
-                        if (sl.IsOutlier(RewardList[IndexCount])) {
-                            return GetState();
-                        }
-                    }
-                }
-            }
+            //if (Configuration.IsConvergenceVT == true) {
+            //    //弾く　＋ーepsilonの入力
+            //    foreach(StdList sl in Configuration.Stdlist) {
+            //        if (state.state == sl.C) {
+            //            //チェックする、＋ー２σ以内ですか, 外れ値だったら、弾く
+            //            if (sl.IsOutlier(RewardList[IndexCount])) {
+            //                return GetState();
+            //            }
+            //        }
+            //    }
+            //}
 
             return state;
         }
