@@ -368,6 +368,7 @@ namespace XCS
                 //}
 			    if (double.IsNaN(C.F))
 			    {
+                    C.F = 0.0;
 			        Console.ReadLine();
 			    }
 			}
