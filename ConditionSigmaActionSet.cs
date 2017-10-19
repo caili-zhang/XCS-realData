@@ -11,17 +11,14 @@ namespace XCS
 {
 	class ConditionSigmaActionSet : ActionSet 
 	{
-		public ConditionSigmaActionSet( List<Classifier> actSet,char act)
-		{
-            foreach (Classifier cl in actSet){
-                if(cl.A == act) this.CList.Add(cl);
-            }
+		public ConditionSigmaActionSet(MatchSet M, char act)
+        {
+            CList = M.MatchAction(act);
+        }
 
-		}
 
-	   
 
-	    public override void Show()
+        public override void Show()
 		{
             StreamWriter sw = new StreamWriter("./ActionSet_" + Configuration.T + ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
             if (Configuration.ASName != "CS" && Configuration.ASName != "MaxCS" && Configuration.ASName != "Max" && Configuration.ASName != "Updatee0CS")

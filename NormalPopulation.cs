@@ -55,12 +55,11 @@ namespace XCS
             }
             else
             {
-                sw.WriteLine("time,state,prediction,mean,epsilon,average,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
-                foreach (SigmaNormalClassifier C in this.CList)
+                sw.WriteLine("state,act,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
+                foreach (Classifier C in this.CList)
                 {
-                   
-                    sw.WriteLine(Configuration.T + "," + C.C.state + "," + C.P + "," + C.M + "," + C.Epsilon + "," + Configuration.RewardAverage + "," + C.F + ","
-                        + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
+
+                    sw.WriteLine(C.C.state + "," + C.A + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
             }
             sw.Close();

@@ -243,7 +243,7 @@ namespace XCS
 			// GA時親に包摂
 			Configuration.DoGASubsumption = true;//9-8 chou
 			// 試行回数
-			Configuration.Iteration = 1000000;
+			Configuration.Iteration = 100000;
 			//Configuration.Iteration = 50000;
 			//Configuration.Iteration = 500000;	//150116// int型に変換
 			// 単純移動平均
@@ -336,12 +336,12 @@ namespace XCS
                 char Action = PA.SelectAction();
 
 
-                // ActionSetはただMをコピーするだけ,アクションがないから
+                
                 ActionSet AS;
 
                 if (Configuration.ASName == "CS")
                 {
-                    AS = new ConditionSigmaActionSet(M.CList, Action);
+                    AS = new ConditionSigmaActionSet(M, Action);
                 }
                 else
                 {
