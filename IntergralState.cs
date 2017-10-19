@@ -39,20 +39,27 @@ namespace XCS
             return this;
         }
 
-        // 確率的に#に変える
         public override void Covering()
         {
-            string S = this.state;
-            string CoveredState = "";
+            string S = this.state;//長さはstate＝＞８＊４
+            string CoveredState = "";//長さは　８＊４
+
             for (int i = 0; i < S.Length; i++)
             {
-                if (Configuration.MT.NextDouble() < Configuration.P_sharp)
-                {
-                    CoveredState += '#';
+                if (S[i] == '*')
+                {//covering
+                    if (Configuration.MT.NextDouble() < Configuration.P_sharp)
+                    {
+                        CoveredState += "0";
+                    }
+                    else
+                    {
+                        CoveredState += "*";
+                    }
                 }
                 else
                 {
-                    CoveredState += S[i];
+                    CoveredState += "0";
                 }
             }
             this.state = CoveredState;
