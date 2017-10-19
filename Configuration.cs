@@ -278,9 +278,6 @@ namespace XCS
 		/// 分類子成熟期限
 		/// </summary>
 		public static int MatureTime { set; get; }
-        //1000##　の発生　収束　消失　見たい
-		
-        public static StreamWriter Problem;
         
         
 

@@ -162,8 +162,7 @@ namespace XCS
 
 
            
-            Configuration.Problem = new StreamWriter("./problem" + ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
-
+           
 			Configuration.ESW = new StreamWriter( "./epsilon_" + Configuration.Seed + "CnoiseWidth_" + Configuration.NoiseWidth
 				+ "AS_" + "CS" + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
 				+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
@@ -315,8 +314,7 @@ namespace XCS
 				Configuration.Epsilon_0 += Configuration.NoiseWidth;
 			}
 
-            Configuration.Problem.WriteLine("time" +"," + "reward");
-
+            
             // メインループ
             #region main roop
             while ( Configuration.T < Configuration.Iteration )
@@ -470,7 +468,7 @@ namespace XCS
             #endregion 
 
            
-            Configuration.Problem.Close();
+            
             P.Compact();
             //P.Show();
 

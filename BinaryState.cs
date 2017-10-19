@@ -59,7 +59,7 @@ namespace XCS
 			{
 				if( Configuration.MT.NextDouble() < Configuration.P_sharp )
 				{
-					CoveredState += '#';
+					CoveredState += '0';
 				}
 				else
 				{

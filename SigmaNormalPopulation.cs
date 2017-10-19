@@ -208,10 +208,7 @@ namespace XCS
 					}
 					else
                     {
-                    //    if (C.C.state == "1#00##")
-                    //    {
-                            
-                    //    }
+                    
 						this.Remove( C );
 					}
 					return;

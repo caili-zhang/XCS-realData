@@ -429,15 +429,7 @@ namespace XCS
                         SigmaNormalClassifier SNC = (SigmaNormalClassifier)Cl;
                         
 
-                        if (C.C.state == "#000##" | C.C.state == "0#00##" | C.C.state == "00#0##" | C.C.state == "000###"
-                            | C.C.state == "##00##" | C.C.state == "00####"
-                           |C.C.state=="0#####"
-                            
-                            )
-                          
-                        {
-                            Configuration.ESW.WriteLine(Configuration.T + "," + Cl.C.state /*+ "," + Cl.A*/ + "," + Cl.Exp + "," + Cl.Epsilon + "," + Cl.Epsilon_0 + "," + C.C.state /*+ "," + C.A*/ + "," + C.Exp + "," + C.Epsilon + "," + C.Epsilon_0 + "," + ++Configuration.Count);
-                        }
+                        
                         
                         this.Remove(C);//as から削除
                         Pop.Remove(C);//pop から削除
