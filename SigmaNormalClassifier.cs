@@ -57,7 +57,7 @@ namespace XCS
 		public SigmaNormalClassifier( SigmaNormalClassifier C )
 		{
 			this.C = new BinaryState( C.C );
-			//this.A = C.A;
+			this.A = C.A;
 			this.P = C.P;
 			this.Epsilon = C.Epsilon;
 			this.F = C.F;
@@ -93,11 +93,11 @@ namespace XCS
 				if( this.IsConvergenceEpsilon() )
 				{
 					Configuration.FlagEpsilon = true;
-					if( this.Epsilon < this.Epsilon_0 )
-					{
+					//if( this.Epsilon < this.Epsilon_0 )
+					//{
 						//Console.WriteLine( this.C.state + ":" + this.A + ":" + this.EpsilonList[0] );
 						return true;
-					}
+					//}
 				}
 			}
 			return false;
@@ -157,15 +157,15 @@ namespace XCS
 			{
 				if( Configuration.MT.NextDouble() < Configuration.Myu )
 				{
-					// #とstateの切り替え
-					if( this.C.state[i] == '0' )
-					{
-						state += S.state[i];
-					}
-					else
-					{
-						state += '*';
-					}
+                    // #とstateの切り替え
+                    if (this.C.state[i] == '0')
+                    {
+                        state += '*';
+                    }
+                    else
+                    {
+                        state += '0';
+                    }
 				}
 				else
 				{
@@ -188,9 +188,9 @@ namespace XCS
 				{
 					if( this.IsMoreGeneral( C ) )
 					{
-                        if (this.Epsilon_0 < C.Epsilon_0)//chou 10-5 GA subsumption 
+                        //if (this.Epsilon_0 < C.Epsilon_0)//chou 10-5 GA subsumption 
 
-                        { return true; }
+                         return true; 
 					}
 				}
 			//}

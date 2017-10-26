@@ -151,10 +151,7 @@ namespace XCS
             Path += "_le" + Configuration.LookBackEpsilon;
             Path += "_ps" + Configuration.P_sharp;
             Path += "_per" + Configuration.CoverPersentage;
-            //foreach( string parameter in args )
-            //{
-            //	Path += ( "_" + parameter );
-            //}
+            
 
             System.IO.DirectoryInfo di = System.IO.Directory.CreateDirectory(Path);
             System.IO.Directory.SetCurrentDirectory(Path);
@@ -171,7 +168,8 @@ namespace XCS
 
             // 初期化
             // Population初期化
-            Population P = new NormalPopulation(Configuration.N);
+            Population P = new NormalPopulation
+                (Configuration.N);
 
             Experiment(Env, P);
         }
@@ -181,7 +179,7 @@ namespace XCS
             // 変数設定
 
             // Populationの最大サイズ
-            Configuration.N = 800;
+            Configuration.N = 5000;
             //Configuration.N = 800;	// 150116
             if (Configuration.L == 6)
             {
@@ -320,8 +318,7 @@ namespace XCS
                 Configuration.Epsilon_0 += Configuration.NoiseWidth;
             }
 
-            Configuration.Problem.WriteLine("time" + "," + "reward");
-
+            Configuration.Problem.WriteLine("state,p,m,e,e0,fitness,num,kappa,time,generatetime");
             // メインループ
             #region main roop
             while (Configuration.T < Configuration.Iteration)
@@ -395,7 +392,7 @@ namespace XCS
                 PredictionArray PA = new epsilongreedyPA(M);
                 // Action決定
                 char Action = PA.SelectAction();
-
+                
 
                 // ActionSetはただMをコピーするだけ,アクションがないから
                 ActionSet AS;
@@ -410,9 +407,7 @@ namespace XCS
                 }
 
                 double Rho = Env.ExecuteAction(Action);
-                //Configuration.Problem.WriteLine(S.state + "," + Configuration.T + "," + Rho);
-
-
+               
 
                 StdList Sigma = null;
 
@@ -514,12 +509,29 @@ namespace XCS
 
 
 
+                foreach (Classifier classifier in P.CList) {
+                    if (classifier.C.state == "00000*****0*0*00**0*0000**0**0**")
+                    {
+                        Configuration.Problem.WriteLine(classifier.C.state + "," + classifier.P + "," + classifier.M + "," + classifier.Epsilon
+                            + "," + classifier.Epsilon_0 + "," + classifier.F + "," + classifier.N + "," + classifier.Kappa + "," + 
+                            classifier.Ts+","+classifier.GenerateTime);
+                        //Console.WriteLine("find");
+                    }
 
+                }
 
                 Configuration.T++;
-                Console.WriteLine(Configuration.T);
 
-                if (Configuration.T % 10000 == 0)
+                if (Configuration.T == 61) {
+                    Console.ReadLine();
+                }
+                if (Configuration.T % 100 == 0)
+                {
+                    Console.WriteLine(Configuration.T);
+                }
+
+               
+                if (Configuration.T % 100000 == 0)
                 {
 
                     P.Show();

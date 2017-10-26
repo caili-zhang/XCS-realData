@@ -61,14 +61,22 @@ namespace XCS
             }
             else
             {
-                sw.WriteLine("time,state,prediction,mean,epsilon,average,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
-                foreach (SigmaNormalClassifier C in this.CList)
+                sw.WriteLine("state,act,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
+                foreach (Classifier C in this.CList)
                 {
-                    //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-                    //Console.WriteLine();
-
-                    sw.WriteLine(Configuration.T + "," + C.C.state + "," + C.P + "," + C.M + "," + C.Epsilon + "," + Configuration.RewardAverage + "," + C.F + ","
-                        + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
+                    string classifierState = "";
+                    for (int i = 0; i < C.C.state.Length; i++)
+                    {
+                        if (i % 4 == 0)
+                        {
+                            classifierState = classifierState + "," + C.C.state[i];
+                        }
+                        else
+                        {
+                            classifierState += C.C.state[i];
+                        }
+                    }
+                    sw.WriteLine(classifierState + "," + C.A + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
             }
             sw.Close();
@@ -129,6 +137,13 @@ namespace XCS
 
                     if (C.N > 1)
                     {
+                        if (C.C.state == "00000*****0*0*00**0*0000**0**0**")
+                        {
+
+
+                           
+                            Configuration.Problem.WriteLine(C.C.state + "," + C.N+","+C.Ts);
+                        }
                         C.N--;
                     }
                     else
@@ -165,8 +180,6 @@ namespace XCS
 
             if ((C.Exp > Configuration.Theta_del) && (C.F / C.N < Configuration.Delta * AvFitness))
             {
-                //Vote *= AvFitness / ( C.F / C.N )* (C.Epsilon_0/SumEpsilon_0()); //2015/10/8 cho ε小さいのも残す 
-                //Vote *= AvFitness / (C.F / C.N) * (C.Epsilon_0 / MaxEpsilon_0());//10-14 chou failled
                 Vote *= AvFitness / (C.F / C.N);
             }
 
@@ -240,26 +253,10 @@ namespace XCS
                         {
                             SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
                             SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Cl;
-                            //10の数字は適当　可変にするか？ 1/10にする　10－7 あんまり変わらない
-                            //分散が同じの判断基準　他に？？t test を使う　予定  特殊化がでない
-                            //
-                            //double t = (Snc_oya.M - Snc_ko.M)/Math.Sqrt(Snc_oya.S/30 + Snc_ko.S/30);
-
-                            //double studentT = StudentT.InvCDF(0, 1, 60, 0.005);
-
-                            //if (t < studentT || t > Math.Abs(studentT))//t test で有意差がある 包摂しない
-                            //{
-
-                            //}
-                            // else//有意差がない　統合しでもよい ただ　特殊化ルールどう識別するか
-                            //{
-                            if (/*Math.Abs(Cl.M - C.M) < 10 &&*/
-                                // Math.Abs(Cl.Epsilon_0 - C.Epsilon_0)< 10&&
-                                // Cl.Kappa == 1 
-                                //&& Snc_oya.Epsilon < Snc_ko.Epsilon
+                         
+                            if (
                               (Cl.Epsilon_0 < C.Epsilon_0 || Math.Abs(Cl.Epsilon_0 - C.Epsilon_0) < Cl.Epsilon_0 / 10)
-                               //&& Math.Abs(Cl.Epsilon_0 - C.Epsilon_0) < 10//case 1 +- 10
-                               // Cl.Epsilon < C.Epsilon
+                               
                                && Snc_ko.IsConvergenceEpsilon()
                             && Snc_oya.IsConvergenceEpsilon()
 
@@ -269,7 +266,7 @@ namespace XCS
                                 // 包摂された、削除したいClassifier C　をCLに登録
                                 CL.Add(C);
                             }
-                            // }
+                           
 
                         }
                     }

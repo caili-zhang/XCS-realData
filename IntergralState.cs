@@ -104,23 +104,20 @@ namespace XCS
             string S = this.state;//長さはstate＝＞８＊４
             string CoveredState = "";//長さは　８＊４
             
-            for (int i = 0; i < S.Length; i++)
+            for (int i = 0; i < S.Length/4; i++)
             {
-                if (S[i] =='*')
-                {//covering
-                    if (Configuration.MT.NextDouble() < Configuration.P_sharp)
+                // | 0***| *0** | => |0000|*0**|
+                
+                //covering 
+                if (Configuration.MT.NextDouble() < Configuration.P_sharp)
                     {
-                        CoveredState += "0";
+                        CoveredState += "0000";
                     }
                     else
                     {
-                        CoveredState += "*";
-                    }
+                        CoveredState += S[i*4].ToString() +S[i*4+1].ToString() +S[i*4+2].ToString() + S[i*4 + 3].ToString();
                 }
-                else
-                {
-                    CoveredState += "0";
-                }
+                
             }
             this.state = CoveredState;
             this.CountSharp();

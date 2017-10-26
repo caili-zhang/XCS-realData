@@ -47,8 +47,8 @@ namespace XCS
 			sw.WriteLine( "state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence,convergencetime" );
 			foreach( SigmaNormalClassifier C in this.CList )
 			{
-				//Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-				//Console.WriteLine();
+				
+
 
 				sw.WriteLine( C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt( C.S / ( C.St - 1 ) ) + "," + C.GenerateTime + "," + C.C.Generality + "," + ( C.IsConvergenceEpsilon() ? 1 : 0 ) + "," + C.ConvergenceTime );
 			}
