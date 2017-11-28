@@ -168,8 +168,7 @@ namespace XCS
 
             // 初期化
             // Population初期化
-            Population P = new NormalPopulation
-                (Configuration.N);
+            Population P = new NormalPopulation(Configuration.N);
 
             Experiment(Env, P);
         }
@@ -198,10 +197,10 @@ namespace XCS
             //Configuration.Type = "Binary";
             Configuration.Type = "noaction";
             // Covering閾値(行動の数)
-            //Configuration.Theta_mna = 2;
+            
             Configuration.Theta_mna = 2;
 
-            // Covering時の#に変化させる割合
+            
 
             // 乱数生成
             MersenneTwister MT = new MersenneTwister(Configuration.Seed);
@@ -218,7 +217,7 @@ namespace XCS
             Configuration.Delta = 0.1;
             // Epsilon-greedyのランダム割合
             Configuration.P_explr = 1.0;    // 常にランダム
-                                            // MultiStep問題の割引率
+                                            
             Configuration.Gamma = 0.71;
             // 学習割合
             Configuration.Beta = 0.2;
@@ -229,33 +228,26 @@ namespace XCS
             Configuration.Alpha = 0.1;
             Configuration.Nyu = 5;
             // 包摂
-            Configuration.DoActionSetSubsumption = true;//
-                                                        // 包摂閾値(経験値)
-                                                        //Configuration.Theta_sub = 20;
-                                                        //Configuration.Theta_sub = 200;	// 150116
-                                                        // GA閾値(TimeStamp)
+            Configuration.DoActionSetSubsumption = true;
             Configuration.Theta_GA = 25;
             // Crossover割合
-            Configuration.Chai = 0.8;//komine
-                                     // 突然変異割合
-            Configuration.Myu = 0.04;//komine
-                                     // GA時親に包摂
-            Configuration.DoGASubsumption = true;//9-8 chou
-                                                 // 試行回数
-            Configuration.Iteration = 100000;
-            //Configuration.Iteration = 50000;
-            //Configuration.Iteration = 500000;	//150116// int型に変換
+            Configuration.Chai = 0.8;
+            Configuration.Myu = 0.04;
+            Configuration.DoGASubsumption = true;
+            Configuration.Iteration =  100000;
+            
             // 単純移動平均
             Configuration.SMA = 100;
-            //Configuration.SMA = 5000;	// 150116
+            
             // 手法開始フラグ
             Configuration.FlagEpsilon = Configuration.FlagSigma = true;
             Configuration.StartTime = -1;
             // ε学習率
             Configuration.LearningRateEpsilon = 0.05;
             // 分類子学習期限
-            //Configuration.MatureTime = 30;
-            //Configuration.MatureTime = Configuration.LookBackEpsilon * 5;
+            
+
+
             Configuration.MatureTime = Configuration.LookBackEpsilon * 4 / 5;
             Configuration.URE_Epsilon0 = -1;
             // トーナメント選択
@@ -318,7 +310,7 @@ namespace XCS
                 Configuration.Epsilon_0 += Configuration.NoiseWidth;
             }
 
-            Configuration.Problem.WriteLine("state,p,m,e,e0,fitness,num,kappa,time,generatetime");
+            Configuration.Problem.WriteLine("state,起床,就寝,お茶,園芸,入浴,おやつ,新聞,リハビリ, p,m,e,e0,fitness,num,kappa,time,generatetime");
             // メインループ
             #region main roop
             while (Configuration.T < Configuration.Iteration)
@@ -381,10 +373,10 @@ namespace XCS
                         }
                     }
                 }
-
+                
                 //8 bit の入力データを読み込む
                 State S = Env.GetState();
-
+                
                 // MatchSet生成
                 MatchSet M = new NormalMatchSet(S, P);
 
@@ -470,7 +462,7 @@ namespace XCS
                 }
 
 
-
+                //population のマイクロ分類子数を記録
                 Num[Configuration.T] = P.CList.Count();
                 //Std[Configuration.T] = Math.Sqrt( Stdlist[20].
                 if (Configuration.StartTime < 0 && Configuration.FlagSigma && Configuration.FlagEpsilon)
@@ -509,22 +501,21 @@ namespace XCS
 
 
 
-                foreach (Classifier classifier in P.CList) {
-                    if (classifier.C.state == "00000*****0*0*00**0*0000**0**0**")
-                    {
-                        Configuration.Problem.WriteLine(classifier.C.state + "," + classifier.P + "," + classifier.M + "," + classifier.Epsilon
-                            + "," + classifier.Epsilon_0 + "," + classifier.F + "," + classifier.N + "," + classifier.Kappa + "," + 
-                            classifier.Ts+","+classifier.GenerateTime);
-                        //Console.WriteLine("find");
-                    }
+                //foreach (Classifier classifier in P.CList) {
+                //    if (classifier.C.state == "00000000000000000000000000000000"&&classifier.N>1)
+                //    {
+                //        Configuration.Problem.WriteLine(classifier.C.state + "," + classifier.P + "," + classifier.M + "," + classifier.Epsilon
+                //            + "," + classifier.Epsilon_0 + "," + classifier.F + "," + classifier.N + "," + classifier.Kappa + "," + 
+                //            classifier.Ts+","+classifier.GenerateTime+"," +Configuration.T);
+                        
+                //        //Console.WriteLine("find");
+                //    }
 
-                }
+                //}
 
                 Configuration.T++;
 
-                if (Configuration.T == 61) {
-                    Console.ReadLine();
-                }
+                
                 if (Configuration.T % 100 == 0)
                 {
                     Console.WriteLine(Configuration.T);
@@ -534,14 +525,15 @@ namespace XCS
                 if (Configuration.T % 100000 == 0)
                 {
 
+
                     P.Show();
                 }
 
             }
             #endregion
-
-
             Configuration.Problem.Close();
+
+
             P.Compact();
             //P.Show();
 

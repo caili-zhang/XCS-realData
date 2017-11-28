@@ -50,7 +50,7 @@ namespace XCS
             //	+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
             if (Configuration.ASName != "CS" && Configuration.ASName != "MaxCS" && Configuration.ASName != "Max" && Configuration.ASName != "Updatee0CS")
             {
-                sw.WriteLine("state,act,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
+                sw.WriteLine("state,起床,就寝,お茶,園芸,入浴,おやつ,新聞,リハビリ,act,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
                 foreach (Classifier C in this.CList)
                 {
                     //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
@@ -61,7 +61,7 @@ namespace XCS
             }
             else
             {
-                sw.WriteLine("state,act,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
+                sw.WriteLine("state,起床,就寝,お茶,園芸,入浴,おやつ,新聞,リハビリ,act,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
                 foreach (Classifier C in this.CList)
                 {
                     string classifierState = "";
@@ -137,13 +137,7 @@ namespace XCS
 
                     if (C.N > 1)
                     {
-                        if (C.C.state == "00000*****0*0*00**0*0000**0**0**")
-                        {
-
-
-                           
-                            Configuration.Problem.WriteLine(C.C.state + "," + C.N+","+C.Ts);
-                        }
+                        
                         C.N--;
                     }
                     else
@@ -190,8 +184,9 @@ namespace XCS
         {
             foreach (Classifier C in this.CList)
             {
-                if (C.Equals(Cl))
+                if (C.Equals(Cl) && (Cl.Epsilon_0 < 0.013))
                 {
+
                     C.N++;
                     return;
                 }
