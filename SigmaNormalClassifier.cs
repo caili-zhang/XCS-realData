@@ -106,7 +106,8 @@ namespace XCS
 		// 包摂条件判定用
 		public override bool IsMoreGeneral( Classifier Spec )
 		{
-			if( this.C.NumberOfSharp <= Spec.C.NumberOfSharp )
+			if( this.C.NumberOfSharp <=
+                Spec.C.NumberOfSharp )
 			{
 				return false;
 			}
@@ -124,31 +125,50 @@ namespace XCS
 
 			return true;
 		}
+        //交叉、属性ごとで交叉を行う、４ビットを１つ単位で交叉する、２点交叉
+		//public override void Crossover( Classifier C )
+  //      {
+		//	double x = Math.Floor(Configuration.MT.NextDouble() * ( this.C.Length/4 + 1 ) );
+		//	double y = Math.Floor(Configuration.MT.NextDouble() * ( this.C.Length/4 + 1 ) );
 
-		public override void Crossover( Classifier C )
-		{
-			double x = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
-			double y = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
+		//	if( x > y )
+		//	{
+		//		double tmp = x;
+		//		x = y;
+		//		y = tmp;
+		//	}
 
-			if( x > y )
-			{
-				double tmp = x;
-				x = y;
-				y = tmp;
-			}
+		//	int i = 0;
+		//	do
+		//	{
+		//		if( i>= x*4 && i < y*4 )
+		//		{
+		//			this.C.Switch( C.C, i );
+		//		}
+		//		i++;
+		//	} while( i < y*4 );
+		//}
 
-			int i = 0;
-			do
-			{
-				if( x <= i && i < y )
-				{
-					this.C.Switch( C.C, i );
-				}
-				i++;
-			} while( i < y );
-		}
+        //交叉、属性ごとで交叉を行う、４ビットを１つ単位で交叉する、点交叉
+        public override void Crossover(Classifier C)
+        {
+            double x = Math.Floor(Configuration.MT.NextDouble() * (this.C.Length / 4 + 1));
+            
 
-		public override void Mutation( State S )
+            
+
+            int i = 0;
+            do
+            {
+                if (i >= x * 4 )
+                {
+                    this.C.Switch(C.C, i);
+                }
+                i++;
+            } while (i < x * 4);
+        }
+
+        public override void Mutation( State S )
 		{
 			int i = 0;
 
@@ -188,7 +208,7 @@ namespace XCS
 				{
 					if( this.IsMoreGeneral( C ) )
 					{
-                        //if (this.Epsilon_0 < C.Epsilon_0)//chou 10-5 GA subsumption 
+                        //if (this.Epsilon_0 < C.Epsilon_0)
 
                          return true; 
 					}

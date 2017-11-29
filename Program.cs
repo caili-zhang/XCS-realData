@@ -164,8 +164,7 @@ namespace XCS
             Configuration.ESW = new StreamWriter("./epsilon_" + Configuration.Seed + "CnoiseWidth_" + Configuration.NoiseWidth
                 + "AS_" + "CS" + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
                 + "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
-
-
+            Configuration.ESW.WriteLine("iter,subsumber state,exp,epsilon,e0,subsumed state,exp,epsilon,e0,counter");     
             // 初期化
             // Population初期化
             Population P = new NormalPopulation(Configuration.N);
@@ -178,7 +177,8 @@ namespace XCS
             // 変数設定
 
             // Populationの最大サイズ
-            Configuration.N = 5000;
+            Configuration.N = 10000
+                ;
             //Configuration.N = 800;	// 150116
             if (Configuration.L == 6)
             {
@@ -464,7 +464,7 @@ namespace XCS
 
                 //population のマイクロ分類子数を記録
                 Num[Configuration.T] = P.CList.Count();
-                //Std[Configuration.T] = Math.Sqrt( Stdlist[20].
+      
                 if (Configuration.StartTime < 0 && Configuration.FlagSigma && Configuration.FlagEpsilon)
                 {
                     Configuration.StartTime = Configuration.T;

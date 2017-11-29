@@ -31,31 +31,20 @@ namespace XCS
         // ListからClassifier削除
         public override void Remove(Classifier C)
         {
-            //if( Configuration.T > 35000 )
-            //{
-            //	Console.WriteLine( Configuration.T + " del " + C.C.state + " : " + C.A + " e: " + C.Epsilon + " e0: " + C.Epsilon_0 );
-            //	System.Threading.Thread.Sleep( 1000 );
-            //}
+           
             this.CList.Remove(C);
         }
 
         // すべてのClassifier表示(確認用)
         public override void Show()
         {
-            StreamWriter sw = new StreamWriter("./Population_" + Configuration.T /*+ "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-				+ "AS_" + Configuration.ASName + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-				+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon */+ ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
-            //StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-            //	+ "AS_" + "CS" + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-            //	+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
+            StreamWriter sw = new StreamWriter("./Population_" + Configuration.T + ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
+       
             if (Configuration.ASName != "CS" && Configuration.ASName != "MaxCS" && Configuration.ASName != "Max" && Configuration.ASName != "Updatee0CS")
             {
                 sw.WriteLine("state,起床,就寝,お茶,園芸,入浴,おやつ,新聞,リハビリ,act,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
                 foreach (Classifier C in this.CList)
                 {
-                    //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-                    //Console.WriteLine();
-
                     sw.WriteLine(C.C.state + "," +C.A+"," +C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
             }
@@ -82,7 +71,7 @@ namespace XCS
             sw.Close();
         }
 
-        // Situationに合ったClassifierをMatchSetに渡す
+        //Situationに合ったClassifierをMatchSetに渡す
         public override List<Classifier> MatchSituation(State S)
         {
             List<Classifier> MatchSet = new List<Classifier>();
@@ -149,7 +138,7 @@ namespace XCS
             }
         }
         protected double SumEpsilon_0()
-        {//2015 10 8 chou 
+        {
             double sum = 0;
             foreach (Classifier C in this.CList)
             {

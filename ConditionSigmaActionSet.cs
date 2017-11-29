@@ -339,9 +339,9 @@ namespace XCS
                 //収束した，分散が全体の半分以上なら，正確性を下げるようにする
                 if (Configuration.IsConvergenceVT)
                 {
-                    if (C.Epsilon_0 >0.013)
+                    if (C.Epsilon_0 >0.03)
                     {
-                        C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon_0 / 0.013 , -Configuration.Nyu*2);
+                        C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon_0 / 0.03 , -Configuration.Nyu*2);
                     }
                     else//分散が半分いかなら，通常のKAPPA計算式で計算
                     {
@@ -396,7 +396,8 @@ namespace XCS
 			    if (double.IsNaN(C.F))
 			    {
                     C.F = 0.0;
-			        Console.ReadLine();
+                    
+                 Console.ReadLine();
 			    }
 			}
 		}
@@ -414,72 +415,57 @@ namespace XCS
             //for (int i = 0; i < N; i++)
             //{
                 #region subsume
-                Classifier Cl = null;
+                Classifier subsumberCl = null;
 
-                foreach (Classifier C in copyActionSet)
+                foreach (Classifier subsumber in copyActionSet)
                 {
-                    if (C.CouldSubsume())
+                    if (subsumber.CouldSubsume())
                     {
-                        if ( (Cl == null) || (C.C.NumberOfSharp > Cl.C.NumberOfSharp) | ((C.C.NumberOfSharp == Cl.C.NumberOfSharp)
-                        && (Configuration.MT.NextDouble() < 0.5))   )
+                        if ( (subsumberCl == null) || 
+                        (subsumber.C.NumberOfSharp >subsumberCl.C.NumberOfSharp) ||
+                        (subsumber.C.NumberOfSharp == subsumberCl.C.NumberOfSharp && Configuration.MT.NextDouble() < 0.5)
+                        )   
                         {
-                            if(C.Epsilon_0 < 0.013)
-                            {
-                            Cl = C;//actionsetなかに最も一般的な分類子をClにする
-                            }
-                            
+                        subsumberCl = subsumber;//actionsetなかに最も一般的な分類子をClにする   
                         }
                     }
                 }
 
-                if (Cl != null)
+                if (subsumberCl != null)
                 {
                     // 削除中にforeachできない
                     List<Classifier> CL = new List<Classifier>();
 
-                    foreach (Classifier C in copyActionSet)
+                    foreach (Classifier subsumed in copyActionSet)
                     {
-                        if (Cl.IsMoreGeneral(C))
+                        if (subsumberCl.IsMoreGeneral(subsumed))
                         {
-                            //SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
-                            //SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Cl;
-                            
-                            //if ((Cl.Epsilon_0 < C.Epsilon_0 || Math.Abs(Cl.Epsilon_0 - C.Epsilon_0) < Cl.Epsilon_0 / 10)
-                            //   && Snc_ko.IsConvergenceEpsilon()
-                            //&& Snc_oya.IsConvergenceEpsilon()
-                            //    ) 
-                            //{
-                                Cl.N += C.N;
+                            subsumberCl.N += subsumed.N;
                                 // 包摂された、削除したいClassifier C　をCLに登録
-                                CL.Add(C);
-                            //}
-                            
-
+                            CL.Add(subsumed);
+                           
                         }
                     }
 
-                    foreach (Classifier C in CL)
+                    foreach (Classifier subsumed in CL)
                     {
 
-                        SigmaNormalClassifier SNC = (SigmaNormalClassifier)Cl;
-                        
+                        SigmaNormalClassifier SNC = (SigmaNormalClassifier)subsumberCl;
 
-                        
-                        Configuration.ESW.WriteLine(Configuration.T + "," + Cl.C.state /*+ "," + Cl.A*/ + "," + Cl.Exp + "," + Cl.Epsilon + "," + Cl.Epsilon_0 + "," + C.C.state /*+ "," + C.A*/ + "," + C.Exp + "," + C.Epsilon + "," + C.Epsilon_0 + "," + ++Configuration.Count);
-                        
-                        
-                        this.Remove(C);//as から削除
-                        Pop.Remove(C);//pop から削除
+
+                    
+                    Configuration.ESW.WriteLine(Configuration.T + "," + subsumberCl.C.state + "," + subsumberCl.Exp + "," + subsumberCl.Epsilon + "," + subsumberCl.Epsilon_0 
+                            + "," + subsumed.C.state + "," + subsumed.Exp + "," + subsumed.Epsilon + "," + subsumed.Epsilon_0 + "," + ++Configuration.Count);
+
+
+
+                    this.Remove(subsumed);//as から削除
+                        Pop.Remove(subsumed
+                            );//pop から削除
                     }
 
                 }
-               
-
                 #endregion
-           
-
-		 
-
 		}
 
 		// Actionsetから削除
@@ -565,24 +551,17 @@ namespace XCS
 				// bothChild
 				Child_1.Mutation( Situation );
 				Child_2.Mutation( Situation );
-
-                //if(Child_1.C.state== "00000000000000000000000000000000"|Child_2.C.state== "00000000000000000000000000000000")
-                //{
-                //    Console.ReadLine();
-                //}
-
+                
 				if( Configuration.DoGASubsumption )
 				{
-					if( Parent_1.DoesSubsume( Child_1 ) && (Parent_1.Epsilon_0 < 0.013))
+					if( Parent_1.DoesSubsume( Child_1 ) && (Parent_1.Epsilon_0 < 0.03))
 					{
-                        
                         
                         Parent_1.N++;
 					}
-					else if( Parent_2.DoesSubsume( Child_1) && (Parent_2.Epsilon_0 < 0.013))
+					else if( Parent_2.DoesSubsume( Child_1) && (Parent_2.Epsilon_0 < 0.03))
 					{
                         
-                       
                         Parent_2.N++;
 					}
 					else
@@ -591,11 +570,11 @@ namespace XCS
 					}
 					P.Delete();
 
-					if( Parent_1.DoesSubsume( Child_2 ) && (Parent_1.Epsilon_0 < 0.013))
+					if( Parent_1.DoesSubsume( Child_2 ) && (Parent_1.Epsilon_0 < 0.03))
 					{
 						Parent_1.N++;
 					}
-					else if( Parent_2.DoesSubsume( Child_2 ) && (Parent_2.Epsilon_0 < 0.013))
+					else if( Parent_2.DoesSubsume( Child_2 ) && (Parent_2.Epsilon_0 < 0.03))
 					{
 						Parent_2.N++;
 					}

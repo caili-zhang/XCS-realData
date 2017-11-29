@@ -41,15 +41,10 @@ namespace XCS
 			StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
 				+ "AS_" + Configuration.ASName + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
 				+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
-			//StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-			//	+ "AS_" + "CS" + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-			//	+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
+			
 			sw.WriteLine( "state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence,convergencetime" );
 			foreach( SigmaNormalClassifier C in this.CList )
 			{
-				
-
-
 				sw.WriteLine( C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt( C.S / ( C.St - 1 ) ) + "," + C.GenerateTime + "," + C.C.Generality + "," + ( C.IsConvergenceEpsilon() ? 1 : 0 ) + "," + C.ConvergenceTime );
 			}
 			sw.Close();
@@ -70,154 +65,103 @@ namespace XCS
 
 			return MatchSet;
 		}
+        public override void Delete()
+        {
 
-		// Populationからfitnessが一番小さいものを削除
-		public override void Delete()
-		{
-			//if( this.CountNumerosity() <= Configuration.N )
-			//{
-			//	return;
-			//}
+            int SumNumerosity = 0;
+            double SumFitness = 0.0;
 
-			//int SumNumerosity = 0;
-			//double SumFitness = 0.0;
+            foreach (Classifier C in this.CList)
+            {
+                SumNumerosity += C.N;
+                SumFitness += C.F;
+            }
+            if (SumNumerosity <= Configuration.N)
+            {
+                return;
+            }
+            double AvFitness = SumFitness / SumNumerosity;
+            double VoteSum = 0;
 
-			//List<Classifier> DeleteCandidate = new List<Classifier>();
-			//if(Configuration.ASName == "CS")
-			//{
-			//	foreach(Classifier C in this.CList)
-			//	{
-			//		SigmaNormalClassifier SC = ( SigmaNormalClassifier )C;
+            foreach (Classifier C in this.CList)
+            {
+                VoteSum += this.DeletionVote(C, AvFitness);
+            }
 
-			//		double WR = 0;
-			//		foreach(double d in SC.WinningRate)
-			//		{
-			//			WR += d;
-			//		}
+            double ChoicePoint = Configuration.MT.NextDouble() * VoteSum;//ルーレット選択
 
-			//		if(SC.HasMatured() && (WR < 0.4 * SC.WinningRate.Count()))
-			//		{
-			//			DeleteCandidate.Add( SC );
-			//		}
-			//	}
+            VoteSum = 0;
 
-			//	if(DeleteCandidate.Count == 0)
-			//	{
-			//		DeleteCandidate = this.CList;
-			//	}
-			//	//else
-			//	//{
-			//	//	bool Flag = true;
-			//	//	foreach( Classifier C in DeleteCandidate )
-			//	//	{
-			//	//		SigmaNormalClassifier SNC = ( SigmaNormalClassifier )C;
-			//	//		double WR = 0;
-			//	//		foreach(double d in SNC.WiningRate)
-			//	//		{
-			//	//			WR += d;
-			//	//		}
+            foreach (Classifier C in this.CList)
+            {
+                VoteSum += this.DeletionVote(C, AvFitness);
 
-			//	//		// 悪い子探し
-			//	//		if( WR < 0.4 * SNC.WiningRate.Count() )
-			//	//		{
-			//	//			Flag = false;
-			//	//		}
-			//	//	}
-			//	//	// 悪い子が一人もいなかったら
-			//	//	if( Flag )
-			//	//	{
-			//	//		DeleteCandidate = this.CList;
-			//	//	}
+                if (VoteSum > ChoicePoint)
+                {
 
-			//	//}
-			//}
-			//else
-			//{
-			//	DeleteCandidate = this.CList;
-			//}
 
-			//foreach( Classifier C in DeleteCandidate )
-			//{
-			//	SumNumerosity += C.N;
-			//	SumFitness += C.F;
-			//}
-			
-			//double AvFitness = SumFitness / SumNumerosity;
-			//double VoteSum = 0;
-
-			//foreach( Classifier C in DeleteCandidate )
-			//{
-			//	VoteSum += this.DeletionVote( C, AvFitness );
-			//}
-
-			//double ChoicePoint = Configuration.MT.NextDouble() * VoteSum;
-			//VoteSum = 0;
-
-			//foreach( Classifier C in DeleteCandidate )
-			//{
-			//	VoteSum += this.DeletionVote( C, AvFitness );
-
-			//	if( VoteSum > ChoicePoint )
-			//	{
-			//		if( C.N > 1 )
-			//		{
-			//			C.N--;
-			//		}
-			//		else
-			//		{
-			//			this.Remove( C );
-			//		}
-			//		return;
-			//	}
-			//}
-			int SumNumerosity = 0;
-			double SumFitness = 0.0;
-
-			foreach( Classifier C in this.CList )
-			{
-				SigmaNormalClassifier SNC = ( SigmaNormalClassifier )C;
-				SumNumerosity += SNC.N;
-				//SumFitness += C.F;
-				SumFitness += SNC.WinningRate.Average();
-				//Console.WriteLine(SNC.C.state + " ave: " + SNC.WinningRate.Average());
-			}
-			if( SumNumerosity <= Configuration.N )
-			{
-				return;
-			}
-			double AvFitness = SumFitness / SumNumerosity;
-			double VoteSum = 0;
-
-			foreach( Classifier C in this.CList )
-			{
-				VoteSum += this.DeletionVote( C, AvFitness );
-			}
-
-			double ChoicePoint = Configuration.MT.NextDouble() * VoteSum;
-			VoteSum = 0;
-            
-			foreach( Classifier C in this.CList )
-			{
-				VoteSum += this.DeletionVote( C, AvFitness );
-
-				if( VoteSum > ChoicePoint )
-				{
-					if( C.N > 1 )
-					{
-						C.N--;
-					}
-					else
+                    if (C.N > 1)
                     {
-                    //    if (C.C.state == "1#00##")
-                    //    {
-                            
-                    //    }
-						this.Remove( C );
-					}
-					return;
-				}
-			}
-		}
+
+                        C.N--;
+                    }
+                    else
+                    {
+                        this.Remove(C);
+                    }
+                    return;
+                }
+            }
+        }
+        // Populationからfitnessが一番小さいものを削除
+  //      public override void Delete()
+		//{
+			
+		//	int SumNumerosity = 0;
+		//	double SumFitness = 0.0;
+
+		//	foreach( Classifier C in this.CList )
+		//	{
+		//		SigmaNormalClassifier SNC = ( SigmaNormalClassifier )C;
+		//		SumNumerosity += SNC.N;
+				
+		//		SumFitness += SNC.WinningRate.Average();
+				
+		//	}
+		//	if( SumNumerosity <= Configuration.N )
+		//	{
+		//		return;
+		//	}
+		//	double AvFitness = SumFitness / SumNumerosity;
+		//	double VoteSum = 0;
+
+		//	foreach( Classifier C in this.CList )
+		//	{
+		//		VoteSum += this.DeletionVote( C, AvFitness );
+		//	}
+
+		//	double ChoicePoint = Configuration.MT.NextDouble() * VoteSum;
+		//	VoteSum = 0;
+            
+		//	foreach( Classifier C in this.CList )
+		//	{
+		//		VoteSum += this.DeletionVote( C, AvFitness );
+
+		//		if( VoteSum > ChoicePoint )
+		//		{
+		//			if( C.N > 1 )
+		//			{
+		//				C.N--;
+		//			}
+		//			else
+  //                  {
+                    
+		//				this.Remove( C );
+		//			}
+		//			return;
+		//		}
+		//	}
+		//}
 
 		protected override double DeletionVote( Classifier C, double AvFitness )
 		{
@@ -225,20 +169,16 @@ namespace XCS
 			SigmaNormalClassifier SNC = ( SigmaNormalClassifier )C;
 
 			double Vote = SNC.As * SNC.N;
-			//Console.WriteLine("AS: " + SNC.As + " N: " + SNC.N);
+			
 
-			if( ( SNC.Exp > Configuration.Theta_del ) && ( SNC.WinningRate.Average() / SNC.N < Configuration.Delta * AvFitness ) )
+			if( ( SNC.Exp > Configuration.Theta_del ))
 			{
-				if(SNC.WinningRate.Average() == 0)
-				{
-					//Console.WriteLine("0 : " + Vote);
-					return Vote;
-				}
+				
 				Vote *= AvFitness / ( SNC.WinningRate.Average() / SNC.N );
-				//Console.WriteLine("hoge");
+				
 			}
 
-			//Console.WriteLine(SNC.WinningRate.Average() + " : " + Vote);
+			
 			return Vote;
 		}
 
