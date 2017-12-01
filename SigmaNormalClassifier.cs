@@ -124,29 +124,48 @@ namespace XCS
 
 			return true;
 		}
+        //交叉、属性ごとで交叉を行う、４ビットを１つ単位で交叉する、点交叉
+        public override void Crossover(Classifier C)
+        {
+            double x = Math.Floor(Configuration.MT.NextDouble() * (this.C.Length / 4 + 1));
 
-		public override void Crossover( Classifier C )
-		{
-			double x = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
-			double y = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
 
-			if( x > y )
-			{
-				double tmp = x;
-				x = y;
-				y = tmp;
-			}
 
-			int i = 0;
-			do
-			{
-				if( x <= i && i < y )
-				{
-					this.C.Switch( C.C, i );
-				}
-				i++;
-			} while( i < y );
-		}
+
+            int i = 0;
+            do
+            {
+                if (i >= x * 4)
+                {
+                    this.C.Switch(C.C, i);
+                }
+                i++;
+            } while (i < x * 4);
+        }
+
+       
+  //      public override void Crossover( Classifier C )
+		//{
+		//	double x = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
+		//	double y = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
+
+		//	if( x > y )
+		//	{
+		//		double tmp = x;
+		//		x = y;
+		//		y = tmp;
+		//	}
+
+		//	int i = 0;
+		//	do
+		//	{
+		//		if( x <= i && i < y )
+		//		{
+		//			this.C.Switch( C.C, i );
+		//		}
+		//		i++;
+		//	} while( i < y );
+		//}
 
 		public override void Mutation( State S )
 		{

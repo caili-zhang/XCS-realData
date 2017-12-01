@@ -178,7 +178,8 @@ namespace XCS
             // 変数設定
 
             // Populationの最大サイズ
-            Configuration.N = 5000;
+            Configuration.N = 800
+                ;
             //Configuration.N = 800;	// 150116
             if (Configuration.L == 6)
             {
