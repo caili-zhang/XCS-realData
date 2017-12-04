@@ -21,8 +21,7 @@ namespace XCS
             // 最大サイズになったとき
             if (this.Number == this.CList.Count)
             {
-                //Console.WriteLine("hogehoge");
-                //System.Threading.Thread.Sleep( 1000 );
+                
                 return; // 削除実装予定
             }
             this.CList.Add(C);
@@ -31,23 +30,15 @@ namespace XCS
         // ListからClassifier削除
         public override void Remove(Classifier C)
         {
-            //if( Configuration.T > 35000 )
-            //{
-            //	Console.WriteLine( Configuration.T + " del " + C.C.state + " : " + C.A + " e: " + C.Epsilon + " e0: " + C.Epsilon_0 );
-            //	System.Threading.Thread.Sleep( 1000 );
-            //}
+            
             this.CList.Remove(C);
         }
 
         // すべてのClassifier表示(確認用)
         public override void Show()
         {
-            StreamWriter sw = new StreamWriter("./Population_" + Configuration.T /*+ "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-				+ "AS_" + Configuration.ASName + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-				+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon */+ ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
-            //StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-            //	+ "AS_" + "CS" + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-            //	+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
+            StreamWriter sw = new StreamWriter("./Population_" + Configuration.T + ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
+          
             if (Configuration.ASName != "CS" && Configuration.ASName != "MaxCS" && Configuration.ASName != "Max" && Configuration.ASName != "Updatee0CS")
             {
                 sw.WriteLine("state,prediction,epsilon,average reward,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
@@ -61,13 +52,16 @@ namespace XCS
             }
             else
             {
-                sw.WriteLine("time,state,prediction,mean,epsilon,average,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
+                sw.WriteLine("time," + "wake,sleep,tea,garden,bath,desert,news,rehabi"+
+                    ",prediction,mean,epsilon,average,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
                 foreach (SigmaNormalClassifier C in this.CList)
                 {
                     //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
                     //Console.WriteLine();
 
-                    sw.WriteLine(Configuration.T + "," + C.C.state + "," + C.P + "," + C.M + "," + C.Epsilon + "," + Configuration.RewardAverage + "," + C.F + ","
+                    sw.WriteLine(Configuration.T + "," + C.C.state[0] +"," + C.C.state[1] + "," + C.C.state[2] + "," + C.C.state[3] + "," + C.C.state[4] + "," + C.C.state[5] + ","
+                        + C.C.state[6] + "," + C.C.state[7] + ","
+                         + C.P + "," + C.M + "," + C.Epsilon + "," + Configuration.RewardAverage + "," + C.F + ","
                         + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
                 }
             }
@@ -165,8 +159,6 @@ namespace XCS
 
             if ((C.Exp > Configuration.Theta_del) && (C.F / C.N < Configuration.Delta * AvFitness))
             {
-                //Vote *= AvFitness / ( C.F / C.N )* (C.Epsilon_0/SumEpsilon_0()); //2015/10/8 cho ε小さいのも残す 
-                //Vote *= AvFitness / (C.F / C.N) * (C.Epsilon_0 / MaxEpsilon_0());//10-14 chou failled
                 Vote *= AvFitness / (C.F / C.N);
             }
 
