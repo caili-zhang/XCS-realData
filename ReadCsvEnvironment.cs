@@ -26,7 +26,7 @@ namespace XCS
             this.Number = 4;    // 進数
 
             // csv読み込み
-            string file = "all_data.csv";
+            string file = "divided_0.csv";
             StreamReader reader = new StreamReader(file, Encoding.GetEncoding("Shift_JIS"));
             while (reader.Peek() >= 0)
             {
