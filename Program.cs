@@ -30,7 +30,7 @@ namespace XCS
 			Configuration.DifferenceEpsilon = 0.1;//for real data 0.0~1.0
 			Configuration.LookBackEpsilon = 15;
 			Configuration.P_sharp = 0.35;
-		    Configuration.CoverPersentage = 0;//重なる部分の許す範囲
+		    Configuration.CoverPersentage = 0.155;//重なる部分の許す範囲 0~1.0
 
 
 			string EnvName = "hoge";
@@ -228,7 +228,7 @@ namespace XCS
 			// Fitnessの計算パラメータ 下駄　1/1000
 			Configuration.Epsilon_0 =0.001;
 			Configuration.Alpha = 0.1;
-			Configuration.Nyu = 5;
+			Configuration.Nyu = 15;
 			// 包摂
 			Configuration.DoActionSetSubsumption = true;//
 			// 包摂閾値(経験値)
@@ -315,9 +315,15 @@ namespace XCS
 				Configuration.Epsilon_0 += Configuration.NoiseWidth;
 			}
 
-            Configuration.Problem.WriteLine("time" +"," + "reward");
-            StreamWriter sw11002001 = new StreamWriter("./prob11002001.csv");
+            Configuration.Problem.WriteLine("state,iter,P, cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
+            StreamWriter goodsleep1 = new StreamWriter("./goodsleep_rule1.csv");
+            goodsleep1.WriteLine("state ,iter,P , cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
 
+            StreamWriter goodsleep2 = new StreamWriter("./goodsleep_rule2.csv");
+            goodsleep2.WriteLine("state ,iter,P , cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
+
+            StreamWriter badsleep = new StreamWriter("./badsleep_rule.csv");
+            badsleep.WriteLine("state ,iter,P , cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
             // メインループ
             #region main roop
             while ( Configuration.T < Configuration.Iteration )
@@ -385,27 +391,36 @@ namespace XCS
                     }
                 }
 
-                //nsole.WriteLine( Configuration.T + " : " + P.CountNumerosity() + " : " + P.CList.Count() );
-                // situation取得
+                
                 
                 
 				State S = Env.GetState();
-    //            if (S.state == "01000001") {
-    //                Console.ReadLine();
-    //            }
-
                 
                 // MatchSet生成
                 MatchSet M = new NormalMatchSet( S, P );
+
                 foreach (Classifier cl in M.CList)
                 {
-                    if (cl.C.state == "11002001")
+                    if (cl.C.state[4] == '2' & cl.C.state[7] == '#')//"bath2  rehabi# or bath# rehabi0"
                     {
 
-                        sw11002001.WriteLine(cl.C.state + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.M + "," + cl.GenerateTime);
+                        goodsleep1.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
+                    }
+                    if (cl.C.state[4] == '#' & cl.C.state[7] == '0')//"bath2  rehabi# or bath# rehabi0"
+                    {
+
+                        goodsleep2.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
                     }
                 }
-                
+                foreach (Classifier cl in M.CList)
+                {
+                    if (cl.C.state[4] == '0' & cl.C.state[7] == '1')//"bath0 rehabi1"
+                    {
+
+                        badsleep.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
+                    }
+                }
+
                 // ActionSetはただMをコピーするだけ,アクションがないから
                 ActionSet AS;
 				if( Configuration.ASName == "CS" )
@@ -417,20 +432,11 @@ namespace XCS
 				    AS = new NormalActionSet(M.CList);/*M.MatchAction(Action))*/;
                 }
 
-                foreach (Classifier cl in AS.CList)
-                {
-                    if (cl.C.state == "11002001")
-                    {
-
-                        sw11002001.WriteLine(cl.C.state + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.M + "," + cl.GenerateTime);
-                    }
-                }
+                
                 char Action = '0';//action ないから、全部０にする
                 double Rho = Env.ExecuteAction(Action);
 
-                //Configuration.Problem.WriteLine(S.state + "," + Configuration.T + "," + Rho);
                 
-
 
 				StdList Sigma = null;
 
@@ -465,12 +471,12 @@ namespace XCS
 				}
                 //chou 1000回の報酬平均を保存
 
-                if (Configuration.T < 10000)
+                if (Configuration.T < 1000)
                 {
                     Configuration.RewardList.Add(Rho);
 
                 }
-                if (Configuration.T == 10000)
+                if (Configuration.T == 1000)
                 {
                     Configuration.RewardAverage = Configuration.RewardList.Mean();
 
@@ -539,16 +545,13 @@ namespace XCS
                 
 				Configuration.T++;
                 Console.WriteLine(Configuration.T);
-
-                if (Configuration.T % 10000 == 0)
-                {
-                    
-                    P.Show();
-                }
-
+                
             }
+            P.Show();
             #endregion 
-            sw11002001.Close();
+            goodsleep1.Close();
+            goodsleep2.Close();
+            badsleep.Close();
 
             Configuration.Problem.Close();
             P.Compact();

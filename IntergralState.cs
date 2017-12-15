@@ -56,6 +56,10 @@ namespace XCS
                 }
             }
             this.state = CoveredState;
+            if (this.state == "########")//all #の分類子を弾く
+            {
+                Covering();
+            }
             this.CountSharp();
         }
 

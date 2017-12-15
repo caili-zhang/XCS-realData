@@ -142,7 +142,8 @@ namespace XCS
                         }
                         if (cpStdLists.Count == 1)
                         {
-                            C.Epsilon_0 = cpStdLists[0].S;
+                            C.Epsilon_0 = cpStdLists[0].S+ Configuration.Epsilon_0;
+                            
                         }
                         else
                         {
@@ -168,7 +169,7 @@ namespace XCS
                             cl0.S = Math.Sqrt(cl0.S/cl0.St);
 
 
-                        C.Epsilon_0 = cl0.S + Configuration.Epsilon_0;
+                            C.Epsilon_0 = cl0.S + Configuration.Epsilon_0;
 
                         }
 
@@ -259,15 +260,11 @@ namespace XCS
                SigmaNormalClassifier SNC = ( SigmaNormalClassifier )C;
 
 
-               /* if (C.Epsilon_0 > Configuration.Rho * 0.4 && SNC.IsConvergenceEpsilon())
-                {
-                    C.Kappa = 0; //分散が大きいものを排除したい 10-15 1-6 out
-                    AccuracySum += C.Kappa * C.N;
-                }*/
+               
                if (Configuration.T > 1000)
                {
 
-                  
+                    
                    if (//またがるのものを排除 平均プラマイ　Pのプラマイ
 
                             (C.M - C.Epsilon) < Configuration.RewardAverage
@@ -280,12 +277,13 @@ namespace XCS
                        //puls minus 0.5e どうなるかな0128 ダメだった　余計なもの残した
                        mincross = Math.Min(Math.Abs(C.M + C.Epsilon - Configuration.RewardAverage),
                            Math.Abs(C.M - C.Epsilon - Configuration.RewardAverage));
-                       crossPercentage = mincross / (C.Epsilon);
+                        //crossPercentage = mincross / (C.Epsilon);
+                        crossPercentage = mincross / Configuration.RewardAverage;//12/11変更、許容範囲の図り方、平均値と比較
 
-                       //規制緩和　c.epsilon の　20% ぐらいまたがる　を許す、緩和しない基本的に+-epsilon 十分緩いい
-                       //±σ　相当　片側85% と　片側15% の関係
+                        //規制緩和　c.epsilon の　20% ぐらいまたがる　を許す、緩和しない基本的に+-epsilon 十分緩いい
+                        //±σ　相当　片側85% と　片側15% の関係
 
-                       if (crossPercentage< Configuration.CoverPersentage)//許容範囲で通常のやり方
+                        if (crossPercentage< Configuration.CoverPersentage)//許容範囲で通常のやり方
                        {
                            if (C.Epsilon < C.Epsilon_0)
                            {
@@ -354,17 +352,11 @@ namespace XCS
 
 			foreach( Classifier C in this.CList )
 			{
-
-                //if (AccuracySum == 0) //これが入れると　分類子の数が800ぐらい増えた、なぜ？？
-                //{
-                //    C.F = 0;
-                //}
-                //else
-                //{
-                //fitness の収束値　＝　C.Kappa * C.N / AccuracySum
-                    C.F += Configuration.Beta * (C.Kappa * C.N / AccuracySum - C.F);
+                
+                
+                C.F += Configuration.Beta * (C.Kappa * C.N / AccuracySum - C.F);
                     
-                //}
+                
 			    if (double.IsNaN(C.F))
 			    {
 			        Console.ReadLine();
@@ -430,9 +422,7 @@ namespace XCS
                         SigmaNormalClassifier SNC = (SigmaNormalClassifier)Cl;
                         
 
-                        if (C.C.state == "#000##" | C.C.state == "0#00##" | C.C.state == "00#0##" | C.C.state == "000###"
-                            | C.C.state == "##00##" | C.C.state == "00####"
-                           |C.C.state=="0#####"
+                        if (C.C.state == "####2##0"
                             
                             )
                           

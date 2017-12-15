@@ -146,6 +146,10 @@ namespace XCS
 				}
 				i++;
 			} while( i < y );
+            if (this.C.state == "########")
+            {
+                Crossover(C);
+            }
 		}
 
 		public override void Mutation( State S )
@@ -174,9 +178,11 @@ namespace XCS
 				i++;
 			} while( i < this.C.state.Length );
 			this.C.state = state;
+            if (this.C.state == "########")
+            {
+                Mutation(S);
+            }
 			this.C.CountSharp();
-
-			
 		}
 
 		// 包摂条件判定

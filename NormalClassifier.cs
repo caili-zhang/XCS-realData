@@ -14,7 +14,6 @@ namespace XCS
 			// Covering済みConditionセット
 			this.C = S;
 			// MatchSetにない行動をランダムに選ぶ
-			//this.A = Actions[Configuration.MT.Next( Actions.Count - 1 )];
 
 			this.P = Configuration.P_I;
 			this.Epsilon = Configuration.Epsilon_I;
@@ -30,7 +29,6 @@ namespace XCS
 			this.GenerateTime = Configuration.T;
 		}
 
-		
 		// コピーコンストラクタ
 		public NormalClassifier( NormalClassifier C )
 		{
