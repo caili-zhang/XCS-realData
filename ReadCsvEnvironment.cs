@@ -26,7 +26,7 @@ namespace XCS
             this.Number = 4;    // 進数
 
             // csv読み込み
-            string file = "divided_0.csv";
+            string file = "all_data.csv";
             StreamReader reader = new StreamReader(file, Encoding.GetEncoding("Shift_JIS"));
             while (reader.Peek() >= 0)
             {
@@ -84,17 +84,7 @@ namespace XCS
         // Actionに対するReward ばらつき幅同じ
         public override double ExecuteAction(char act)
         {
-            // シングルステップ問題
-            //this.Eop = true;
-            //if (this.Action == act)
-            //{
-            //    return 1000.0;
-            //}
-            //else
-            //{
-            //    return 0.0;
-            //}
-            // シングルステップ問題
+            
             this.Eop = true;
             if (this.Action == act)
             {

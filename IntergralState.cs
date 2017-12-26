@@ -120,6 +120,10 @@ namespace XCS
                 
             }
             this.state = CoveredState;
+            if(this.state== "0000000000000000")
+            {
+                Covering();
+            }
             this.CountSharp();
         }
 

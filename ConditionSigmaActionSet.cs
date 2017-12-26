@@ -96,11 +96,6 @@ namespace XCS
 
 					SNC.EpsilonList[0] = Math.Sqrt(C.S / (C.St - 1));
 
-
-                   
-
-					
-
 #region　分類子が照合する全状態のVTの分散と平均を使って　e0 を推測　　chou 160107
                     //分類子が照合する全状態のVTの分散と平均を使って　e0 を推測　　chou 160107
                     if (Configuration.IsConvergenceVT) 
@@ -167,10 +162,9 @@ namespace XCS
                             }
 
                             cl0.S = Math.Sqrt(cl0.S/cl0.St);
-
-
-                        C.Epsilon_0 = cl0.S + Configuration.Epsilon_0;
-                        C.M = cl0.M;
+                            
+                            C.Epsilon_0 = cl0.S + Configuration.Epsilon_0;
+                            C.M = cl0.M;
                         }
 
                     }
@@ -272,72 +266,72 @@ namespace XCS
                 //{
 
 
-                //if (//またがるのものを排除 平均プラマイ　Pのプラマイ
+                if (//またがるのものを排除 平均プラマイ　Pのプラマイ
 
-                //         (C.M - C.Epsilon) < Configuration.RewardAverage
-                //         && (C.M + C.Epsilon) > Configuration.RewardAverage
-                //    )
-                //{//またがる分類子の正確性を極端に下げる　PS：0にしてはいけない
-                // //またがる部分とEの割合でKappaの正確性を下げていく、またがる部分が大きいければ　下がるのが早い
-                //    double crossPercentage;
-                //    double mincross;
-                //    //puls minus 0.5e どうなるかな0128 ダメだった　余計なもの残した
-                //    mincross = Math.Min(Math.Abs(C.M + C.Epsilon - Configuration.RewardAverage),
-                //        Math.Abs(C.M - C.Epsilon - Configuration.RewardAverage));
-                //    crossPercentage = mincross / (C.Epsilon);
+                         (C.M - C.Epsilon) < Configuration.RewardAverage
+                         && (C.M + C.Epsilon) > Configuration.RewardAverage
+                    )
+                {//またがる分類子の正確性を極端に下げる　PS：0にしてはいけない
+                 //またがる部分とEの割合でKappaの正確性を下げていく、またがる部分が大きいければ　下がるのが早い
+                    double crossPercentage;
+                    double mincross;
+                    //puls minus 0.5e どうなるかな0128 ダメだった　余計なもの残した
+                    mincross = Math.Min(Math.Abs(C.M + C.Epsilon - Configuration.RewardAverage),
+                        Math.Abs(C.M - C.Epsilon - Configuration.RewardAverage));
+                    crossPercentage = mincross / (C.Epsilon);
 
-                //    //規制緩和　c.epsilon の　20% ぐらいまたがる　を許す、緩和しない基本的に+-epsilon 十分緩いい
-                //    //±σ　相当　片側85% と　片側15% の関係
+                    //規制緩和　c.epsilon の　20% ぐらいまたがる　を許す、緩和しない基本的に+-epsilon 十分緩いい
+                    //±σ　相当　片側85% と　片側15% の関係
 
-                //    if (crossPercentage < Configuration.CoverPersentage)//許容範囲で通常のやり方
-                //    {
-                //        if (C.Epsilon < C.Epsilon_0)
-                //        {
-                //            C.Kappa = 1;
-                //        }
-                //        else
-                //        {//epsilon>epsilon0 の場合　
-                //            C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
-                //        }
-                //    }
-                //    else//許容範囲を超えた
-                //    {
-                //        C.Kappa = Configuration.Alpha * Math.Pow(1 + crossPercentage, -Configuration.Nyu);
-                //        // C.Kappa = Math.Pow(Math.E,-Math.Pow(5*crossPercentage,2));
-                //    }
+                    if (crossPercentage < Configuration.CoverPersentage)//許容範囲で通常のやり方
+                    {
+                        if (C.Epsilon < C.Epsilon_0)
+                        {
+                            C.Kappa = 1;
+                        }
+                        else
+                        {//epsilon>epsilon0 の場合　
+                            C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
+                        }
+                    }
+                    else//許容範囲を超えた
+                    {
+                        C.Kappa = Configuration.Alpha * Math.Pow(1 + crossPercentage, -Configuration.Nyu);
+                        // C.Kappa = Math.Pow(Math.E,-Math.Pow(5*crossPercentage,2));
+                    }
 
 
-                //    AccuracySum += C.Kappa * C.N;
-                //    if (double.IsNaN(AccuracySum))
-                //    {
-                //        Console.ReadLine();
-                //    }
+                    AccuracySum += C.Kappa * C.N;
+                    if (double.IsNaN(AccuracySum))
+                    {
+                        Console.ReadLine();
+                    }
 
-                //}
-                //else //またがらない分類子は 通常のやり方
-                //{
-                //if (C.Epsilon <= C.Epsilon_0)
-                //{
-                //    C.Kappa = 1;
-                //}
-                //else
-                //{//epsilon>epsilon0 の場合　
-                //    C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
-                //}
-                //AccuracySum += C.Kappa * C.N;
-                // //Accuracy　はNaNなるとき　止める
-                //if (double.IsNaN(AccuracySum))
-                //{
-                //    Console.ReadLine();
-                //}
-                //}
-                //}
+                }
+                else //またがらない分類子は 通常のやり方
+                {
+                    if (C.Epsilon <= C.Epsilon_0)
+                    {
+                        C.Kappa = 1;
+                    }
+                    else
+                    {//epsilon>epsilon0 の場合　
+                        C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
+                    }
+                    AccuracySum += C.Kappa * C.N;
+                    //Accuracy　はNaNなるとき　止める
+                    if (double.IsNaN(AccuracySum))
+                    {
+                        Console.ReadLine();
+                    }
+                }
+            }
 
-                //else //1000 回以下の場合 
-                //{
+            //else //1000 回以下の場合 
+            //{
 
-                //収束した，分散が全体の半分以上なら，正確性を下げるようにする
-                if (Configuration.IsConvergenceVT)
+            //収束した，分散が全体の半分以上なら，正確性を下げるようにする
+            if (Configuration.IsConvergenceVT)
                 {
                     if (C.Epsilon_0 >0.013)
                     {
