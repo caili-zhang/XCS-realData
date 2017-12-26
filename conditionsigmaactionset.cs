@@ -247,82 +247,21 @@ namespace XCS
 			}
 		}
 
-		protected override void UpdateFitness()
-		{
-			double AccuracySum = 0;
 
-            //kappa の値更新
-			foreach( Classifier C in this.CList )
-			{
-               SigmaNormalClassifier SNC = ( SigmaNormalClassifier )C;
+        protected override void UpdateFitness()
+        {
+            double AccuracySum = 0;
 
-                //if (//またがるのものを排除 平均プラマイ　Pのプラマイ
-
-                //         (C.M - C.Epsilon) < Configuration.RewardAverage
-                //         && (C.M + C.Epsilon) > Configuration.RewardAverage
-                //    )
-                //{//またがる分類子の正確性を極端に下げる　PS：0にしてはいけない
-                // //またがる部分とEの割合でKappaの正確性を下げていく、またがる部分が大きいければ　下がるのが早い
-                //    double crossPercentage;
-                //    double mincross;
-                //    //puls minus 0.5e どうなるかな0128 ダメだった　余計なもの残した
-                //    mincross = Math.Min(Math.Abs(C.M + C.Epsilon - Configuration.RewardAverage),
-                //        Math.Abs(C.M - C.Epsilon - Configuration.RewardAverage));
-                //    crossPercentage = mincross / (C.Epsilon);
-
-                //    //規制緩和　c.epsilon の　20% ぐらいまたがる　を許す、緩和しない基本的に+-epsilon 十分緩いい
-                //    //±σ　相当　片側85% と　片側15% の関係
-
-                //    if (crossPercentage < Configuration.CoverPersentage)//許容範囲で通常のやり方
-                //    {
-                //        if (C.Epsilon < C.Epsilon_0)
-                //        {
-                //            C.Kappa = 1;
-                //        }
-                //        else
-                //        {//epsilon>epsilon0 の場合　
-                //            C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
-                //        }
-                //    }
-                //    else//許容範囲を超えた
-                //    {
-                //        C.Kappa = Configuration.Alpha * Math.Pow(1 + crossPercentage, -Configuration.Nyu);
-                //        // C.Kappa = Math.Pow(Math.E,-Math.Pow(5*crossPercentage,2));
-                //    }
+            foreach (Classifier C in this.CList)
+            {
+                SigmaNormalClassifier SNC = (SigmaNormalClassifier)C;
 
 
-                //    AccuracySum += C.Kappa * C.N;
-                //    if (double.IsNaN(AccuracySum))
-                //    {
-                //        Console.ReadLine();
-                //    }
 
-                //}
-                //else //またがらない分類子は 通常のやり方
-                //{
-                //if (C.Epsilon <= C.Epsilon_0)
-                //{
-                //    C.Kappa = 1;
-                //}
-                //else
-                //{//epsilon>epsilon0 の場合　
-                //    C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
-                //}
-                //AccuracySum += C.Kappa * C.N;
-                // //Accuracy　はNaNなるとき　止める
-                //if (double.IsNaN(AccuracySum))
-                //{
-                //    Console.ReadLine();
-                //}
-                //}
-                //}
-
-                //else //1000 回以下の場合 
-                //{
-
-                //
-                if (Configuration.IsConvergenceVT)
+                if (Configuration.T > 1000)
                 {
+
+
                     if (//またがるのものを排除 平均プラマイ　Pのプラマイ
 
                              (C.M - C.Epsilon) < Configuration.RewardAverage
@@ -335,7 +274,8 @@ namespace XCS
                         //puls minus 0.5e どうなるかな0128 ダメだった　余計なもの残した
                         mincross = Math.Min(Math.Abs(C.M + C.Epsilon - Configuration.RewardAverage),
                             Math.Abs(C.M - C.Epsilon - Configuration.RewardAverage));
-                        crossPercentage = mincross / (C.Epsilon);
+                        //crossPercentage = mincross / (C.Epsilon);
+                        crossPercentage = mincross / Configuration.RewardAverage;//12/11変更、許容範囲の図り方、平均値と比較
 
                         //規制緩和　c.epsilon の　20% ぐらいまたがる　を許す、緩和しない基本的に+-epsilon 十分緩いい
                         //±σ　相当　片側85% と　片側15% の関係
@@ -384,28 +324,9 @@ namespace XCS
                     }
                 }
 
-                //if (C.Epsilon <= C.Epsilon_0)
-                //    {
-                //        C.Kappa = 1;
-                //    }
-                //    else
-                //    {
-
-                //        //ここC.Epsilon_0 == 0, kappa の計算がおかしいから, SNC.epsilon_0 下駄を足す
-                //        C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / SNC.Epsilon_0, -Configuration.Nyu);
-                //    }
-
-
-                //    if (double.IsNaN(C.Kappa))
-                //    {
-                //        Console.WriteLine("kappa =NaN");
-                //        Console.ReadLine();
-                //    }
-
-                //}
-                else
+                else //1000 回以下の場合 
                 {
-                    //収束していないとき，通常更新
+
                     if (C.Epsilon <= C.Epsilon_0)
                     {
                         C.Kappa = 1;
@@ -416,32 +337,30 @@ namespace XCS
                         //ここC.Epsilon_0 == 0, kappa の計算がおかしいから, SNC.epsilon_0 下駄を足す
                         C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / SNC.Epsilon_0, -Configuration.Nyu);
                     }
-                }
-                    //}
-
+                    if (double.IsNaN(C.Kappa))
+                    {
+                        Console.WriteLine("kappa =NaN");
+                        Console.ReadLine();
+                    }
                     AccuracySum += C.Kappa * C.N;
 
-                //}
+                }
             }
 
-            //Fitness更新
-			foreach( Classifier C in this.CList )
-			{
+            foreach (Classifier C in this.CList)
+            {
 
-                
-                 C.F += Configuration.Beta * (C.Kappa * C.N / AccuracySum - C.F);
-                    
-             
-			    if (double.IsNaN(C.F))
-			    {
-                    C.F = 0.0;
-			        Console.ReadLine();
-			    }
-			}
-		}
 
-		// 包摂
-		protected override void Subsumption( Population Pop )
+                C.F += Configuration.Beta * (C.Kappa * C.N / AccuracySum - C.F);
+
+                if (double.IsNaN(C.F))
+                {
+                    Console.ReadLine();
+                }
+            }
+        }
+        // 包摂
+        protected override void Subsumption( Population Pop )
 		{
 		    List<Classifier> copyActionSet=new List<Classifier>() ;
 		    foreach (Classifier classifier in CList)
