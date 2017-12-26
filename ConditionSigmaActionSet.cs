@@ -47,6 +47,7 @@ namespace XCS
             
 		}
 
+
 		public override void Update( Population Pop, double P, StdList Sigma )
 		{
 			double SumNumerosity = 0; 
@@ -59,6 +60,7 @@ namespace XCS
 			
 
 			foreach( Classifier C in this.CList )
+
 			{
 				C.Exp++;
 
@@ -355,8 +357,7 @@ namespace XCS
                 
                 
                 C.F += Configuration.Beta * (C.Kappa * C.N / AccuracySum - C.F);
-                    
-                
+
 			    if (double.IsNaN(C.F))
 			    {
 			        Console.ReadLine();
@@ -373,45 +374,57 @@ namespace XCS
 		        copyActionSet.Add(classifier);
 		    }
 		    int N = copyActionSet.Count;
-            
-            //for (int i = 0; i < N; i++)
-            //{
+
+            //最大N回実行する
+            for (int i = 0; i < N; i++)
+            {
                 #region subsume
                 Classifier Cl = null;
 
+                //actionsetなかに最も一般的な分類子をClにする
                 foreach (Classifier C in copyActionSet)
                 {
+
                     if (C.CouldSubsume())
                     {
                         if ((Cl == null) || (C.C.NumberOfSharp > Cl.C.NumberOfSharp) || ((C.C.NumberOfSharp == Cl.C.NumberOfSharp) && (Configuration.MT.NextDouble() < 0.5)))
                         {
-                            Cl = C;//actionsetなかに最も一般的な分類子をClにする
+                            Cl = C;
                         }
                     }
                 }
 
+
                 if (Cl != null)
                 {
+
                     // 削除中にforeachできない
+
                     List<Classifier> CL = new List<Classifier>();
 
+                    // 包摂された、削除したいClassifier C　をCLに登録
                     foreach (Classifier C in copyActionSet)
                     {
                         if (Cl.IsMoreGeneral(C))
                         {
                             SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
                             SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Cl;
-                            
-                            if ((Cl.Epsilon_0 < C.Epsilon_0 || Math.Abs(Cl.Epsilon_0 - C.Epsilon_0) < Cl.Epsilon_0 / 10)
+
+                            // e0 の値を３位まで見る、近いものは差がないとみなす
+                            var subsumer = Math.Round(Cl.Epsilon_0, 3);
+                            var subsumed = Math.Round(C.Epsilon_0, 3);
+
+                            if ((subsumer <= (subsumed + subsumer / 10))
                                && Snc_ko.IsConvergenceEpsilon()
                             && Snc_oya.IsConvergenceEpsilon()
-                                ) 
+                                )
                             {
+
                                 Cl.N += C.N;
-                                // 包摂された、削除したいClassifier C　をCLに登録
+                                
                                 CL.Add(C);
                             }
-                            
+
 
                         }
                     }
@@ -420,26 +433,27 @@ namespace XCS
                     {
 
                         SigmaNormalClassifier SNC = (SigmaNormalClassifier)Cl;
-                        
 
-                        if (C.C.state == "####2##0"
-                            
-                            )
-                          
+
+                        if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                         {
-                            Configuration.ESW.WriteLine(Configuration.T + "," + Cl.C.state /*+ "," + Cl.A*/ + "," + Cl.Exp + "," + Cl.Epsilon + "," + Cl.Epsilon_0 + "," + C.C.state /*+ "," + C.A*/ + "," + C.Exp + "," + C.Epsilon + "," + C.Epsilon_0 + "," + ++Configuration.Count);
+
+                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime+", in AS");
                         }
-                        
+
                         this.Remove(C);//as から削除
                         Pop.Remove(C);//pop から削除
                     }
 
+                    //いまの最も一般化されたものを削除する
+                    copyActionSet.Remove(Cl);
+
                 }
-               
+
 
                 #endregion
-           
 
+            }
 		 
 
 		}

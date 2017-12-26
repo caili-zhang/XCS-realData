@@ -243,7 +243,7 @@ namespace XCS
 			// GA時親に包摂
 			Configuration.DoGASubsumption = true;//9-8 chou
 			// 試行回数
-			Configuration.Iteration = 100000;
+			Configuration.Iteration = 200000;
 			//Configuration.Iteration = 50000;
 			//Configuration.Iteration = 500000;	//150116// int型に変換
 			// 単純移動平均
@@ -315,7 +315,7 @@ namespace XCS
 				Configuration.Epsilon_0 += Configuration.NoiseWidth;
 			}
 
-            Configuration.Problem.WriteLine("state,iter,P, cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
+            Configuration.Problem.WriteLine("state ,iter,P , cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
             StreamWriter goodsleep1 = new StreamWriter("./goodsleep_rule1.csv");
             goodsleep1.WriteLine("state ,iter,P , cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
 
@@ -412,7 +412,7 @@ namespace XCS
                         goodsleep2.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
                     }
                 }
-                foreach (Classifier cl in M.CList)
+                foreach (Classifier cl in P.CList)
                 {
                     if (cl.C.state[4] == '0' & cl.C.state[7] == '1')//"bath0 rehabi1"
                     {
