@@ -243,7 +243,7 @@ namespace XCS
 			// GA時親に包摂
 			Configuration.DoGASubsumption = true;//9-8 chou
 			// 試行回数
-			Configuration.Iteration = 200000;
+			Configuration.Iteration = 100000;
 			//Configuration.Iteration = 50000;
 			//Configuration.Iteration = 500000;	//150116// int型に変換
 			// 単純移動平均
@@ -487,10 +487,7 @@ namespace XCS
 				{
 					double p = Rho;
 					AS.Update( P, p, Sigma );
-					AS.RunGA( S, P );//komine
-
-
-
+                    AS.RunGA(S, P);
                     PreviousAS = null;
 				}
 				else
@@ -554,7 +551,7 @@ namespace XCS
             badsleep.Close();
 
             Configuration.Problem.Close();
-            P.Compact();
+            //P.Compact();
             //P.Show();
 
 			if( ( Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS" ) )
