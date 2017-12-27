@@ -362,8 +362,8 @@ namespace XCS
 		    int N = copyActionSet.Count;
 
             //最大N回実行する
-            //for (int i = 0; i < N; i++)
-            //{
+            for (int i = 0; i < N; i++)
+            {
                 #region subsume
                 Classifier Cl = null;
 
@@ -439,7 +439,7 @@ namespace XCS
 
                 #endregion
 
-            //}
+            }
 		 
 
 		}
