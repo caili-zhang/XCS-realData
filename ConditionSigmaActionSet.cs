@@ -432,16 +432,11 @@ namespace XCS
                     }
 
                     //いまの最も一般化されたものを削除する
-                    //copyActionSet.Remove(Cl);
+                    copyActionSet.Remove(Cl);
 
                 }
-
-
                 #endregion
-
             }
-		 
-
 		}
 
 		// Actionsetから削除
