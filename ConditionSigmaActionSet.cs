@@ -370,8 +370,8 @@ namespace XCS
             int N = copyActionSet.Count;
 
             //最大N回実行する
-            for (int i = 0; i < N; i++)
-            {
+            //for (int i = 0; i < N; i++)
+            //{
                 #region subsume
                 Classifier Cl = null;
 
@@ -424,8 +424,7 @@ namespace XCS
                     }
 
                     foreach (Classifier C in CL)
-                    {
-
+                    { 
                         SigmaNormalClassifier SNC = (SigmaNormalClassifier)Cl;
 
                         this.Remove(C);//as から削除
@@ -433,14 +432,13 @@ namespace XCS
                     }
 
                     //いまの最も一般化されたものを削除する
-                    copyActionSet.Remove(Cl);
+                    //copyActionSet.Remove(Cl);
 
                 }
 
 
                 #endregion
-
-            }
+            //}
 
 
         }
