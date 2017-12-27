@@ -57,10 +57,7 @@ namespace XCS
 
             }
 
-			
-
 			foreach( Classifier C in this.CList )
-
 			{
 				C.Exp++;
 
@@ -136,10 +133,10 @@ namespace XCS
                         foreach (var std in Configuration.ConvergentedVT)
                         {
                             
-                                if (std.IsIncluded(C.C.state))
-                                {
-                                    cpStdLists.Add(std.Clone()); //クローンメソット　　
-                                }
+                            if (std.IsIncluded(C.C.state))
+                            {
+                                cpStdLists.Add(std.Clone()); //クローンメソット　　
+                            }
                             
                         }
                         if (cpStdLists.Count == 1)
@@ -157,9 +154,6 @@ namespace XCS
                                 
                             }
 
-
-
-
                             //ここst= 0 , cl0.M がNULLになる
                             cl0.M = cl0.M/cl0.St;
 
@@ -169,7 +163,6 @@ namespace XCS
                             }
 
                             cl0.S = Math.Sqrt(cl0.S/cl0.St);
-
 
                             C.Epsilon_0 = cl0.S + Configuration.Epsilon_0;
 
@@ -238,14 +231,9 @@ namespace XCS
 						C.Epsilon += Configuration.Beta * ( Math.Abs( P - C.P ) - C.Epsilon );
 					}
 				}
-
-				
 			}
 
 			this.UpdateFitness();
-
-            
-
 
 			if( Configuration.DoActionSetSubsumption )
 			{
@@ -351,11 +339,9 @@ namespace XCS
                     
                }
             }
-
+            //
 			foreach( Classifier C in this.CList )
 			{
-                
-                
                 C.F += Configuration.Beta * (C.Kappa * C.N / AccuracySum - C.F);
 
 			    if (double.IsNaN(C.F))
@@ -376,8 +362,8 @@ namespace XCS
 		    int N = copyActionSet.Count;
 
             //最大N回実行する
-            for (int i = 0; i < N; i++)
-            {
+            //for (int i = 0; i < N; i++)
+            //{
                 #region subsume
                 Classifier Cl = null;
 
@@ -446,14 +432,14 @@ namespace XCS
                     }
 
                     //いまの最も一般化されたものを削除する
-                    copyActionSet.Remove(Cl);
+                    //copyActionSet.Remove(Cl);
 
                 }
 
 
                 #endregion
 
-            }
+            //}
 		 
 
 		}
