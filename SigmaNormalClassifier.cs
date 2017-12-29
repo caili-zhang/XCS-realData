@@ -201,9 +201,7 @@ namespace XCS
                                 Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime+", in GA");
                                 Configuration.Problem.WriteLine(this.C.state + "," + Configuration.T + "," + this.P + "," + this.M + "," + this.Epsilon + "," + this.F + "," + this.N + "," + this.Exp + "," + this.Ts + "," + this.As + "," + this.Kappa + "," + this.Epsilon_0 + "," + this.St + "," + this.GenerateTime + ", in GA");
                             }
-
                             return true;
-
                         }
 					}
 				}
@@ -239,7 +237,6 @@ namespace XCS
 					this.ConvergenceTime = Configuration.T;
 				}
 			}
-
 			return Sum < Configuration.DifferenceEpsilon;
 		}
 
@@ -250,7 +247,6 @@ namespace XCS
 				return false;
 			}
 			return true;
-			
 		}
 	}
 }

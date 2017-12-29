@@ -380,7 +380,6 @@ namespace XCS
                     }
                 }
 
-
                 if (Cl != null)
                 {
 
@@ -435,13 +434,8 @@ namespace XCS
                     //copyActionSet.Remove(Cl);
 
                 }
-
-
                 #endregion
-
             //}
-		 
-
 		}
 
 		// Actionsetから削除
@@ -525,8 +519,28 @@ namespace XCS
 				// bothChild
 				Child_1.Mutation( Situation );
 				Child_2.Mutation( Situation );
+                if (Child_1.C.state[4] == '0' & Child_1.C.state[7] == '1')//"bath0 rehabi1"
+                {
+                    Configuration.Problem.WriteLine(Child_1.C.state + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + ","
+                        + Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0 + "," + Child_1.St + "," + Child_1.GenerateTime + ", child 2 ");
+                    Configuration.Problem.WriteLine(Parent_1.C.state + "," + Configuration.T + "," + Parent_1.P + "," + Parent_1.M + "," + Parent_1.Epsilon + "," + Parent_1.F + ","
+                        + Parent_1.N + "," + Parent_1.Exp + "," + Parent_1.Ts + "," + Parent_1.As + "," + Parent_1.Kappa + "," + Parent_1.Epsilon_0 + "," + Parent_1.St + "," + Parent_1.GenerateTime + ",Parent1");
 
-				if( Configuration.DoGASubsumption )
+                    Configuration.Problem.WriteLine(Parent_2.C.state + "," + Configuration.T + "," + Parent_2.P + "," + Parent_2.M + "," + Parent_2.Epsilon + "," + Parent_2.F + ","
+                        + Parent_2.N + "," + Parent_2.Exp + "," + Parent_2.Ts + "," + Parent_2.As + "," + Parent_2.Kappa + "," + Parent_2.Epsilon_0 + "," + Parent_2.St + "," + Parent_2.GenerateTime + ",Parent2");
+                }
+
+                if (Child_2.C.state[4] == '0' & Child_2.C.state[7] == '1')//"bath0 rehabi1"
+                {
+                    Configuration.Problem.WriteLine(Child_2.C.state + "," + Configuration.T + "," + Child_2.P + "," + Child_2.M + "," + Child_2.Epsilon + "," + Child_2.F + ","
+                        + Child_2.N + "," + Child_2.Exp + "," + Child_2.Ts + "," + Child_2.As + "," + Child_2.Kappa + "," + Child_2.Epsilon_0 + "," + Child_2.St + "," + Child_2.GenerateTime + ",child 2");
+                    Configuration.Problem.WriteLine(Parent_1.C.state + "," + Configuration.T + "," + Parent_1.P + "," + Parent_1.M + "," + Parent_1.Epsilon + "," + Parent_1.F + ","
+                        + Parent_1.N + "," + Parent_1.Exp + "," + Parent_1.Ts + "," + Parent_1.As + "," + Parent_1.Kappa + "," + Parent_1.Epsilon_0 + "," + Parent_1.St + "," + Parent_1.GenerateTime + ",Parent1");
+
+                    Configuration.Problem.WriteLine(Parent_2.C.state + "," + Configuration.T + "," + Parent_2.P + "," + Parent_2.M + "," + Parent_2.Epsilon + "," + Parent_2.F + ","
+                        + Parent_2.N + "," + Parent_2.Exp + "," + Parent_2.Ts + "," + Parent_2.As + "," + Parent_2.Kappa + "," + Parent_2.Epsilon_0 + "," + Parent_2.St + "," + Parent_2.GenerateTime + ",Parent2");
+                }
+                if ( Configuration.DoGASubsumption )
 				{
 					if( Parent_1.DoesSubsume( Child_1 ) )
 					{
@@ -594,6 +608,10 @@ namespace XCS
 
                 if (FitnessSum > ChoicePoint)
                 {
+                    if (C.C.state == "####0###")
+                    {
+                        Console.ReadLine();
+                    }
                     return C;
                 }
             }
