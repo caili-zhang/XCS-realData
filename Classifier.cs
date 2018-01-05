@@ -117,10 +117,8 @@ namespace XCS
 			{
 				return false;
 			}
-
 			Classifier C = ( Classifier )obj;
-
-			return ( ( this.C.Equals( C.C ) ) /*&& ( this.A == C.A )*/ );
+			return ( ( this.C.Equals( C.C ) )  );
 		}
 
 		/// <summary>

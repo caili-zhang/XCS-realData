@@ -74,103 +74,7 @@ namespace XCS
 		// Populationからfitnessが一番小さいものを削除
 		public override void Delete()
 		{
-			//if( this.CountNumerosity() <= Configuration.N )
-			//{
-			//	return;
-			//}
-
-			//int SumNumerosity = 0;
-			//double SumFitness = 0.0;
-
-			//List<Classifier> DeleteCandidate = new List<Classifier>();
-			//if(Configuration.ASName == "CS")
-			//{
-			//	foreach(Classifier C in this.CList)
-			//	{
-			//		SigmaNormalClassifier SC = ( SigmaNormalClassifier )C;
-
-			//		double WR = 0;
-			//		foreach(double d in SC.WinningRate)
-			//		{
-			//			WR += d;
-			//		}
-
-			//		if(SC.HasMatured() && (WR < 0.4 * SC.WinningRate.Count()))
-			//		{
-			//			DeleteCandidate.Add( SC );
-			//		}
-			//	}
-
-			//	if(DeleteCandidate.Count == 0)
-			//	{
-			//		DeleteCandidate = this.CList;
-			//	}
-			//	//else
-			//	//{
-			//	//	bool Flag = true;
-			//	//	foreach( Classifier C in DeleteCandidate )
-			//	//	{
-			//	//		SigmaNormalClassifier SNC = ( SigmaNormalClassifier )C;
-			//	//		double WR = 0;
-			//	//		foreach(double d in SNC.WiningRate)
-			//	//		{
-			//	//			WR += d;
-			//	//		}
-
-			//	//		// 悪い子探し
-			//	//		if( WR < 0.4 * SNC.WiningRate.Count() )
-			//	//		{
-			//	//			Flag = false;
-			//	//		}
-			//	//	}
-			//	//	// 悪い子が一人もいなかったら
-			//	//	if( Flag )
-			//	//	{
-			//	//		DeleteCandidate = this.CList;
-			//	//	}
-
-			//	//}
-			//}
-			//else
-			//{
-			//	DeleteCandidate = this.CList;
-			//}
-
-			//foreach( Classifier C in DeleteCandidate )
-			//{
-			//	SumNumerosity += C.N;
-			//	SumFitness += C.F;
-			//}
-			
-			//double AvFitness = SumFitness / SumNumerosity;
-			//double VoteSum = 0;
-
-			//foreach( Classifier C in DeleteCandidate )
-			//{
-			//	VoteSum += this.DeletionVote( C, AvFitness );
-			//}
-
-			//double ChoicePoint = Configuration.MT.NextDouble() * VoteSum;
-			//VoteSum = 0;
-
-			//foreach( Classifier C in DeleteCandidate )
-			//{
-			//	VoteSum += this.DeletionVote( C, AvFitness );
-
-			//	if( VoteSum > ChoicePoint )
-			//	{
-			//		if( C.N > 1 )
-			//		{
-			//			C.N--;
-			//		}
-			//		else
-			//		{
-			//			this.Remove( C );
-			//		}
-			//		return;
-			//	}
-			//}
-			int SumNumerosity = 0;
+            int SumNumerosity = 0;
 			double SumFitness = 0.0;
 
 			foreach( Classifier C in this.CList )
@@ -208,9 +112,6 @@ namespace XCS
 					}
 					else
                     {
-
-                        
-
                         this.Remove( C );
 					}
 					return;

@@ -119,17 +119,18 @@ namespace XCS
 
                 if (VoteSum > ChoicePoint)
                 {
-                    
-
                     if (C.N > 1)
                     {
+                        if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
+                        {
+                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop -1");
+                        }
                         C.N--;
                     }
                     else
                     {
                         if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                         {
-
                             Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop delete");
                         }
                         this.Remove(C);
@@ -283,9 +284,7 @@ namespace XCS
 
                 #endregion
             }
-
-
-
+            
         }
 
 

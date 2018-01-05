@@ -32,7 +32,7 @@ namespace XCS
 		// コピーコンストラクタ
 		public NormalClassifier( NormalClassifier C )
 		{
-			this.C = new BinaryState( C.C );
+			this.C = new IntegralState( C.C );
 			//this.A = C.A;
 			this.P = C.P;
 			this.Epsilon = C.Epsilon;

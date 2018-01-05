@@ -56,7 +56,7 @@ namespace XCS
 		// コピーコンストラクタ
 		public SigmaNormalClassifier( SigmaNormalClassifier C )
 		{
-			this.C = new BinaryState( C.C );
+			this.C = new IntegralState( C.C );
 			//this.A = C.A;
 			this.P = C.P;
 			this.Epsilon = C.Epsilon;
@@ -88,31 +88,29 @@ namespace XCS
 
 		public override bool CouldSubsume()
 		{
-			if( this.Exp > this.ExpThreshold )
-			{
-				if( this.IsConvergenceEpsilon() )
-				{
-					Configuration.FlagEpsilon = true;
-					if( this.Epsilon < this.Epsilon_0||(this.Epsilon==0 &&this.Epsilon_0==0) )
-					{
-						//Console.WriteLine( this.C.state + ":" + this.A + ":" + this.EpsilonList[0] );
+            if (this.Exp > this.ExpThreshold)
+            {
+                if (this.IsConvergenceEpsilon())
+                {
+                    //Configuration.FlagEpsilon = true;
+                    // original 条件は e < e0
+                    if ( this.Epsilon < this.Epsilon_0||(this.Epsilon==0 &&this.Epsilon_0==0) )
+                    {
 						return true;
 					}
-				}
-			}
-			return false;
+                }
+            }
+            return false;
 		}
 
 		// 包摂条件判定用
 		public override bool IsMoreGeneral( Classifier Spec )
 		{
-			if( this.C.NumberOfSharp <= Spec.C.NumberOfSharp )
+			if( this.C.NumberOfSharp < Spec.C.NumberOfSharp )
 			{
 				return false;
 			}
-
 			int i = 0;
-
 			do
 			{
 				if( this.C.state[i] != '#' && this.C.state[i] != Spec.C.state[i] )
@@ -121,7 +119,6 @@ namespace XCS
 				}
 				i++;
 			} while( i < this.C.state.Length );
-
 			return true;
 		}
 

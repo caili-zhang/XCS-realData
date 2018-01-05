@@ -28,7 +28,8 @@ namespace XCS
                     // 一部を変化させたCondition
                     State state = new IntegralState(S);
                     state.Covering();
-		            
+                    
+                    
                     Classifier CC;
 
                     if (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS")
@@ -37,7 +38,7 @@ namespace XCS
                         if (CC.C.state[4] == '0' & CC.C.state[7] == '1')//"bath0 rehabi1"
                         {
                             Configuration.Problem.WriteLine(CC.C.state + "," + Configuration.T + "," + CC.P + "," + CC.M + "," + CC.Epsilon + "," + CC.F + "," +
-                                CC.N + "," + CC.Exp + "," + CC.Ts + "," + CC.As + "," + CC.Kappa + "," + CC.Epsilon_0 + "," + CC.St + "," + CC.GenerateTime + "gengerate covering");
+                                CC.N + "," + CC.Exp + "," + CC.Ts + "," + CC.As + "," + CC.Kappa + "," + CC.Epsilon_0 + "," + CC.St + "," + CC.GenerateTime + ", covering");
                             
                         }
                     }
@@ -53,67 +54,18 @@ namespace XCS
                 }
 		    }
 
-		    /*while( this.CList.Count == 0 )
-			{
-				// situationにあうものをPopulationから探す
-				this.CList = P.MatchSituation( S );
 
-				// Actionの種類
-				List<char> Actions = new List<char>();
-				int NumberOfActions = 0;
-
-				// Multiplexer(2進数)
-				if( Configuration.Type == "Binary" )
-				{
-					Actions.Add( '0' );
-					Actions.Add( '1' );
-					foreach( Classifier C in this.CList )
-					{
-						Actions.Remove( C.A );
-					}
-					NumberOfActions = 2 - Actions.Count;
-				}
-				
-				// MatchSetにある行動が少ないとき
-				if( NumberOfActions < Configuration.Theta_mna )
-				{
-					// 一部を変化させたCondition
-					State state = new BinaryState( S );
-					state.Covering();
-
-					Classifier CC;
-					if( Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS" )
-					{
-						CC = new SigmaNormalClassifier( state, Actions, Configuration.ExpThreshold );
-					}
-					else
-					{
-						CC = new NormalClassifier( state, Actions );
-					}
-					P.Add( CC );
-					// 整理
-					P.Delete();
-					this.CList = new List<Classifier>();
-				}
-			}*/
 		}
 
 		public override void Show()
 		{
-            StreamWriter sw = new StreamWriter("./MatchSet_" + Configuration.T /*+ "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-				+ "AS_" + Configuration.ASName + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-				+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon */+ ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
-            //StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-            //	+ "AS_" + "CS" + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-            //	+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
+            StreamWriter sw = new StreamWriter("./MatchSet_" + Configuration.T + ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
+            
             if (Configuration.ASName != "CS" && Configuration.ASName != "MaxCS" && Configuration.ASName != "Max" && Configuration.ASName != "Updatee0CS")
             {
                 sw.WriteLine("state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
                 foreach (Classifier C in this.CList)
                 {
-                    //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-                    //Console.WriteLine();
-
                     sw.WriteLine(C.C.state + ","/* + C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
             }

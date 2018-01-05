@@ -65,7 +65,7 @@ namespace XCS
 		/// <summary>
 		/// Covering(#に一部を変える)
 		/// </summary>
-		abstract public void Covering();
+		abstract public void Covering( );
 
 		//// #の数
 		//abstract public int NumberOfSharp();
@@ -90,14 +90,13 @@ namespace XCS
 			}
 
 			State S = ( State )obj;
-			for( int i = 0; i < this.state.Length; i++ )
-			{
-				if( this.state[i] != S.state[i] )
-				{
-					return false;
-				}
-			}
-
+            for (int i = 0; i < this.state.Length; i++)
+            {
+                if (this.state[i] != S.state[i])
+                {
+                    return false;
+                }
+            }
 			return true;
 		}
 

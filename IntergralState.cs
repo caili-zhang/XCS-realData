@@ -42,11 +42,12 @@ namespace XCS
         // 確率的に#に変える
         public override void Covering()
         {
-            string S = this.state;
+            string S = this.state; 
             string CoveredState = "";
             for (int i = 0; i < S.Length; i++)
             {
-                if (Configuration.MT.NextDouble() < Configuration.P_sharp)
+                var random = Configuration.MT.NextDouble();
+                if ( random < Configuration.P_sharp)
                 {
                     CoveredState += '#';
                 }
@@ -55,11 +56,15 @@ namespace XCS
                     CoveredState += S[i];
                 }
             }
-            this.state = CoveredState;
-            if (this.state == "########")//all #の分類子を弾く
+            if (CoveredState == "########")//all #の分類子を弾く
             {
-                Covering();
+                this.Covering();
             }
+            else
+            {
+                this.state = CoveredState;
+            }
+            
             this.CountSharp();
         }
 
