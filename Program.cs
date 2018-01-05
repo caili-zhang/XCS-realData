@@ -158,10 +158,7 @@ namespace XCS
 
             System.IO.DirectoryInfo di = System.IO.Directory.CreateDirectory(Path);
             System.IO.Directory.SetCurrentDirectory(Path);
-
-
-
-
+            
             Configuration.Problem = new StreamWriter("./problem" + ".csv", true, System.Text.Encoding.GetEncoding("shift_jis"));
 
             Configuration.ESW = new StreamWriter("./epsilon_" + Configuration.Seed + "CnoiseWidth_" + Configuration.NoiseWidth
@@ -244,8 +241,7 @@ namespace XCS
             Configuration.DoGASubsumption = true;//9-8 chou
                                                  // 試行回数
             Configuration.Iteration = 100000;
-            //Configuration.Iteration = 50000;
-            //Configuration.Iteration = 500000;	//150116// int型に変換
+           
             // 単純移動平均
             Configuration.SMA = 100;
             //Configuration.SMA = 5000;	// 150116
@@ -328,11 +324,7 @@ namespace XCS
             #region main roop
             while (Configuration.T < Configuration.Iteration)
             {
-                //if(Configuration.T == 26)
-                //{
-                //    Console.ReadLine();
-                //}
-                // VTの収束
+                
                 if (!Configuration.IsConvergenceVT)
                 {
                     bool flag = true;
@@ -345,8 +337,7 @@ namespace XCS
                             flag = false;
                             break;
                         }
-
-
+                        
                     }
                     if (flag)	// 初めてTrue
                     {
@@ -357,15 +348,12 @@ namespace XCS
                             Configuration.ConvergentedVT[i].M = Configuration.Stdlist[i].M;
                             //Configuration.ConvergentedVT[i * 4+1].M = Configuration.Stdlist[i * 2+1].M;
 
-
                             Configuration.ConvergentedVT[i].S = Configuration.Stdlist[i].S;
                             //Configuration.ConvergentedVT[i * 4 + 1].S = Configuration.Stdlist[i*2+1].S;
 
                             Configuration.ConvergentedVT[i].T = Configuration.Stdlist[i].T;
                             //Configuration.ConvergentedVT[i * 4 + 1].T = Configuration.Stdlist[i * 2 + 1].T;
                         }
-
-
                         // [P]の全てを新しい基準で再評価
                         foreach (Classifier C in P.CList)
                         {
@@ -374,8 +362,6 @@ namespace XCS
                             int SumT = 0;
                             foreach (StdList SL in Configuration.Stdlist)
                             {
-
-
                                 if (SL.IsIncluded(C.C.state))
                                 {
                                     ST += SL.S * SL.T;
@@ -394,13 +380,7 @@ namespace XCS
                         }
                     }
                 }
-
-
-                //if (Configuration.T == 79213)
-                //{
-                //    Console.ReadLine();
-                //}
-
+                
                 State S = Env.GetState();
 
                 // MatchSet生成
@@ -414,7 +394,6 @@ namespace XCS
                     }
                     if (cl.C.state[4] == '#' & cl.C.state[7] == '0')//"bath2  rehabi# or bath# rehabi0"
                     {
-
                         goodsleep2.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
                     }
                 }
@@ -442,8 +421,6 @@ namespace XCS
 
                 char Action = '0';//action ないから、全部０にする
                 double Rho = Env.ExecuteAction(Action);
-
-
 
                 StdList Sigma = null;
 
@@ -502,8 +479,6 @@ namespace XCS
                     PreviousS = S;
                 }
 
-
-
                 Num[Configuration.T] = P.CList.Count();
                 //Std[Configuration.T] = Math.Sqrt( Stdlist[20].Sigma / (Stdlist[20].T - 1));
 
@@ -511,10 +486,7 @@ namespace XCS
                 {
                     Configuration.StartTime = Configuration.T;
                 }
-                Configuration.FlagSigma = Configuration.FlagEpsilon = false;
-
-
-
+                Configuration.FlagSigma = Configuration.FlagEpsilon = false
                 if (!ConvergenceStelist && (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS"))
                 {
                     int i = 1;

@@ -399,7 +399,7 @@ namespace XCS
                             && Snc_oya.IsConvergenceEpsilon()
                                 )
                             {
-                                if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
+                                if (C.C.state[4] == '#' & C.C.state[7] == '0')//"bath0 rehabi1"
                                 {
                                     Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + 
                                         C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
@@ -517,7 +517,7 @@ namespace XCS
                 Child_1.Mutation(Situation);
                 Child_2.Mutation(Situation);
 
-                if (Child_1.C.state[4] == '0' & Child_1.C.state[7] == '1')//"bath0 rehabi1"
+                if (Child_1.C.state[4] == '#' & Child_1.C.state[7] == '0')//"bath0 rehabi1"
                 {
                     Configuration.Problem.WriteLine(Child_1.C.state + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + ","
                         + Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0 + "," + Child_1.St + "," + Child_1.GenerateTime + ", child 2 ");
@@ -528,7 +528,7 @@ namespace XCS
                         + Parent_2.N + "," + Parent_2.Exp + "," + Parent_2.Ts + "," + Parent_2.As + "," + Parent_2.Kappa + "," + Parent_2.Epsilon_0 + "," + Parent_2.St + "," + Parent_2.GenerateTime + ",Parent2");
                 }
 
-                if (Child_2.C.state[4] == '0' & Child_2.C.state[7] == '1')//"bath0 rehabi1"
+                if (Child_2.C.state[4] == '#' & Child_2.C.state[7] == '0')//"bath0 rehabi1"
                 {
                     Configuration.Problem.WriteLine(Child_2.C.state + "," + Configuration.T + "," + Child_2.P + "," + Child_2.M + "," + Child_2.Epsilon + "," + Child_2.F + ","
                         + Child_2.N + "," + Child_2.Exp + "," + Child_2.Ts + "," + Child_2.As + "," + Child_2.Kappa + "," + Child_2.Epsilon_0 + "," + Child_2.St + "," + Child_2.GenerateTime + ",child 2");

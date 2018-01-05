@@ -35,7 +35,7 @@ namespace XCS
                     if (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS")
                     {
                         CC = new SigmaNormalClassifier(state, Configuration.ExpThreshold);
-                        if (CC.C.state[4] == '0' & CC.C.state[7] == '1')//"bath0 rehabi1"
+                        if (CC.C.state[4] == '#' & CC.C.state[7] == '0')//"bath0 rehabi1"
                         {
                             Configuration.Problem.WriteLine(CC.C.state + "," + Configuration.T + "," + CC.P + "," + CC.M + "," + CC.Epsilon + "," + CC.F + "," +
                                 CC.N + "," + CC.Exp + "," + CC.Ts + "," + CC.As + "," + CC.Kappa + "," + CC.Epsilon_0 + "," + CC.St + "," + CC.GenerateTime + ", covering");
