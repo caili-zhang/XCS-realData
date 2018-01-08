@@ -38,11 +38,15 @@ namespace XCS
 		/// <param name="S">situation</param>
 		/// <returns>situationに一致するClassifierの集合</returns>
 		abstract public List<Classifier> MatchSituation( State S );
-
-		/// <summary>
-		/// 整理
-		/// </summary>
-		abstract public void Delete();
+        /// <summary>
+        /// pop subsumption
+        /// </summary>
+        /// <param name="P"></param>
+        abstract public void Subsumption();
+        /// <summary>
+        /// 整理
+        /// </summary>
+        abstract public void Delete();
 
 		/// <summary>
 		/// 削除条件計算

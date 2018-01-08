@@ -113,14 +113,18 @@ namespace XCS
 		public static double Nyu { set; get; }
 
 		/// <summary>
-		/// 包摂
+		/// AS  包摂
 		/// </summary>
 		public static bool DoActionSetSubsumption { set; get; }
 
-		/// <summary>
-		/// 包摂閾値
+        /// <summary>
+		/// POP 包摂
 		/// </summary>
-		public static int Theta_sub { set; get; }
+		public static bool DoPopSubsumption { set; get; }
+        /// <summary>
+        /// 包摂閾値
+        /// </summary>
+        public static int Theta_sub { set; get; }
 
 		/// <summary>
 		/// GA閾値

@@ -92,11 +92,6 @@ namespace XCS
 
                     SNC.EpsilonList[0] = Math.Sqrt(C.S / (C.St - 1));
 
-
-
-
-
-
                     #region　分類子が照合する全状態のVTの分散と平均を使って　e0 を推測　　chou 160107
                     //分類子が照合する全状態のVTの分散と平均を使って　e0 を推測　　chou 160107
                     if (Configuration.IsConvergenceVT)
@@ -119,8 +114,6 @@ namespace XCS
                                 }
                             }
                         }
-
-
                         Classifier cl0 = new NormalClassifier();
 
                         cl0.S = 0;
@@ -168,7 +161,6 @@ namespace XCS
 
                     }
                     #endregion
-
 
                     #region tatumi 160106 XCS-SAC  VTが全部収束したら　加重平均でe0更新
                     //if (Configuration.IsConvergenceVT)
@@ -247,57 +239,53 @@ namespace XCS
             {
                 SigmaNormalClassifier SNC = (SigmaNormalClassifier)C;
 
-
-
                 if (Configuration.T > 1000)
                 {
+                    //if (//またがるのものを排除 平均プラマイ　Pのプラマイ
+
+                    //         (C.M - C.Epsilon) < Configuration.RewardAverage
+                    //         && (C.M + C.Epsilon) > Configuration.RewardAverage
+                    //    )
+                    //{//またがる分類子の正確性を極端に下げる　PS：0にしてはいけない
+                    // //またがる部分とEの割合でKappaの正確性を下げていく、またがる部分が大きいければ　下がるのが早い
+                    //    double crossPercentage;
+                    //    double mincross;
+                    //    //puls minus 0.5e どうなるかな0128 ダメだった　余計なもの残した
+                    //    mincross = Math.Min(Math.Abs(C.M + C.Epsilon - Configuration.RewardAverage),
+                    //        Math.Abs(C.M - C.Epsilon - Configuration.RewardAverage));
+                    //    //crossPercentage = mincross / (C.Epsilon);
+                    //    crossPercentage = mincross / Configuration.RewardAverage;//12/11変更、許容範囲の図り方、平均値と比較
+
+                    //    //規制緩和　c.epsilon の　20% ぐらいまたがる　を許す、緩和しない基本的に+-epsilon 十分緩いい
+                    //    //±σ　相当　片側85% と　片側15% の関係
+
+                    //    if (crossPercentage < Configuration.CoverPersentage)//許容範囲で通常のやり方
+                    //    {
+                    //        if (C.Epsilon < C.Epsilon_0)
+                    //        {
+                    //            C.Kappa = 1;
+                    //        }
+                    //        else
+                    //        {//epsilon>epsilon0 の場合　
+                    //            C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
+                    //        }
+                    //    }
+                    //    else//許容範囲を超えた
+                    //    {
+                    //        C.Kappa = Configuration.Alpha * Math.Pow(1 + crossPercentage, -Configuration.Nyu);
+                    //        // C.Kappa = Math.Pow(Math.E,-Math.Pow(5*crossPercentage,2));
+                    //    }
 
 
-                    if (//またがるのものを排除 平均プラマイ　Pのプラマイ
+                    //    AccuracySum += C.Kappa * C.N;
+                    //    if (double.IsNaN(AccuracySum))
+                    //    {
+                    //        Console.ReadLine();
+                    //    }
 
-                             (C.M - C.Epsilon) < Configuration.RewardAverage
-                             && (C.M + C.Epsilon) > Configuration.RewardAverage
-                        )
-                    {//またがる分類子の正確性を極端に下げる　PS：0にしてはいけない
-                     //またがる部分とEの割合でKappaの正確性を下げていく、またがる部分が大きいければ　下がるのが早い
-                        double crossPercentage;
-                        double mincross;
-                        //puls minus 0.5e どうなるかな0128 ダメだった　余計なもの残した
-                        mincross = Math.Min(Math.Abs(C.M + C.Epsilon - Configuration.RewardAverage),
-                            Math.Abs(C.M - C.Epsilon - Configuration.RewardAverage));
-                        //crossPercentage = mincross / (C.Epsilon);
-                        crossPercentage = mincross / Configuration.RewardAverage;//12/11変更、許容範囲の図り方、平均値と比較
-
-                        //規制緩和　c.epsilon の　20% ぐらいまたがる　を許す、緩和しない基本的に+-epsilon 十分緩いい
-                        //±σ　相当　片側85% と　片側15% の関係
-
-                        if (crossPercentage < Configuration.CoverPersentage)//許容範囲で通常のやり方
-                        {
-                            if (C.Epsilon < C.Epsilon_0)
-                            {
-                                C.Kappa = 1;
-                            }
-                            else
-                            {//epsilon>epsilon0 の場合　
-                                C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
-                            }
-                        }
-                        else//許容範囲を超えた
-                        {
-                            C.Kappa = Configuration.Alpha * Math.Pow(1 + crossPercentage, -Configuration.Nyu);
-                            // C.Kappa = Math.Pow(Math.E,-Math.Pow(5*crossPercentage,2));
-                        }
-
-
-                        AccuracySum += C.Kappa * C.N;
-                        if (double.IsNaN(AccuracySum))
-                        {
-                            Console.ReadLine();
-                        }
-
-                    }
-                    else //またがらない分類子は 通常のやり方
-                    {
+                    //}
+                    //else //またがらない分類子は 通常のやり方
+                    //{
                         if (C.Epsilon <= C.Epsilon_0)
                         {
                             C.Kappa = 1;
@@ -312,12 +300,11 @@ namespace XCS
                         {
                             Console.ReadLine();
                         }
-                    }
+                    //}
                 }
 
                 else //1000 回以下の場合 
                 {
-
                     if (C.Epsilon <= C.Epsilon_0)
                     {
                         C.Kappa = 1;
@@ -334,7 +321,6 @@ namespace XCS
                         Console.ReadLine();
                     }
                     AccuracySum += C.Kappa * C.N;
-
                 }
             }
             //
@@ -399,7 +385,7 @@ namespace XCS
                             && Snc_oya.IsConvergenceEpsilon()
                                 )
                             {
-                                if (C.C.state[4] == '#' & C.C.state[7] == '0')//"bath0 rehabi1"
+                                if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                                 {
                                     Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + 
                                         C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
@@ -419,10 +405,6 @@ namespace XCS
                         this.Remove(C);//as から削除
                         Pop.Remove(C);//pop から削除
                     }
-
-                    //いまの最も一般化されたものを削除する
-                    //copyActionSet.Remove(Subsumber_cl);
-
                 }
                 #endregion
             }
@@ -456,9 +438,17 @@ namespace XCS
 
                 Classifier Parent_2 = this.SelectOffspring();
                 //親を選択する、同じ親選ばないようにする
+                //どうしても同じ親を選ぶ場合、GAをやめる、return 
+
+                var selectCounter = 0;
                 while (CList.Count != 1 && Parent_2.C.state == Parent_1.C.state)
                 {
                     Parent_2 = this.SelectOffspring();
+                    selectCounter += 1;
+                    if (selectCounter > 10)
+                    {
+                        return;
+                    }
                 }
 
                 Classifier Child_1 = new SigmaNormalClassifier((SigmaNormalClassifier)Parent_1);
@@ -497,27 +487,16 @@ namespace XCS
                     Child_2.F = Child_1.F;
 
                     Child_2.Epsilon_0 = Child_1.Epsilon_0;
-
-                    //for( int i = 0; i < SNC1.WinningRate.Count(); i++ )
-                    //{
-                    //	SNC1.WinningRate[i] = SNC2.WinningRate[i] = ( SNP1.WinningRate[i] + SNP2.WinningRate[i] ) / 2;
-                    //}
                 }
 
                 Child_1.F *= 0.1;
                 Child_2.F *= 0.1;
 
-                //for( int i = 0; i < SNC1.WinningRate.Count(); i++ )
-                //{
-                //	SNC1.WinningRate[i] *= 0.1;
-                //	SNC2.WinningRate[i] *= 0.1;
-                //}
-
                 // bothChild
                 Child_1.Mutation(Situation);
                 Child_2.Mutation(Situation);
 
-                if (Child_1.C.state[4] == '#' & Child_1.C.state[7] == '0')//"bath0 rehabi1"
+                if (Child_1.C.state[4] == '0' & Child_1.C.state[7] == '1')//"bath0 rehabi1"
                 {
                     Configuration.Problem.WriteLine(Child_1.C.state + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + ","
                         + Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0 + "," + Child_1.St + "," + Child_1.GenerateTime + ", child 2 ");
@@ -528,7 +507,7 @@ namespace XCS
                         + Parent_2.N + "," + Parent_2.Exp + "," + Parent_2.Ts + "," + Parent_2.As + "," + Parent_2.Kappa + "," + Parent_2.Epsilon_0 + "," + Parent_2.St + "," + Parent_2.GenerateTime + ",Parent2");
                 }
 
-                if (Child_2.C.state[4] == '#' & Child_2.C.state[7] == '0')//"bath0 rehabi1"
+                if (Child_2.C.state[4] == '0' & Child_2.C.state[7] == '1')//"bath0 rehabi1"
                 {
                     Configuration.Problem.WriteLine(Child_2.C.state + "," + Configuration.T + "," + Child_2.P + "," + Child_2.M + "," + Child_2.Epsilon + "," + Child_2.F + ","
                         + Child_2.N + "," + Child_2.Exp + "," + Child_2.Ts + "," + Child_2.As + "," + Child_2.Kappa + "," + Child_2.Epsilon_0 + "," + Child_2.St + "," + Child_2.GenerateTime + ",child 2");
@@ -540,10 +519,7 @@ namespace XCS
                 }
 
 
-                if (Configuration.T == 4036)
-                {
-                    Console.ReadLine();
-                }
+                
                 if (Configuration.DoGASubsumption)
                 {
                     if (Parent_1.DoesSubsume(Child_1))
@@ -588,33 +564,32 @@ namespace XCS
         protected override Classifier SelectOffspring()
         {
             double FitnessSum = 0;
-
-
+            // Fitness Sum を計算する
             foreach (Classifier C in this.CList)
             {
-                FitnessSum += C.F;
-                //if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))//9-24 nakata
-                //{
-                //    FitnessSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);//e0が小さいものが優位,追加したもの
-                //}
+                //FitnessSum += C.F;
+                if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))//9-24 nakata
+                {
+                    //e0が小さいものが優位,追加したもの
+                    FitnessSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);
+                }
             }
 
             double ChoicePoint = Configuration.MT.NextDouble() * FitnessSum;
             FitnessSum = 0;
-
+            // ルーレット選択する
             foreach (Classifier C in this.CList)
             {
                 //if( !Double.IsNaN( C.F ) && ( C.Exp > Configuration.ExpThreshold ) )
-                //if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))
-                //{
-                //    FitnessSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);//e0が小さいものが優位,追加したもの
-                //}
-
-                if (!(Double.IsNaN(C.Kappa)))
+                if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))
                 {
-                    FitnessSum += C.F;
+                    FitnessSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);//e0が小さいものが優位,追加したもの
                 }
 
+                //if (!(Double.IsNaN(C.Kappa)))
+                //{
+                //    FitnessSum += C.F;
+                //}
                 if (FitnessSum > ChoicePoint)
                 {
                     return C;

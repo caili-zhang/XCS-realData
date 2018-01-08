@@ -193,7 +193,7 @@ namespace XCS
 					{
                         if (this.Epsilon_0 <= C.Epsilon_0)//chou 10-5 GA subsumption 
                         {
-                            if (C.C.state[4] == '#' & C.C.state[7] == '0')//"bath0 rehabi1"
+                            if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                             {
                                 Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime+", in GA");
                                 Configuration.Problem.WriteLine(this.C.state + "," + Configuration.T + "," + this.P + "," + this.M + "," + this.Epsilon + "," + this.F + "," + this.N + "," + this.Exp + "," + this.Ts + "," + this.As + "," + this.Kappa + "," + this.Epsilon_0 + "," + this.St + "," + this.GenerateTime + ", in GA");

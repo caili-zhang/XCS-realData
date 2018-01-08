@@ -40,6 +40,8 @@ namespace XCS
             {
                 if (args[i] == "-s" | args[i] == "-S" | args[i] == "--Seed" | args[i] == "--seed")
                 {
+
+
                     Configuration.Seed = int.Parse(args[++i]);
                 }
 
@@ -228,10 +230,12 @@ namespace XCS
             Configuration.Nyu = 15;
             // 包摂
             Configuration.DoActionSetSubsumption = true;//
-                                                        // 包摂閾値(経験値)
-                                                        //Configuration.Theta_sub = 20;
-                                                        //Configuration.Theta_sub = 200;	// 150116
-                                                        // GA閾値(TimeStamp)
+            Configuration.DoPopSubsumption = true;
+
+            // 包摂閾値(経験値)
+            //Configuration.Theta_sub = 20;
+            //Configuration.Theta_sub = 200;	// 150116
+            // GA閾値(TimeStamp)
             Configuration.Theta_GA = 25;
             // Crossover割合
             Configuration.Chai = 0.8;//komine
@@ -470,6 +474,11 @@ namespace XCS
                     double p = Rho;
                     AS.Update(P, p, Sigma);
                     AS.RunGA(S, P);
+                    //if (Configuration.DoPopSubsumption)
+                    //{
+                    //    P.Subsumption();//do pop subsumption
+                    //}
+                    
                     PreviousAS = null;
                 }
                 else
@@ -486,7 +495,7 @@ namespace XCS
                 {
                     Configuration.StartTime = Configuration.T;
                 }
-                Configuration.FlagSigma = Configuration.FlagEpsilon = false
+                Configuration.FlagSigma = Configuration.FlagEpsilon = false;
                 if (!ConvergenceStelist && (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS"))
                 {
                     int i = 1;
@@ -516,16 +525,18 @@ namespace XCS
                 Console.WriteLine(Configuration.T);
 
             }
+            //最後の一回まとめる
+            //P.Subsumption();
+
             P.Show();
+            
             #endregion 
             goodsleep1.Close();
             goodsleep2.Close();
             badsleep.Close();
 
             Configuration.Problem.Close();
-            //P.Compact();
-            //P.Show();
-
+            
             if ((Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS"))
             {
                 StreamWriter stdSw = new StreamWriter("./VarianceTable_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
@@ -567,8 +578,6 @@ namespace XCS
             }
 
             sw.Close();
-
-
 
             StreamWriter Zerosw = new StreamWriter("./Zero_per_" + Configuration.Seed + "CnoiseWidth_" + Configuration.NoiseWidth
                 + "AS_" + Configuration.ASName + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma

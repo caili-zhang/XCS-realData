@@ -121,7 +121,7 @@ namespace XCS
                 {
                     if (C.N > 1)
                     {
-                        if (C.C.state[4] == '#' & C.C.state[7] == '0')//"bath0 rehabi1"
+                        if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                         {
                             Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop -1");
                         }
@@ -130,7 +130,7 @@ namespace XCS
                     else
                     {
 
-                        if (C.C.state[4] == '#' & C.C.state[7] == '0')//"bath0 rehabi1"
+                        if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                         {
                             Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop delete");
                         }
@@ -138,6 +138,80 @@ namespace XCS
                     }
                     return;
                 }
+            }
+        }
+
+        /// <summary>
+        ///  POP subsumption
+        /// </summary>
+        /// <param name="pop"></param>
+        public override void Subsumption()
+        {
+            List<Classifier> copyPopSet = new List<Classifier>();
+            foreach (Classifier classifier in CList)
+            {   
+                //正確かつ収束した分類子に対して行う
+                SigmaNormalClassifier s_classifier = (SigmaNormalClassifier)classifier;
+                if (s_classifier.Kappa==1 & s_classifier.IsConvergenceEpsilon())
+                {
+                    copyPopSet.Add(classifier);
+                }
+                
+            }
+            int N = copyPopSet.Count;
+
+            //最大N回実行する 、Nは変化する，もっと一般化されたものは毎回削除される
+            for (int i = 0; i < N; i++)
+            {
+                #region subsume
+                Classifier Subsumber_cl = null;
+
+                //actionsetなかに最も一般的な分類子をClにする、残った分類子の中にもっと一般化な分類子を抽出
+                foreach (Classifier C in copyPopSet)
+                {
+                    if (C.CouldSubsume())
+                    {
+                        if ((Subsumber_cl == null) || (C.C.NumberOfSharp > Subsumber_cl.C.NumberOfSharp) || ((C.C.NumberOfSharp == Subsumber_cl.C.NumberOfSharp) && (Configuration.MT.NextDouble() < 0.5)))
+                        {
+                            Subsumber_cl = C;
+                        }
+                    }
+                }
+                if (Subsumber_cl != null)
+                {
+                    // 削除中にforeachできない
+                    List<Classifier> CL = new List<Classifier>();
+                    // 包摂された、削除したいClassifier C　をCLに登録
+                    // まずCopyActionSetは　Subsumber_cl を削除する、しないと自分を削除される
+                    copyPopSet.Remove(Subsumber_cl);
+                    foreach (Classifier C in copyPopSet)
+                    {
+                        if (Subsumber_cl.IsMoreGeneral(C))
+                        {
+                            SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
+                            SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Subsumber_cl;
+                            
+                            if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
+                            {
+                                Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
+                                    C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
+
+                                Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
+                                    Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
+                                    Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
+                            }
+                            Subsumber_cl.N += C.N;
+                            CL.Add(C);
+                        }
+                    }
+
+                    foreach (Classifier C in CL)
+                    {
+                        this.Remove(C);
+                        //pop から削除
+                    }
+                }
+                #endregion
             }
         }
         protected double SumEpsilon_0()
