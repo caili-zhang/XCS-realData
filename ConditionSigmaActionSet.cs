@@ -608,10 +608,10 @@ namespace XCS
 
                 if (FitnessSum > ChoicePoint)
                 {
-                    if (C.C.state == "####0###")
-                    {
-                        Console.ReadLine();
-                    }
+                    //if (C.C.state == "####0###")
+                    //{
+                    //    Console.ReadLine();
+                    //}
                     return C;
                 }
             }
