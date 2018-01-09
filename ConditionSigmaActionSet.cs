@@ -25,18 +25,15 @@ namespace XCS
                 sw.WriteLine("state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
                 foreach (Classifier C in this.CList)
                 {
-
-
+                    
                     sw.WriteLine(C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
             }
             else
             {
-                sw.WriteLine("time,state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
+                sw.WriteLine("time,state,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
                 foreach (SigmaNormalClassifier C in this.CList)
                 {
-
-
                     sw.WriteLine(Configuration.T + "," + C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + ","
                         + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
                 }
@@ -49,8 +46,14 @@ namespace XCS
         public override void Update(Population Pop, double P, StdList Sigma)
         {
             double SumNumerosity = 0;
-            foreach (Classifier C in this.CList)
+            foreach (SigmaNormalClassifier C in this.CList)
             {
+                //if (C.C.state == "####0##1" & C.IsConvergenceEpsilon())
+                //{
+
+                //    Console.ReadLine();
+                //    this.Show();
+                //}
                 SumNumerosity += C.N;
 
             }
@@ -225,6 +228,7 @@ namespace XCS
 
             this.UpdateFitness();
 
+
             if (Configuration.DoActionSetSubsumption)
             {
                 this.Subsumption(Pop);
@@ -233,10 +237,14 @@ namespace XCS
 
         protected override void UpdateFitness()
         {
+            
+            /////////////////////////////////////////////////////////////
+
             double AccuracySum = 0;
 
-            foreach (Classifier C in this.CList)
+            foreach (SigmaNormalClassifier C in this.CList)
             {
+                
                 SigmaNormalClassifier SNC = (SigmaNormalClassifier)C;
 
                 if (Configuration.T > 1000)
@@ -326,6 +334,7 @@ namespace XCS
             //
             foreach (Classifier C in this.CList)
             {
+
                 C.F += Configuration.Beta * (C.Kappa * C.N / AccuracySum - C.F);
 
                 if (double.IsNaN(C.F))
@@ -333,6 +342,7 @@ namespace XCS
                     Console.ReadLine();
                 }
             }
+            
         }
 
         // 包摂
@@ -362,15 +372,17 @@ namespace XCS
                         }
                     }
                 }
-                if (Subsumber_cl!= null)
+                if (Subsumber_cl != null)
                 {
                     // 削除中にforeachできない
                     List<Classifier> CL = new List<Classifier>();
                     // 包摂された、削除したいClassifier C　をCLに登録
                     // まずCopyActionSetは　Subsumber_cl を削除する、しないと自分を削除される
                     copyActionSet.Remove(Subsumber_cl);
-                    foreach (Classifier C in copyActionSet)
+                    for (int index = 0; index < copyActionSet.Count; index++)
                     {
+                        Classifier C = copyActionSet[index];
+
                         if (Subsumber_cl.IsMoreGeneral(C))
                         {
                             SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
@@ -387,7 +399,7 @@ namespace XCS
                             {
                                 if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                                 {
-                                    Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + 
+                                    Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
                                         C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
 
                                     Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
@@ -395,17 +407,59 @@ namespace XCS
                                         Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
                                 }
                                 Subsumber_cl.N += C.N;
-                                CL.Add(C);
+                                //包摂された分類子を削除
+                                copyActionSet.RemoveAt(index);
+                                //AS で削除,pop で削除
+                                this.Remove(C);
+                                Pop.Remove(C);
                             }
                         }
                     }
-
-                    foreach (Classifier C in CL)
-                    {
-                        this.Remove(C);//as から削除
-                        Pop.Remove(C);//pop から削除
-                    }
                 }
+                //if (Subsumber_cl!= null)
+                //{
+                //    // 削除中にforeachできない
+                //    List<Classifier> CL = new List<Classifier>();
+                //    // 包摂された、削除したいClassifier C　をCLに登録
+                //    // まずCopyActionSetは　Subsumber_cl を削除する、しないと自分を削除される
+                //    copyActionSet.Remove(Subsumber_cl);
+                //    foreach (Classifier C in copyActionSet)
+                //    {
+                //        if (Subsumber_cl.IsMoreGeneral(C))
+                //        {
+                //            SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
+                //            SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Subsumber_cl;
+
+                //            // e0 の値を３位まで見る、近いものは差がないとみなす
+                //            var subsumed = Math.Round(C.Epsilon_0, 3);
+                //            var subsumer = Math.Round(Subsumber_cl.Epsilon_0, 3);
+
+                //            if ((subsumer <= (subsumed + subsumer / 10))
+                //               && Snc_ko.IsConvergenceEpsilon()
+                //            && Snc_oya.IsConvergenceEpsilon()
+                //                )
+                //            {
+                //                if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
+                //                {
+                //                    Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + 
+                //                        C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
+
+                //                    Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
+                //                        Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
+                //                        Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
+                //                }
+                //                Subsumber_cl.N += C.N;
+                //                CL.Add(C);
+                //            }
+                //        }
+                //    }
+
+                //    foreach (Classifier C in CL)
+                //    {
+                //        this.Remove(C);//as から削除
+                //        Pop.Remove(C);//pop から削除
+                //    }
+                //}
                 #endregion
             }
         }
@@ -418,9 +472,11 @@ namespace XCS
 
         public override void RunGA(State Situation, Population P)
         {
+            
             double NumerositySum = 0.0;
             double TimeStampSum = 0.0;
 
+            
             foreach (Classifier C in this.CList)
             {
                 NumerositySum += C.N;
@@ -563,34 +619,67 @@ namespace XCS
 
         protected override Classifier SelectOffspring()
         {
-            double FitnessSum = 0;
+            //this.CList.OrderBy( n => n.Epsilon);
+            //e 昇順に並べ
+            this.CList.Sort((ListA, ListB) => (int)(ListA.Epsilon*10000) - (int)(ListB.Epsilon*10000));
+            double KappaSum = 0;
+            //double FitnessSum = 0;
             // Fitness Sum を計算する
-            foreach (Classifier C in this.CList)
+            for (int i =0; i< this.CList.Count; i++)
             {
-                //FitnessSum += C.F;
-                if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))//9-24 nakata
-                {
-                    //e0が小さいものが優位,追加したもの
-                    FitnessSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);
-                }
-            }
-
-            double ChoicePoint = Configuration.MT.NextDouble() * FitnessSum;
-            FitnessSum = 0;
-            // ルーレット選択する
-            foreach (Classifier C in this.CList)
-            {
-                //if( !Double.IsNaN( C.F ) && ( C.Exp > Configuration.ExpThreshold ) )
+                SigmaNormalClassifier C = (SigmaNormalClassifier)(this.CList[i]);
                 if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))
                 {
-                    FitnessSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);//e0が小さいものが優位,追加したもの
+                    KappaSum += C.Kappa * (this.CList.Count - i);
                 }
+                    
+                if (C.C.state == "####0##1" & C.IsConvergenceEpsilon())
+                {
 
-                //if (!(Double.IsNaN(C.Kappa)))
+                    //Console.ReadLine();
+                    //this.Show();
+                }
+                //XCS original method 
+                //FitnessSum += C.F;
+
+                // 学部、効いていない
+                //if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))//
                 //{
-                //    FitnessSum += C.F;
+                //    //e0が小さいものが優位,追加したもの
+                //    KappaSum += (1 / C.Epsilon) * C.Kappa;
+                //    //KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);
                 //}
-                if (FitnessSum > ChoicePoint)
+            }
+
+            //foreach (SigmaNormalClassifier C in this.CList)
+            //{
+            //    if (C.C.state == "####0##1" & C.IsConvergenceEpsilon())
+            //    {
+
+            //        Console.ReadLine();
+            //        this.Show();
+            //    }
+            //    //FitnessSum += C.F;
+            //    if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))//9-24 nakata
+            //    {
+            //        //e0が小さいものが優位,追加したもの
+            //        KappaSum += (1 / C.Epsilon)*C.Kappa ;
+            //        //KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);
+            //    }
+            //}
+
+            double ChoicePoint = Configuration.MT.NextDouble() * KappaSum;
+            //double ChoicePoint = Configuration.MT.NextDouble() * FitnessSum;
+            KappaSum = 0;
+            // ルーレット選択する
+            for (int i = 0; i < this.CList.Count; i++)
+            {
+                Classifier C = this.CList[i];
+                if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))
+                {
+                    KappaSum += C.Kappa * (this.CList.Count - i);
+                }
+                if (KappaSum > ChoicePoint)
                 {
                     return C;
                 }

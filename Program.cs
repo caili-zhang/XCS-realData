@@ -328,14 +328,16 @@ namespace XCS
             #region main roop
             while (Configuration.T < Configuration.Iteration)
             {
-                
+                //if (Configuration.T == 11638)
+                //{
+                //    Console.ReadLine();
+                //}
                 if (!Configuration.IsConvergenceVT)
                 {
                     bool flag = true;
                     //入力データのSLが収束すれば、VTが収束とみなす。
                     foreach (StdList SL in Configuration.Stdlist)
                     {
-
                         if (flag && !SL.IsConvergenceSigma())
                         {
                             flag = false;
@@ -389,6 +391,7 @@ namespace XCS
 
                 // MatchSet生成
                 MatchSet M = new NormalMatchSet(S, P);
+                Console.WriteLine("after matchset" + P.CountNumerosity());
 
                 foreach (Classifier cl in M.CList)
                 {
@@ -419,10 +422,10 @@ namespace XCS
                 }
                 else
                 {
-                    AS = new NormalActionSet(M.CList);/*M.MatchAction(Action))*/;
+                    AS = new ConditionSigmaActionSet(M.CList);
+                    //AS = new NormalActionSet(M.CList);/*M.MatchAction(Action))*/;
                 }
-
-
+                
                 char Action = '0';//action ないから、全部０にする
                 double Rho = Env.ExecuteAction(Action);
 
@@ -472,13 +475,21 @@ namespace XCS
                 if (Env.Eop)
                 {
                     double p = Rho;
+                    
                     AS.Update(P, p, Sigma);
+
+                    Console.WriteLine("after AS update " + P.CountNumerosity());
                     AS.RunGA(S, P);
+                    if (P.CountNumerosity() > 400)
+                    {
+                        Console.ReadLine();
+                    }
+                    Console.WriteLine("after GA " + P.CountNumerosity());
                     //if (Configuration.DoPopSubsumption)
                     //{
                     //    P.Subsumption();//do pop subsumption
                     //}
-                    
+
                     PreviousAS = null;
                 }
                 else
@@ -521,12 +532,14 @@ namespace XCS
                     }
                 }
 
-                Configuration.T++;
+                
                 Console.WriteLine(Configuration.T);
-
+                Console.WriteLine(P.CountNumerosity());
+                Configuration.T++;
+                
             }
             //最後の一回まとめる
-            //P.Subsumption();
+            P.Subsumption();
 
             P.Show();
             

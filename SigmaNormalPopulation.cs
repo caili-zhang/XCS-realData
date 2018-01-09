@@ -85,10 +85,15 @@ namespace XCS
 				SumFitness += SNC.WinningRate.Average();
 				//Console.WriteLine(SNC.C.state + " ave: " + SNC.WinningRate.Average());
 			}
+            if (SumNumerosity > Configuration.N)
+            {
+                Console.ReadLine();
+            }
 			if( SumNumerosity <= Configuration.N )
 			{
 				return;
 			}
+
 			double AvFitness = SumFitness / SumNumerosity;
 			double VoteSum = 0;
 
@@ -196,6 +201,8 @@ namespace XCS
                         }
                     }
                 }
+
+                // subsumer が包摂できる分類子を包摂する
                 if (Subsumber_cl != null)
                 {
                     // 削除中にforeachできない
@@ -203,45 +210,82 @@ namespace XCS
                     // 包摂された、削除したいClassifier C　をCLに登録
                     // まずCopyActionSetは　Subsumber_cl を削除する、しないと自分を削除される
                     copyPopSet.Remove(Subsumber_cl);
-                    foreach (Classifier C in copyPopSet)
+                    for(int index = 0; index < copyPopSet.Count; i++)
                     {
+                        Classifier C = copyPopSet[index];
+
                         if (Subsumber_cl.IsMoreGeneral(C))
                         {
                             SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
                             SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Subsumber_cl;
 
                             // e0 の値を３位まで見る、近いものは差がないとみなす
-                            var subsumed = Math.Round(C.Epsilon_0, 3);
-                            var subsumer = Math.Round(Subsumber_cl.Epsilon_0, 3);
+                            //var subsumed = Math.Round(C.Epsilon_0, 3);
+                            //var subsumer = Math.Round(Subsumber_cl.Epsilon_0, 3);
 
-                            if ((subsumer <= (subsumed + subsumer / 10))
-                               && Snc_ko.IsConvergenceEpsilon()
-                            && Snc_oya.IsConvergenceEpsilon()
-                                )
+                            //if ((subsumer <= (subsumed + subsumer / 10))
+                            //   && Snc_ko.IsConvergenceEpsilon()
+                            //&& Snc_oya.IsConvergenceEpsilon()
+                            //    )
+                            //{
+                            if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                             {
-                                if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
-                                {
-                                    Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
-                                        C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
+                                Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
+                                    C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
 
-                                    Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
-                                        Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
-                                        Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
-                                }
-                                Subsumber_cl.N += C.N;
-                                CL.Add(C);
+                                Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
+                                    Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
+                                    Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
                             }
+                            Subsumber_cl.N += C.N;
+                            //包摂された分類子を削除
+                            copyPopSet.RemoveAt(index);
+                            this.Remove(C);
                         }
                     }
+                    //foreach (Classifier C in copyPopSet)
+                    //{
+                    //    Classifier to_delete = null;
+                    //    if (Subsumber_cl.IsMoreGeneral(C))
+                    //    {
+                    //        SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
+                    //        SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Subsumber_cl;
 
-                    foreach (Classifier C in CL)
-                    {
-                        this.Remove(C);
-                        //pop から削除
-                    }
+                    //        // e0 の値を３位まで見る、近いものは差がないとみなす
+                    //        //var subsumed = Math.Round(C.Epsilon_0, 3);
+                    //        //var subsumer = Math.Round(Subsumber_cl.Epsilon_0, 3);
+
+                    //        //if ((subsumer <= (subsumed + subsumer / 10))
+                    //        //   && Snc_ko.IsConvergenceEpsilon()
+                    //        //&& Snc_oya.IsConvergenceEpsilon()
+                    //        //    )
+                    //        //{
+                    //            if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
+                    //            {
+                    //                Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
+                    //                    C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
+
+                    //                Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
+                    //                    Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
+                    //                    Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
+                    //            }
+                    //            Subsumber_cl.N += C.N;
+                    //            to_delete = C;
+                    //            break;
+                                
+                    //            //CL.Add(C);
+                    //        //}
+                    //    }
+                    //}
+
+                    //foreach (Classifier C in CL)
+                    //{
+                    //    this.Remove(C);
+                    //    //pop から削除
+                    //}
 
                     //いまの最も一般化されたものを削除する
-                    copyPopSet.Remove(Subsumber_cl);
+                    //copyPopSet.Remove(Subsumber_cl);
 
                 }
                 #endregion
