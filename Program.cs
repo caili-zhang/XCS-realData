@@ -486,7 +486,7 @@ namespace XCS
                 {
                     Configuration.StartTime = Configuration.T;
                 }
-                Configuration.FlagSigma = Configuration.FlagEpsilon = false
+                Configuration.FlagSigma = Configuration.FlagEpsilon = false;
                 if (!ConvergenceStelist && (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS"))
                 {
                     int i = 1;
