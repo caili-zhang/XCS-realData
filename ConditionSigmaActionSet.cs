@@ -25,15 +25,18 @@ namespace XCS
                 sw.WriteLine("state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
                 foreach (Classifier C in this.CList)
                 {
-                    
+
+
                     sw.WriteLine(C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
             }
             else
             {
-                sw.WriteLine("time,state,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
+                sw.WriteLine("time,state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
                 foreach (SigmaNormalClassifier C in this.CList)
                 {
+
+
                     sw.WriteLine(Configuration.T + "," + C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + ","
                         + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
                 }
@@ -46,14 +49,8 @@ namespace XCS
         public override void Update(Population Pop, double P, StdList Sigma)
         {
             double SumNumerosity = 0;
-            foreach (SigmaNormalClassifier C in this.CList)
+            foreach (Classifier C in this.CList)
             {
-                //if (C.C.state == "####0##1" & C.IsConvergenceEpsilon())
-                //{
-
-                //    Console.ReadLine();
-                //    this.Show();
-                //}
                 SumNumerosity += C.N;
 
             }
@@ -228,10 +225,14 @@ namespace XCS
 
             this.UpdateFitness();
 
-
             if (Configuration.DoActionSetSubsumption)
             {
                 this.Subsumption(Pop);
+                if (Pop.CountNumerosity() > 400)
+                {
+                    Console.WriteLine(" stop!!");
+                }
+               
             }
         }
 
@@ -242,9 +243,12 @@ namespace XCS
 
             double AccuracySum = 0;
 
-            foreach (SigmaNormalClassifier C in this.CList)
+            foreach (Classifier C in this.CList)
             {
-                
+                //if (C.C.state == "####0##1")
+                //{
+                //    Console.ReadLine();
+                //}
                 SigmaNormalClassifier SNC = (SigmaNormalClassifier)C;
 
                 if (Configuration.T > 1000)
@@ -619,66 +623,35 @@ namespace XCS
 
         protected override Classifier SelectOffspring()
         {
-            //this.CList.OrderBy( n => n.Epsilon);
-            //e 昇順に並べ
-            this.CList.Sort((ListA, ListB) => (int)(ListA.Epsilon*10000) - (int)(ListB.Epsilon*10000));
             double KappaSum = 0;
             //double FitnessSum = 0;
             // Fitness Sum を計算する
-            for (int i =0; i< this.CList.Count; i++)
+            foreach (Classifier C in this.CList)
             {
-                SigmaNormalClassifier C = (SigmaNormalClassifier)(this.CList[i]);
-                if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))
-                {
-                    KappaSum += C.Kappa * (this.CList.Count - i);
-                }
-                    
-                if (C.C.state == "####0##1" & C.IsConvergenceEpsilon())
-                {
-
-                    //Console.ReadLine();
-                    //this.Show();
-                }
-                //XCS original method 
                 //FitnessSum += C.F;
-
-                // 学部、効いていない
-                //if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))//
-                //{
-                //    //e0が小さいものが優位,追加したもの
-                //    KappaSum += (1 / C.Epsilon) * C.Kappa;
-                //    //KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);
-                //}
+                if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))//9-24 nakata
+                {
+                    //e0が小さいものが優位,追加したもの
+                    KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);
+                }
             }
-
-            //foreach (SigmaNormalClassifier C in this.CList)
-            //{
-            //    if (C.C.state == "####0##1" & C.IsConvergenceEpsilon())
-            //    {
-
-            //        Console.ReadLine();
-            //        this.Show();
-            //    }
-            //    //FitnessSum += C.F;
-            //    if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))//9-24 nakata
-            //    {
-            //        //e0が小さいものが優位,追加したもの
-            //        KappaSum += (1 / C.Epsilon)*C.Kappa ;
-            //        //KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);
-            //    }
-            //}
 
             double ChoicePoint = Configuration.MT.NextDouble() * KappaSum;
             //double ChoicePoint = Configuration.MT.NextDouble() * FitnessSum;
             KappaSum = 0;
             // ルーレット選択する
-            for (int i = 0; i < this.CList.Count; i++)
+            foreach (Classifier C in this.CList)
             {
-                Classifier C = this.CList[i];
+                //if( !Double.IsNaN( C.F ) && ( C.Exp > Configuration.ExpThreshold ) )
                 if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))
                 {
-                    KappaSum += C.Kappa * (this.CList.Count - i);
+                    KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);//e0が小さいものが優位,追加したもの
                 }
+
+                //if (!(Double.IsNaN(C.Kappa)))
+                //{
+                //    FitnessSum += C.F;
+                //}
                 if (KappaSum > ChoicePoint)
                 {
                     return C;

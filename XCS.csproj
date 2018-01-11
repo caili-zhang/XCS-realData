@@ -99,6 +99,7 @@
     <Compile Include="Environment.cs" />
     <Compile Include="MatchSet.cs" />
     <Compile Include="MersenneTwister.cs" />
+    <Compile Include="NormalActionSet.cs" />
     <Compile Include="NormalClassifier.cs" />
     <Compile Include="NormalMatchSet.cs" />
     <Compile Include="NormalPopulation.cs" />

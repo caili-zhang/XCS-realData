@@ -422,8 +422,7 @@ namespace XCS
                 }
                 else
                 {
-                    AS = new ConditionSigmaActionSet(M.CList);
-                    //AS = new NormalActionSet(M.CList);/*M.MatchAction(Action))*/;
+                    AS = new NormalActionSet(M.CList);/*M.MatchAction(Action))*/;
                 }
                 
                 char Action = '0';//action ないから、全部０にする
@@ -536,7 +535,7 @@ namespace XCS
                 Console.WriteLine(Configuration.T);
                 Console.WriteLine(P.CountNumerosity());
                 Configuration.T++;
-                
+
             }
             //最後の一回まとめる
             P.Subsumption();
