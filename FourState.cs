@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace XCS
 {
-	class BinaryState : State
+	class FourState : State
 	{
 		// 長さと種類をそろえる(GetStateと統合可?)
-		public BinaryState( int Length )
+		public FourState( int Length )
 		{
 			this.Length = Length;
-			Number = 2;    // 0, 1
+			Number = 4;    // 0, 1
 		}
 
 		// すべてをリストアップ用
-		private BinaryState( string S )
+		private FourState( string S )
 		{
 			this.state = S;
 			this.Length = S.Length;
@@ -24,7 +24,7 @@ namespace XCS
 		}
 
 		// コピーコンストラクタ
-		public BinaryState( State S )
+		public FourState( State S )
 		{
 			this.state = S.state;
 			this.Length = S.Length;
@@ -132,7 +132,7 @@ namespace XCS
 				{
 					S = "0" + S;
 				}
-				All[i] = new BinaryState( S );
+				All[i] = new FourState( S );
 			}
 			return All;
 		}

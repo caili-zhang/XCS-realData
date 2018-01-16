@@ -21,8 +21,8 @@ namespace XCS
             Configuration.NoiseWidth = 0;
             Configuration.ASName = "CS";
             Configuration.L = 8;
-            //Configuration.ExploitEnv = new MultiplexerEnvironment( 6 );
-            Environment Env = new ReadCsvEnvironment();
+            
+            Environment Env = new OneBitEnvironment();
             Configuration.Theta_sub = 20;
             Configuration.ExpThreshold = 20;
             Configuration.DifferenceSigma = 0.1;//for real data  0~1.0
@@ -62,9 +62,9 @@ namespace XCS
                 {
                     EnvName = args[++i];
 
-                    if (args[i] == "csv")
+                    if (args[i] == "fourState")
                     {
-                        Env = new ReadCsvEnvironment();
+                        Env = new OneBitEnvironment();
                     }
 
                     else
@@ -225,7 +225,7 @@ namespace XCS
             // 報酬
             Configuration.Rho = 1000;
             // Fitnessの計算パラメータ 下駄　1/1000
-            Configuration.Epsilon_0 = 0.001;
+            Configuration.Epsilon_0 = 10;
             Configuration.Alpha = 0.1;
             Configuration.Nyu = 15;
             // 包摂
@@ -392,28 +392,7 @@ namespace XCS
                 // MatchSet生成
                 MatchSet M = new NormalMatchSet(S, P);
                 Console.WriteLine("after matchset" + P.CountNumerosity());
-
-                foreach (Classifier cl in M.CList)
-                {
-                    if (cl.C.state[4] == '2' & cl.C.state[7] == '#')//"bath2  rehabi# or bath# rehabi0"
-                    {
-                        goodsleep1.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
-                    }
-                    if (cl.C.state[4] == '#' & cl.C.state[7] == '0')//"bath2  rehabi# or bath# rehabi0"
-                    {
-                        goodsleep2.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
-                    }
-                }
-                foreach (Classifier cl in P.CList)
-                {
-                    if (cl.C.state[4] == '0' & cl.C.state[7] == '1')//"bath0 rehabi1"
-                    {
-                        SigmaNormalClassifier snc = (SigmaNormalClassifier)cl;
-                        badsleep.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," 
-                            + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime +","+ snc.ConvergenceTime);
-                    }
-                }
-
+                
                 // ActionSetはただMをコピーするだけ,アクションがないから
                 ActionSet AS;
                 if (Configuration.ASName == "CS")

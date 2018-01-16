@@ -245,59 +245,12 @@ namespace XCS
 
             foreach (Classifier C in this.CList)
             {
-                //if (C.C.state == "####0##1")
-                //{
-                //    Console.ReadLine();
-                //}
+             
                 SigmaNormalClassifier SNC = (SigmaNormalClassifier)C;
 
                 if (Configuration.T > 1000)
                 {
-                    //if (//またがるのものを排除 平均プラマイ　Pのプラマイ
-
-                    //         (C.M - C.Epsilon) < Configuration.RewardAverage
-                    //         && (C.M + C.Epsilon) > Configuration.RewardAverage
-                    //    )
-                    //{//またがる分類子の正確性を極端に下げる　PS：0にしてはいけない
-                    // //またがる部分とEの割合でKappaの正確性を下げていく、またがる部分が大きいければ　下がるのが早い
-                    //    double crossPercentage;
-                    //    double mincross;
-                    //    //puls minus 0.5e どうなるかな0128 ダメだった　余計なもの残した
-                    //    mincross = Math.Min(Math.Abs(C.M + C.Epsilon - Configuration.RewardAverage),
-                    //        Math.Abs(C.M - C.Epsilon - Configuration.RewardAverage));
-                    //    //crossPercentage = mincross / (C.Epsilon);
-                    //    crossPercentage = mincross / Configuration.RewardAverage;//12/11変更、許容範囲の図り方、平均値と比較
-
-                    //    //規制緩和　c.epsilon の　20% ぐらいまたがる　を許す、緩和しない基本的に+-epsilon 十分緩いい
-                    //    //±σ　相当　片側85% と　片側15% の関係
-
-                    //    if (crossPercentage < Configuration.CoverPersentage)//許容範囲で通常のやり方
-                    //    {
-                    //        if (C.Epsilon < C.Epsilon_0)
-                    //        {
-                    //            C.Kappa = 1;
-                    //        }
-                    //        else
-                    //        {//epsilon>epsilon0 の場合　
-                    //            C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
-                    //        }
-                    //    }
-                    //    else//許容範囲を超えた
-                    //    {
-                    //        C.Kappa = Configuration.Alpha * Math.Pow(1 + crossPercentage, -Configuration.Nyu);
-                    //        // C.Kappa = Math.Pow(Math.E,-Math.Pow(5*crossPercentage,2));
-                    //    }
-
-
-                    //    AccuracySum += C.Kappa * C.N;
-                    //    if (double.IsNaN(AccuracySum))
-                    //    {
-                    //        Console.ReadLine();
-                    //    }
-
-                    //}
-                    //else //またがらない分類子は 通常のやり方
-                    //{
+                    
                         if (C.Epsilon <= C.Epsilon_0)
                         {
                             C.Kappa = 1;
@@ -312,7 +265,7 @@ namespace XCS
                         {
                             Console.ReadLine();
                         }
-                    //}
+
                 }
 
                 else //1000 回以下の場合 
@@ -401,15 +354,7 @@ namespace XCS
                             && Snc_oya.IsConvergenceEpsilon()
                                 )
                             {
-                                if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
-                                {
-                                    Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
-                                        C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
-
-                                    Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
-                                        Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
-                                        Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
-                                }
+                                
                                 Subsumber_cl.N += C.N;
                                 //包摂された分類子を削除
                                 copyActionSet.RemoveAt(index);
@@ -555,30 +500,6 @@ namespace XCS
                 // bothChild
                 Child_1.Mutation(Situation);
                 Child_2.Mutation(Situation);
-
-                if (Child_1.C.state[4] == '0' & Child_1.C.state[7] == '1')//"bath0 rehabi1"
-                {
-                    Configuration.Problem.WriteLine(Child_1.C.state + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + ","
-                        + Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0 + "," + Child_1.St + "," + Child_1.GenerateTime + ", child 2 ");
-                    Configuration.Problem.WriteLine(Parent_1.C.state + "," + Configuration.T + "," + Parent_1.P + "," + Parent_1.M + "," + Parent_1.Epsilon + "," + Parent_1.F + ","
-                        + Parent_1.N + "," + Parent_1.Exp + "," + Parent_1.Ts + "," + Parent_1.As + "," + Parent_1.Kappa + "," + Parent_1.Epsilon_0 + "," + Parent_1.St + "," + Parent_1.GenerateTime + ",Parent1");
-
-                    Configuration.Problem.WriteLine(Parent_2.C.state + "," + Configuration.T + "," + Parent_2.P + "," + Parent_2.M + "," + Parent_2.Epsilon + "," + Parent_2.F + ","
-                        + Parent_2.N + "," + Parent_2.Exp + "," + Parent_2.Ts + "," + Parent_2.As + "," + Parent_2.Kappa + "," + Parent_2.Epsilon_0 + "," + Parent_2.St + "," + Parent_2.GenerateTime + ",Parent2");
-                }
-
-                if (Child_2.C.state[4] == '0' & Child_2.C.state[7] == '1')//"bath0 rehabi1"
-                {
-                    Configuration.Problem.WriteLine(Child_2.C.state + "," + Configuration.T + "," + Child_2.P + "," + Child_2.M + "," + Child_2.Epsilon + "," + Child_2.F + ","
-                        + Child_2.N + "," + Child_2.Exp + "," + Child_2.Ts + "," + Child_2.As + "," + Child_2.Kappa + "," + Child_2.Epsilon_0 + "," + Child_2.St + "," + Child_2.GenerateTime + ",child 2");
-                    Configuration.Problem.WriteLine(Parent_1.C.state + "," + Configuration.T + "," + Parent_1.P + "," + Parent_1.M + "," + Parent_1.Epsilon + "," + Parent_1.F + ","
-                        + Parent_1.N + "," + Parent_1.Exp + "," + Parent_1.Ts + "," + Parent_1.As + "," + Parent_1.Kappa + "," + Parent_1.Epsilon_0 + "," + Parent_1.St + "," + Parent_1.GenerateTime + ",Parent1");
-
-                    Configuration.Problem.WriteLine(Parent_2.C.state + "," + Configuration.T + "," + Parent_2.P + "," + Parent_2.M + "," + Parent_2.Epsilon + "," + Parent_2.F + ","
-                        + Parent_2.N + "," + Parent_2.Exp + "," + Parent_2.Ts + "," + Parent_2.As + "," + Parent_2.Kappa + "," + Parent_2.Epsilon_0 + "," + Parent_2.St + "," + Parent_2.GenerateTime + ",Parent2");
-                }
-
-
                 
                 if (Configuration.DoGASubsumption)
                 {

@@ -154,22 +154,14 @@ namespace XCS
                 {
                     if (C.N > 1)
                     {
-                        if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
-                        {
-                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + ","
-                                + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop -1");
-                        }
+                        
 
                         C.N--;
                     }
                     else
                     {
 
-                        if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
-                        {
-                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + ","
-                                + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop delete");
-                        }
+                        
                         this.Remove(C);
                     }
                     return;
@@ -242,15 +234,7 @@ namespace XCS
                             && Snc_oya.IsConvergenceEpsilon()
                                 )
                             {
-                                if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
-                                {
-                                    Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
-                                        C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", Pop subsumed");
-
-                                    Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
-                                        Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
-                                        Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", Pop subsumer");
-                                }
+                                
                                 Subsumber_cl.N += C.N;
                                 //包摂された分類子を削除
                                 copyPopSet.RemoveAt(index);

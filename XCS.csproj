@@ -92,7 +92,7 @@
   <ItemGroup>
     <Compile Include="ActionSet.cs" />
     <Compile Include="IntergralState.cs" />
-    <Compile Include="BinaryState.cs" />
+    <Compile Include="FourState.cs" />
     <Compile Include="Classifier.cs" />
     <Compile Include="ConditionSigmaActionSet.cs" />
     <Compile Include="Configuration.cs" />
@@ -108,6 +108,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadixConvert.cs" />
+    <Compile Include="OneBitEnvironment.cs" />
     <Compile Include="ReadCsvEnvironment.cs" />
     <Compile Include="SigmaNormalClassifier.cs" />
     <Compile Include="SigmaNormalPopulation.cs" />
