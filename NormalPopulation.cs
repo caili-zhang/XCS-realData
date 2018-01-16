@@ -156,9 +156,10 @@ namespace XCS
                     {
                         if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                         {
-                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop -1");
+                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + ","
+                                + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop -1");
                         }
-                        
+
                         C.N--;
                     }
                     else
@@ -166,7 +167,8 @@ namespace XCS
 
                         if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                         {
-                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop delete");
+                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + ","
+                                + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop delete");
                         }
                         this.Remove(C);
                     }
@@ -207,6 +209,7 @@ namespace XCS
                     {
                         if ((Subsumber_cl == null) || (C.C.NumberOfSharp > Subsumber_cl.C.NumberOfSharp) || ((C.C.NumberOfSharp == Subsumber_cl.C.NumberOfSharp) && (Configuration.MT.NextDouble() < 0.5)))
                         {
+                            
                             Subsumber_cl = C;
                         }
                     }
@@ -230,27 +233,29 @@ namespace XCS
                             SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Subsumber_cl;
 
                             // e0 の値を３位まで見る、近いものは差がないとみなす
-                            //var subsumed = Math.Round(C.Epsilon_0, 3);
-                            //var subsumer = Math.Round(Subsumber_cl.Epsilon_0, 3);
+                            var subsumed = Math.Round(C.Epsilon_0, 3);
+                            var subsumer = Math.Round(Subsumber_cl.Epsilon_0, 3);
 
-                            //if ((subsumer <= (subsumed + subsumer / 10))
-                            //   && Snc_ko.IsConvergenceEpsilon()
-                            //&& Snc_oya.IsConvergenceEpsilon()
-                            //    )
-                            //{
-                            if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
+                            if (( (Snc_oya.M+Snc_oya.Epsilon < Configuration.RewardAverage) 
+                                | (Snc_oya.M - Snc_oya.Epsilon > Configuration.RewardAverage))
+                               && Snc_ko.IsConvergenceEpsilon()
+                            && Snc_oya.IsConvergenceEpsilon()
+                                )
                             {
-                                Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
-                                    C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
+                                if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
+                                {
+                                    Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
+                                        C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", Pop subsumed");
 
-                                Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
-                                    Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
-                                    Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
+                                    Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
+                                        Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
+                                        Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", Pop subsumer");
+                                }
+                                Subsumber_cl.N += C.N;
+                                //包摂された分類子を削除
+                                copyPopSet.RemoveAt(index);
+                                this.Remove(C);
                             }
-                            Subsumber_cl.N += C.N;
-                            //包摂された分類子を削除
-                            copyPopSet.RemoveAt(index);
-                            this.Remove(C);
                         }
                     }
                     //foreach (Classifier C in copyPopSet)
