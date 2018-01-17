@@ -292,7 +292,7 @@ namespace XCS
             List<string> DataList = Env.GetDataList();
             List<string> DistinctDataList = DataList.Distinct().ToList();
 
-            int DistinctDataNum = DistinctDataList.Count();
+            int DistinctDataNum = 4;
             // 提案手法　入力データ個数分の分散
             Configuration.Stdlist = new StdList[DistinctDataNum];
             // 収束した　VTの値を保存する　　ちょう
@@ -328,10 +328,6 @@ namespace XCS
             #region main roop
             while (Configuration.T < Configuration.Iteration)
             {
-                //if (Configuration.T == 11638)
-                //{
-                //    Console.ReadLine();
-                //}
                 if (!Configuration.IsConvergenceVT)
                 {
                     bool flag = true;

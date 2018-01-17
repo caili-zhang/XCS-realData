@@ -44,9 +44,6 @@ namespace XCS
 
 	    public StdList()
 	    {
-           
-           
-            
             this.T = 0;
             this.M = 0;
             this.S = 0;
