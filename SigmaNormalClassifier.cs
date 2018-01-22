@@ -103,87 +103,76 @@ namespace XCS
             return false;
 		}
 
-		// 包摂条件判定用
-		public override bool IsMoreGeneral( Classifier Spec )
-		{
-			if( this.C.NumberOfSharp < Spec.C.NumberOfSharp )
-			{
-				return false;
-			}
-			int i = 0;
-			do
-			{
-				if( this.C.state[i] != '#' && this.C.state[i] != Spec.C.state[i] )
-				{
-					return false;
-				}
-				i++;
-			} while( i < this.C.state.Length );
-			return true;
-		}
-
-		public override void Crossover( Classifier C )
-		{
-			double x = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
-			double y = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
-
-			if( x > y )
-			{
-				double tmp = x;
-				x = y;
-				y = tmp;
-			}
-
-			int i = 0;
-			do
-			{
-				if( x <= i && i < y )
-				{
-					this.C.Switch( C.C, i );
-				}
-				i++;
-			} while( i < y );
-            if (this.C.state == "########")
+        // 包摂条件判定用
+        public override bool IsMoreGeneral(Classifier Spec)
+        {
+            if (this.C.NumberOfSharp <= Spec.C.NumberOfSharp)
             {
-                Crossover(C);
+                return false;
             }
-		}
 
-		public override void Mutation( State S )
-		{
-			int i = 0;
+            int i = 0;
 
-			string state = "";
-			do
-			{
-				if( Configuration.MT.NextDouble() < Configuration.Myu )
-				{
-					// #とstateの切り替え
-					if( this.C.state[i] == '#' )
-					{
-						state += S.state[i];
-					}
-					else
-					{
-						state += '#';
-					}
-				}
-				else
-				{
-					state += this.C.state[i];
-				}
-				i++;
-			} while( i < this.C.state.Length );
-			this.C.state = state;
-            if (this.C.state == "########")
+            do
             {
-                Mutation(S);
-            }
-			this.C.CountSharp();
-		}
+                if (this.C.state[i] != '0' && this.C.state[i] != Spec.C.state[i])
+                {
+                    return false;
+                }
+                i++;
+            } while (i < this.C.state.Length);
 
-		// 包摂条件判定
-		public override bool DoesSubsume( Classifier C )
+            return true;
+        }
+
+        //交叉、属性ごとで交叉を行う、４ビットを１つ単位で交叉する、点交叉
+        public override void Crossover(Classifier C)
+        {
+            double x = Math.Floor(Configuration.MT.NextDouble() * (this.C.Length / 4 + 1));
+            int i = 0;
+            do
+            {
+                if (i >= x * 4)
+                {
+                    this.C.Switch(C.C, i);
+                }
+                i++;
+            } while (i < x * 4);
+        }
+
+        public override void Mutation(State S)
+        {
+            int i = 0;
+
+            string state = "";
+            do
+            {
+                if (Configuration.MT.NextDouble() < Configuration.Myu)
+                {
+                    // #とstateの切り替え
+                    if (this.C.state[i] == '0')
+                    {
+                        state += '*';
+                    }
+                    else
+                    {
+                        state += '0';
+                    }
+                }
+                else
+                {
+                    state += this.C.state[i];
+                }
+                i++;
+            } while (i < this.C.state.Length);
+            this.C.state = state;
+            this.C.CountSharp();
+
+
+        }
+
+        // 包摂条件判定
+        public override bool DoesSubsume( Classifier C )
 		{
 			/*if( this.A == C.A )
 			{*/
@@ -193,14 +182,7 @@ namespace XCS
 					{
                         if (this.Epsilon_0 <= C.Epsilon_0)//chou 10-5 GA subsumption 
                         {
-                            if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
-                            {
-                                Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime+", in GA");
-                                Configuration.Problem.WriteLine(this.C.state + "," + Configuration.T + "," + this.P + "," + this.M + "," + this.Epsilon + "," + this.F + "," + this.N + "," + this.Exp + "," + this.Ts + "," + this.As + "," + this.Kappa + "," + this.Epsilon_0 + "," + this.St + "," + this.GenerateTime + ", in GA");
-                            }
-
                             return true;
-
                         }
 					}
 				}

@@ -18,8 +18,25 @@ namespace XCS
         // すべてをリストアップ用
         public IntegralState(string S)
         {
-            this.state = S;
-            this.Length = S.Length;
+            //８＊４のビット列にする
+            string state = "";
+            for (int i = 0; i < S.Length; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (j == Convert.ToInt32(S.Substring(i, 1)))
+                    {
+                        state = state + "0";
+                    }
+                    else
+                    {
+                        state = state + "*";
+                    }
+                }
+
+            }
+            this.state = state;
+            this.Length = state.Length;
             this.NumberOfSharp = 0;
         }
 
@@ -42,31 +59,32 @@ namespace XCS
         // 確率的に#に変える
         public override void Covering()
         {
-            string S = this.state; 
-            string CoveredState = "";
-            for (int i = 0; i < S.Length; i++)
+            string S = this.state;//長さはstate＝＞８＊４
+            string CoveredState = "";//長さは　８＊４
+
+            for (int i = 0; i < S.Length / 4; i++)
             {
-                var random = Configuration.MT.NextDouble();
-                if ( random < Configuration.P_sharp)
+                // | 0***| *0** | => |0000|*0**|
+
+                //covering 
+                if (Configuration.MT.NextDouble() < Configuration.P_sharp)
                 {
-                    CoveredState += '#';
+                    CoveredState += "0000";
                 }
                 else
                 {
-                    CoveredState += S[i];
+                    CoveredState += S[i * 4].ToString() + S[i * 4 + 1].ToString() + S[i * 4 + 2].ToString() + S[i * 4 + 3].ToString();
                 }
+
             }
-            if (CoveredState == "########")//all #の分類子を弾く
+            this.state = CoveredState;
+            if (this.state == "0000000000000000")
             {
-                this.Covering();
+                Covering();
             }
-            else
-            {
-                this.state = CoveredState;
-            }
-            
             this.CountSharp();
         }
+
 
 
         // i番目を入れ替え

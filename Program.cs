@@ -244,7 +244,7 @@ namespace XCS
                                      // GA時親に包摂
             Configuration.DoGASubsumption = true;//9-8 chou
                                                  // 試行回数
-            Configuration.Iteration = 100000;
+            Configuration.Iteration = 100;
            
             // 単純移動平均
             Configuration.SMA = 100;

@@ -52,20 +52,26 @@ namespace XCS
             }
             else
             {
-                sw.WriteLine("time," + "wake,sleep,tea,garden,bath,desert,news,rehabi"+
-                    ",prediction,mean,epsilon,average,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
-                foreach (SigmaNormalClassifier C in this.CList)
+                sw.WriteLine("state,起床,就寝,お茶,園芸,入浴,おやつ,新聞,リハビリ,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
+                foreach (Classifier C in this.CList)
                 {
-                    //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-                    //Console.WriteLine();
-
-                    sw.WriteLine(Configuration.T + "," + C.C.state[0] +"," + C.C.state[1] + "," + C.C.state[2] + "," + C.C.state[3] + "," + C.C.state[4] + "," + C.C.state[5] + ","
-                        + C.C.state[6] + "," + C.C.state[7] + ","
-                         + C.P + "," + C.M + "," + C.Epsilon + "," + Configuration.RewardAverage + "," + C.F + ","
-                        + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
+                    string classifierState = "";
+                    for (int i = 0; i < C.C.state.Length; i++)
+                    {
+                        if (i % 4 == 0)
+                        {
+                            classifierState = classifierState + "," + C.C.state[i];
+                        }
+                        else
+                        {
+                            classifierState += C.C.state[i];
+                        }
+                    }
+                    sw.WriteLine(classifierState  + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
             }
             sw.Close();
+
         }
 
         // Situationに合ったClassifierをMatchSetに渡す
