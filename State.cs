@@ -39,33 +39,33 @@ namespace XCS
 		/// <returns>situation</returns>
 		abstract public State GetState();
 
-		/// <summary>
-		/// Stateに一致するか(#を考慮)
-		/// </summary>
-		/// <param name="S">比較対象</param>
-		/// <returns>一致(true)</returns>
-		public bool Match( State S )
-		{
-			if( this.state.Length != S.state.Length )
-			{
-				return false;
-			}
+        /// <summary>
+        /// Stateに一致するか(#を考慮)
+        /// </summary>
+        /// <param name="S">比較対象</param>
+        /// <returns>一致(true)</returns>
+        public bool Match(State classifier)
+        {
+            if (this.state.Length != classifier.state.Length)
+            {
+                return false;
+            }
 
-			for( int i = 0; i < this.state.Length; i++ )
-			{
-				if( ( this.state[i] != S.state[i] ) && ( this.state[i] != '#' ) && ( S.state[i] != '#' ) )
-				{
-					return false;
-				}
-			}
+            for (int i = 0; i < this.state.Length; i++)
+            {
+                if ((this.state[i] != classifier.state[i]) && (classifier.state[i] != '0'))
+                {
+                    return false;
+                }
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		/// <summary>
-		/// Covering(#に一部を変える)
-		/// </summary>
-		abstract public void Covering( );
+        /// <summary>
+        /// Covering(#に一部を変える)
+        /// </summary>
+        abstract public void Covering( );
 
 		//// #の数
 		//abstract public int NumberOfSharp();
@@ -114,28 +114,29 @@ namespace XCS
 		/// </summary>
 		public abstract void Show();
 
-		/// <summary>
-		/// #の数カウント(生成後に実行必須)
-		/// </summary>
-		public void CountSharp()
-		{
-			int n = 0;
-			for( int i = 0; i < this.state.Length; i++ )
-			{
-				if( this.state[i] == '#' )
-				{
-					n++;
-				}
-			}
-			this.NumberOfSharp = n;
+        /// <summary>
+        /// #の数カウント(生成後に実行必須)
+        /// </summary>
+        public void CountSharp()
+        {
+            int n = 0;
+            for (int i = 0; i < this.state.Length; i++)
+            {
+                //対応のビットは０
+                if (this.state[i] == '0')
+                {
+                    n++;
+                }
+            }
+            this.NumberOfSharp = n;
 
-			this.Generality = ( double )n / this.state.Length;
-		}
+            this.Generality = (double)n / this.state.Length;
+        }
 
-		/// <summary>
-		/// すべての組み合わせを返す
-		/// </summary>
-		/// <returns>すべての組み合わせを配列で返す</returns>
-		//public static abstract State[] AllState(int Length);
-	}
+        /// <summary>
+        /// すべての組み合わせを返す
+        /// </summary>
+        /// <returns>すべての組み合わせを配列で返す</returns>
+        //public static abstract State[] AllState(int Length);
+    }
 }
