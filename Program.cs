@@ -244,7 +244,7 @@ namespace XCS
                                      // GA時親に包摂
             Configuration.DoGASubsumption = true;//9-8 chou
                                                  // 試行回数
-            Configuration.Iteration = 100;
+            Configuration.Iteration = 100000;
            
             // 単純移動平均
             Configuration.SMA = 100;
@@ -328,10 +328,12 @@ namespace XCS
             #region main roop
             while (Configuration.T < Configuration.Iteration)
             {
-                //if (Configuration.T == 11638)
-                //{
-                //    Console.ReadLine();
-                //}
+                Console.WriteLine(Configuration.T);
+                Console.WriteLine(P.CountNumerosity());
+                if (Configuration.T == 29540)
+                {
+                    Console.ReadLine();
+                }
                 if (!Configuration.IsConvergenceVT)
                 {
                     bool flag = true;
@@ -388,31 +390,46 @@ namespace XCS
                 }
                 
                 State S = Env.GetState();
+                foreach (Classifier cl in P.CList)
+                {
+                    if (cl.C.state == "00000000000000000000000000000000")
+                    {
+                        Console.ReadLine();
+                    }
+                }
 
                 // MatchSet生成
                 MatchSet M = new NormalMatchSet(S, P);
                 Console.WriteLine("after matchset" + P.CountNumerosity());
-
                 foreach (Classifier cl in M.CList)
                 {
-                    if (cl.C.state[4] == '2' & cl.C.state[7] == '#')//"bath2  rehabi# or bath# rehabi0"
+                    if(cl.C.state== "00000000000000000000000000000000")
                     {
-                        goodsleep1.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
-                    }
-                    if (cl.C.state[4] == '#' & cl.C.state[7] == '0')//"bath2  rehabi# or bath# rehabi0"
-                    {
-                        goodsleep2.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
+                        Console.ReadLine();
                     }
                 }
-                foreach (Classifier cl in P.CList)
-                {
-                    if (cl.C.state[4] == '0' & cl.C.state[7] == '1')//"bath0 rehabi1"
-                    {
-                        SigmaNormalClassifier snc = (SigmaNormalClassifier)cl;
-                        badsleep.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," 
-                            + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime +","+ snc.ConvergenceTime);
-                    }
-                }
+                
+
+                //foreach (Classifier cl in M.CList)
+                //{
+                //    if (cl.C.state[4] == '2' & cl.C.state[7] == '#')//"bath2  rehabi# or bath# rehabi0"
+                //    {
+                //        goodsleep1.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
+                //    }
+                //    if (cl.C.state[4] == '#' & cl.C.state[7] == '0')//"bath2  rehabi# or bath# rehabi0"
+                //    {
+                //        goodsleep2.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
+                //    }
+                //}
+                //foreach (Classifier cl in P.CList)
+                //{
+                //    if (cl.C.state[4] == '0' & cl.C.state[7] == '1')//"bath0 rehabi1"
+                //    {
+                //        SigmaNormalClassifier snc = (SigmaNormalClassifier)cl;
+                //        badsleep.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," 
+                //            + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime +","+ snc.ConvergenceTime);
+                //    }
+                //}
 
                 // ActionSetはただMをコピーするだけ,アクションがないから
                 ActionSet AS;
@@ -476,18 +493,38 @@ namespace XCS
                     double p = Rho;
                     
                     AS.Update(P, p, Sigma);
-
                     Console.WriteLine("after AS update " + P.CountNumerosity());
+                    foreach (Classifier cl in AS.CList)
+                    {
+                        if (cl.C.state == "00000000000000000000000000000000")
+                        {
+                            Console.ReadLine();
+                        }
+                    }
+
+
+
                     AS.RunGA(S, P);
+
                     if (P.CountNumerosity() > 400)
                     {
                         Console.ReadLine();
                     }
                     Console.WriteLine("after GA " + P.CountNumerosity());
-                    //if (Configuration.DoPopSubsumption)
-                    //{
-                    //    P.Subsumption();//do pop subsumption
-                    //}
+                    foreach (Classifier cl in AS.CList)
+                    {
+                        if (cl.C.state == "00000000000000000000000000000000")
+                        {
+                            Console.ReadLine();
+                        }
+                    }
+                    foreach (Classifier cl in P.CList)
+                    {
+                        if (cl.C.state == "00000000000000000000000000000000")
+                        {
+                            Console.ReadLine();
+                        }
+                    }
 
                     PreviousAS = null;
                 }
@@ -532,8 +569,7 @@ namespace XCS
                 }
 
                 
-                Console.WriteLine(Configuration.T);
-                Console.WriteLine(P.CountNumerosity());
+                
                 Configuration.T++;
 
             }

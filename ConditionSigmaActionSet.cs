@@ -534,7 +534,12 @@ namespace XCS
                 // 交叉
                 if (Configuration.MT.NextDouble() < Configuration.Chai)
                 {
+                    
                     Child_1.Crossover(Child_2);
+                    if(Child_1.C.state== "0000000000000000")
+                    {
+                        Console.ReadLine();
+                    }
                     Child_1.P = (Parent_1.P + Parent_2.P) / 2;
                     //Child_1.Epsilon = Parent_1.Epsilon + Parent_2.Epsilon;
                     Child_1.Epsilon = (Parent_1.Epsilon + Parent_2.Epsilon) / 2;

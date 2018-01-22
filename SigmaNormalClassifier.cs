@@ -166,9 +166,12 @@ namespace XCS
                 i++;
             } while (i < this.C.state.Length);
             this.C.state = state;
+            if (state== "00000000000000000000000000000000")
+            {
+                this.Mutation(S);
+            }
+            
             this.C.CountSharp();
-
-
         }
 
         // 包摂条件判定
