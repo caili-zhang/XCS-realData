@@ -626,14 +626,15 @@ namespace XCS
             double KappaSum = 0;
             //double FitnessSum = 0;
             // Fitness Sum を計算する
-            foreach (Classifier C in this.CList)
+            foreach (Classifier Cl in this.CList)
             {
+                SigmaNormalClassifier C = (SigmaNormalClassifier)Cl;
                 //FitnessSum += C.F;
-                if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))
+                if (!Double.IsNaN(C.Epsilon_0) && (C.Epsilon_0 != 0.001) &&(C.IsConvergenceEpsilon())&& (C.Exp > Configuration.ExpThreshold))
                 {
                     //e0が小さいものが優位,追加したもの
                     //KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);
-                    KappaSum += 1 / C.Kappa; //0115
+                    KappaSum += 1 / C.Epsilon_0; //0115
                 }
             }
 
@@ -641,13 +642,14 @@ namespace XCS
             //double ChoicePoint = Configuration.MT.NextDouble() * FitnessSum;
             KappaSum = 0;
             // ルーレット選択する
-            foreach (Classifier C in this.CList)
+            foreach (Classifier Cl in this.CList)
             {
+                SigmaNormalClassifier C = (SigmaNormalClassifier)Cl;
                 //if( !Double.IsNaN( C.F ) && ( C.Exp > Configuration.ExpThreshold ) )
-                if (!Double.IsNaN(C.Kappa) && (C.Exp > Configuration.ExpThreshold))
+                if (!Double.IsNaN(C.Epsilon_0) && (C.Epsilon_0 != 0.001) && (C.IsConvergenceEpsilon()) && (C.Exp > Configuration.ExpThreshold))
                 {
                     //KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);//e0が小さいものが優位,追加したもの
-                    KappaSum += 1 / C.Kappa;
+                    KappaSum += 1 / C.Epsilon_0;
                 }
 
                 //if (!(Double.IsNaN(C.Kappa)))
