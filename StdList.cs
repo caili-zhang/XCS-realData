@@ -71,41 +71,59 @@ namespace XCS
 
 	    }
 
-	    /// <summary>
-		/// 初期化
-		/// </summary>
-		/// <param name="State">条件部(10進数)</param>
-		/// <param name="Action">行動部(2進数)</param>
-		public StdList( string State, char Action )
-		{
+        /// <summary>
+        /// 初期化
+        /// </summary>
+        /// <param name="State">条件部(10進数)</param>
+        /// <param name="Action">行動部(2進数)</param>
+        public StdList(string State, char Action)
+        {
             //2進数に変換する、state はint 型
             //string S = Convert.ToString( State,4);
             //string S = RadixConvert.ToString(State, 4, false);
 
-			//while( S.Length < Configuration.L )
-			//{
-				//S = "0" + S;
-			//}
+            //while( S.Length < Configuration.L )
+            //{
+            //S = "0" + S;
+            //}
+
+            //XCSI 表現に変える
+
+            string XCSI_state = "";
+            for (int i = 0; i < State.Length; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (j == Convert.ToInt32(State.Substring(i, 1)))
+                    {
+                        XCSI_state = XCSI_state + "0";
+                    }
+                    else
+                    {
+                        XCSI_state = XCSI_state + "*";
+                    }
+                }
+
+            }
+
+            this.C = XCSI_state;
+            this.A = Action;
+            this.T = 0;
+            this.M = 0;
+            this.S = 0;
+            this.ConvergenceFlag = false;
+
+            // 分散の記録初期化
+            this.Sigma = new double[Configuration.LookBackSigma + 1];
+            for (int i = 0; i < this.Sigma.Count(); i++)
+            {
+                this.Sigma[i] = 0;
+            }
+        }
 
 
-			this.C = State;
-			this.A = Action;
-			this.T = 0;
-			this.M = 0;
-			this.S = 0;
-			this.ConvergenceFlag = false;
 
-			// 分散の記録初期化
-			this.Sigma = new double[Configuration.LookBackSigma + 1];
-			for( int i = 0; i < this.Sigma.Count(); i++ )
-			{
-				this.Sigma[i] = 0;
-			}
-		}
-
-        
-
-		public void Update( double Reward )
+        public void Update( double Reward )
 		{
 			// Sigma[2]まで一つずらし
 			for( int i = this.Sigma.Count() - 1; i > 1; i-- )

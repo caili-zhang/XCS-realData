@@ -80,7 +80,6 @@ namespace XCS
                     Console.ReadLine();
                 }
 
-
                 if (C.GetType().Name == "SigmaNormalClassifier")
                 {
                     // このIterationまでのepsilonを記録ずらし
@@ -98,6 +97,7 @@ namespace XCS
                     {
                         if (C.Exp > 2)//0120 cho 
                         {
+
                             if (SNC.IsConvergenceEpsilon())//分類子のstd が収束するときepsilon を更新
                             {
                                 C.Epsilon = SNC.EpsilonList[0];
