@@ -166,7 +166,7 @@ namespace XCS
 			int i = 0;
 			do
 			{
-				if( State[i] != '#' && this.C[i] != State[i] )
+				if( State[i] != '0' && this.C[i] != State[i] )
 				{
 					return false;
 				}

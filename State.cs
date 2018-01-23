@@ -40,7 +40,7 @@ namespace XCS
 		abstract public State GetState();
 
         /// <summary>
-        /// Stateに一致するか(#を考慮)
+        /// Stateに一致するか(0 を考慮)
         /// </summary>
         /// <param name="S">比較対象</param>
         /// <returns>一致(true)</returns>

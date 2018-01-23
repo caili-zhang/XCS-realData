@@ -330,10 +330,7 @@ namespace XCS
             {
                 Console.WriteLine(Configuration.T);
                 Console.WriteLine(P.CountNumerosity());
-                if (Configuration.T == 29540)
-                {
-                    Console.ReadLine();
-                }
+                
                 if (!Configuration.IsConvergenceVT)
                 {
                     bool flag = true;
@@ -408,28 +405,6 @@ namespace XCS
                         Console.ReadLine();
                     }
                 }
-                
-
-                //foreach (Classifier cl in M.CList)
-                //{
-                //    if (cl.C.state[4] == '2' & cl.C.state[7] == '#')//"bath2  rehabi# or bath# rehabi0"
-                //    {
-                //        goodsleep1.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
-                //    }
-                //    if (cl.C.state[4] == '#' & cl.C.state[7] == '0')//"bath2  rehabi# or bath# rehabi0"
-                //    {
-                //        goodsleep2.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime);
-                //    }
-                //}
-                //foreach (Classifier cl in P.CList)
-                //{
-                //    if (cl.C.state[4] == '0' & cl.C.state[7] == '1')//"bath0 rehabi1"
-                //    {
-                //        SigmaNormalClassifier snc = (SigmaNormalClassifier)cl;
-                //        badsleep.WriteLine(cl.C.state + "," + Configuration.T + "," + cl.P + "," + cl.M + "," + cl.Epsilon + "," + cl.F + "," 
-                //            + cl.N + "," + cl.Exp + "," + cl.Ts + "," + cl.As + "," + cl.Kappa + "," + cl.Epsilon_0 + "," + cl.St + "," + cl.GenerateTime +","+ snc.ConvergenceTime);
-                //    }
-                //}
 
                 // ActionSetはただMをコピーするだけ,アクションがないから
                 ActionSet AS;

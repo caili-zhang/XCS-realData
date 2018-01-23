@@ -78,7 +78,7 @@ namespace XCS
 
             }
             this.state = CoveredState;
-            if (this.state == "0000000000000000")
+            if (this.state == "00000000000000000000000000000000")
             {
                 Covering();
             }
