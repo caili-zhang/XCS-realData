@@ -31,6 +31,7 @@ namespace XCS
             while (reader.Peek() >= 0)
             {
                 string[] cols = reader.ReadLine().Split(',');
+                //一行づつ読む
                 string data = "";
 
                 int i = 0;

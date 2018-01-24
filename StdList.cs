@@ -78,15 +78,6 @@ namespace XCS
         /// <param name="Action">行動部(2進数)</param>
         public StdList(string State, char Action)
         {
-            //2進数に変換する、state はint 型
-            //string S = Convert.ToString( State,4);
-            //string S = RadixConvert.ToString(State, 4, false);
-
-            //while( S.Length < Configuration.L )
-            //{
-            //S = "0" + S;
-            //}
-
             //XCSI 表現に変える
 
             string XCSI_state = "";

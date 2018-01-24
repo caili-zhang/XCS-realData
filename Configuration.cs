@@ -285,20 +285,23 @@ namespace XCS
         //1000##　の発生　収束　消失　見たい
 		
         public static StreamWriter Problem;
-        
+
+        public static String PPPP { get; set; }
         
 
 		/// <summary>
 		/// 提案手法(中田)
 		/// </summary>
 		public static double URE_Epsilon0 { set; get; }
+        /// <summary>
+        /// 入力データdistinct　可能なビット列範囲
+        /// </summary>
+        public static string Possible_range { set; get; }
 
-		public static string pppp;
-
-		/// <summary>
-		/// 評価用環境
-		/// </summary>
-		public static Environment ExploitEnv { set; get; }
+        /// <summary>
+        /// 評価用環境
+        /// </summary>
+        public static Environment ExploitEnv { set; get; }
 
 		/// <summary>
 		/// ClassImbalance用

@@ -62,14 +62,16 @@ namespace XCS
             string S = this.state;//長さはstate＝＞８＊４
             string CoveredState = "";//長さは　８＊４
 
+            
             for (int i = 0; i < S.Length / 4; i++)
             {
-                // | 0***| *0** | => |0000|*0**|
+                // | 0***|  => |00**| //入力には０と１しか出ない
 
                 //covering 
                 if (Configuration.MT.NextDouble() < Configuration.P_sharp)
                 {
-                    CoveredState += "0000";
+                    CoveredState += Configuration.Possible_range.Substring(i,4);
+                    //被覆可能なビットだけを被覆する
                 }
                 else
                 {

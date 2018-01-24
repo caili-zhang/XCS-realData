@@ -14,7 +14,6 @@ namespace XCS
         public ConditionSigmaActionSet(List<Classifier> actSet)
         {
             this.CList = actSet;
-
         }
 
         public override void Show()
@@ -25,8 +24,6 @@ namespace XCS
                 sw.WriteLine("state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
                 foreach (Classifier C in this.CList)
                 {
-
-
                     sw.WriteLine(C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
                 }
             }
@@ -35,8 +32,6 @@ namespace XCS
                 sw.WriteLine("time,state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
                 foreach (SigmaNormalClassifier C in this.CList)
                 {
-
-
                     sw.WriteLine(Configuration.T + "," + C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + ","
                         + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
                 }
@@ -52,13 +47,10 @@ namespace XCS
             foreach (Classifier C in this.CList)
             {
                 SumNumerosity += C.N;
-
             }
-
             foreach (Classifier C in this.CList)
             {
                 C.Exp++;
-
                 if (C.Exp < 1 / Configuration.Beta)
                 {
                     C.P += (P - C.P) / C.Exp;
@@ -79,7 +71,6 @@ namespace XCS
                 {
                     Console.ReadLine();
                 }
-
                 if (C.GetType().Name == "SigmaNormalClassifier")
                 {
                     // このIterationまでのepsilonを記録ずらし
@@ -133,7 +124,6 @@ namespace XCS
                         if (cpStdLists.Count == 1)
                         {
                             C.Epsilon_0 = cpStdLists[0].S + Configuration.Epsilon_0;
-
                         }
                         else
                         {
@@ -232,13 +222,13 @@ namespace XCS
                 {
                     Console.WriteLine(" stop!!");
                 }
-               
+
             }
         }
 
         protected override void UpdateFitness()
         {
-            
+
             /////////////////////////////////////////////////////////////
 
             double AccuracySum = 0;
@@ -298,20 +288,20 @@ namespace XCS
                     //}
                     //else //またがらない分類子は 通常のやり方
                     //{
-                        if (C.Epsilon <= C.Epsilon_0)
-                        {
-                            C.Kappa = 1;
-                        }
-                        else
-                        {//epsilon>epsilon0 の場合　
-                            C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
-                        }
-                        AccuracySum += C.Kappa * C.N;
-                        //Accuracy　はNaNなるとき　止める
-                        if (double.IsNaN(AccuracySum))
-                        {
-                            Console.ReadLine();
-                        }
+                    if (C.Epsilon <= C.Epsilon_0)
+                    {
+                        C.Kappa = 1;
+                    }
+                    else
+                    {//epsilon>epsilon0 の場合　
+                        C.Kappa = Configuration.Alpha * Math.Pow(C.Epsilon / C.Epsilon_0, -Configuration.Nyu);
+                    }
+                    AccuracySum += C.Kappa * C.N;
+                    //Accuracy　はNaNなるとき　止める
+                    if (double.IsNaN(AccuracySum))
+                    {
+                        Console.ReadLine();
+                    }
                     //}
                 }
 
@@ -346,7 +336,7 @@ namespace XCS
                     Console.ReadLine();
                 }
             }
-            
+
         }
 
         // 包摂
@@ -363,16 +353,16 @@ namespace XCS
             for (int i = 0; i < N; i++)
             {
                 #region subsume
-                Classifier Subsumber_cl= null;
+                Classifier Subsumber_cl = null;
 
                 //actionsetなかに最も一般的な分類子をClにする、残った分類子の中にもっと一般化な分類子を抽出
                 foreach (Classifier C in copyActionSet)
                 {
                     if (C.CouldSubsume())
                     {
-                        if ((Subsumber_cl== null) || (C.C.NumberOfSharp > Subsumber_cl.C.NumberOfSharp) || ((C.C.NumberOfSharp == Subsumber_cl.C.NumberOfSharp) && (Configuration.MT.NextDouble() < 0.5)))
+                        if ((Subsumber_cl == null) || (C.C.NumberOfSharp > Subsumber_cl.C.NumberOfSharp) || ((C.C.NumberOfSharp == Subsumber_cl.C.NumberOfSharp) && (Configuration.MT.NextDouble() < 0.5)))
                         {
-                            Subsumber_cl= C;
+                            Subsumber_cl = C;
                         }
                     }
                 }
@@ -401,7 +391,8 @@ namespace XCS
                             && Snc_oya.IsConvergenceEpsilon()
                                 )
                             {
-                                if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
+
+                                if (C.C.state.Substring(16, 4).Equals("0***") & C.C.state.Substring(28, 4).Equals("*0**"))//"bath0 rehabi1"
                                 {
                                     Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
                                         C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
@@ -476,11 +467,11 @@ namespace XCS
 
         public override void RunGA(State Situation, Population P)
         {
-            
+
             double NumerositySum = 0.0;
             double TimeStampSum = 0.0;
 
-            
+
             foreach (Classifier C in this.CList)
             {
                 NumerositySum += C.N;
@@ -534,11 +525,17 @@ namespace XCS
                 // 交叉
                 if (Configuration.MT.NextDouble() < Configuration.Chai)
                 {
-                    
+
                     Child_1.Crossover(Child_2);
-                    if(Child_1.C.state== "00000000000000000000000000000000")
+                    if (Child_1.C.state == "00000000000000000000000000000000")
                     {
                         Console.ReadLine();
+                    }
+                    if (Child_1.C.state.Substring(16, 4) == "0***" & Child_1.C.state.Substring(28,4) == "*0**")//"bath0 rehabi1"
+                    {
+                        Configuration.Problem.WriteLine(Child_1.C.state + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + "," +
+                            Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0
+                            + "," + Child_1.St + "," + Child_1.GenerateTime + ", crossOver");
                     }
                     Child_1.P = (Parent_1.P + Parent_2.P) / 2;
                     //Child_1.Epsilon = Parent_1.Epsilon + Parent_2.Epsilon;
@@ -559,9 +556,14 @@ namespace XCS
 
                 // bothChild
                 Child_1.Mutation(Situation);
-                
+                if (Child_1.C.state.Substring(16, 4) == "0***" & Child_1.C.state.Substring(28,4) == "*0**")//"bath0 rehabi1"
+                {
+                    Configuration.Problem.WriteLine(Child_1.C.state + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + "," +
+                        Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0
+                        + "," + Child_1.St + "," + Child_1.GenerateTime + ", Mutation");
+                }
                 Child_2.Mutation(Situation);
-                
+
                 if (Configuration.DoGASubsumption)
                 {
                     if (Parent_1.DoesSubsume(Child_1))
@@ -612,7 +614,7 @@ namespace XCS
             {
                 SigmaNormalClassifier C = (SigmaNormalClassifier)Cl;
                 //FitnessSum += C.F;
-                if (!Double.IsNaN(C.Epsilon_0) && (C.Epsilon_0 != 0.001) &&(C.IsConvergenceEpsilon())&& (C.Exp > Configuration.ExpThreshold))
+                if (!Double.IsNaN(C.Epsilon_0) && (C.Epsilon_0 != 0.001) && (C.IsConvergenceEpsilon()) && (C.Exp > Configuration.ExpThreshold))
                 {
                     //e0が小さいものが優位,追加したもの
                     //KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);
@@ -633,7 +635,6 @@ namespace XCS
                     //KappaSum += C.Kappa * Math.Pow((1 - C.Epsilon_0 / Configuration.Rho), 5);//e0が小さいものが優位,追加したもの
                     KappaSum += 1 / C.Epsilon_0;
                 }
-
                 //if (!(Double.IsNaN(C.Kappa)))
                 //{
                 //    FitnessSum += C.F;

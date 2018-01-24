@@ -34,18 +34,17 @@ namespace XCS
                     if (Configuration.ASName == "CS" || Configuration.ASName == "MaxCS" || Configuration.ASName == "Max" || Configuration.ASName == "Updatee0CS")
                     {
                         CC = new SigmaNormalClassifier(state, Configuration.ExpThreshold);
-                        //if (CC.C.state[4] == '0' & CC.C.state[7] == '1')//"bath0 rehabi1"
-                        //{
-                        //    Configuration.Problem.WriteLine(CC.C.state + "," + Configuration.T + "," + CC.P + "," + CC.M + "," + CC.Epsilon + "," + CC.F + "," +
-                        //        CC.N + "," + CC.Exp + "," + CC.Ts + "," + CC.As + "," + CC.Kappa + "," + CC.Epsilon_0 + "," + CC.St + "," + CC.GenerateTime + ", covering");
-                            
-                        //}
                     }
                     else
                     {
                         CC = new NormalClassifier(state);
                     }
-
+                    
+                    if (CC.C.state.Substring(16,4).Equals("0***") & CC.C.state.Substring(28,4).Equals("*0**"))//"bath0 rehabi1"
+                    {
+                        Configuration.Problem.WriteLine(CC.C.state + "," + Configuration.T + "," + CC.P + "," + CC.M + "," + CC.Epsilon + "," + CC.F + "," +
+                            CC.N + "," + CC.Exp + "," + CC.Ts + "," + CC.As + "," + CC.Kappa + "," + CC.Epsilon_0 + "," + CC.St + "," + CC.GenerateTime + ", covering");
+                    }
                     P.Add(CC);
                     // 整理
                     P.Delete();
@@ -73,9 +72,6 @@ namespace XCS
                 sw.WriteLine("time,state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence");
                 foreach (SigmaNormalClassifier C in this.CList)
                 {
-                    //Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-                    //Console.WriteLine();
-
                     sw.WriteLine(Configuration.T + "," + C.C.state + "," /*+ C.A + "," */+ C.P + "," + C.Epsilon + "," + C.F + ","
                         + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality + "," + (C.IsConvergenceEpsilon() ? 1 : 0));
                 }

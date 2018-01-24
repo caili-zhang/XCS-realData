@@ -171,7 +171,7 @@ namespace XCS
             // 初期化
             // Population初期化
             Population P = new NormalPopulation(Configuration.N);
-
+            //Population P = new SigmaNormalPopulation(Configuration.N);
             Experiment(Env, P);
         }
 
@@ -240,7 +240,7 @@ namespace XCS
             // Crossover割合
             Configuration.Chai = 0.8;//komine
                                      // 突然変異割合
-            Configuration.Myu = 0.04;//komine
+            Configuration.Myu = 0.04; //0.04;//komine original
                                      // GA時親に包摂
             Configuration.DoGASubsumption = true;//9-8 chou
                                                  // 試行回数
@@ -290,9 +290,29 @@ namespace XCS
             Configuration.OneList = new List<double>();
 
             List<string> DataList = Env.GetDataList();
+            //異なる入力インスタンスの種類
             List<string> DistinctDataList = DataList.Distinct().ToList();
 
+            //DistinctDataListをCSVに書き出す
+            StreamWriter Distinct_instances = new StreamWriter("./Distinct_instances.csv");
+
+            //foreach (string DistinctData in DistinctDataList)
+            //{
+            //    StringBuilder sb = new StringBuilder();
+            //    for (int i = 0; i < DistinctData.Length; i++)
+            //    {
+            //        sb.Append(DistinctData[i]).Append(",");
+            //    }
+
+            //    string sb_result = sb.ToString().Substring(0, sb.ToString().Length - 1);
+            //    Distinct_instances.WriteLine(sb_result);
+            //}
+            //Distinct_instances.Close();
+
+
             int DistinctDataNum = DistinctDataList.Count();
+
+            Configuration.Possible_range = "*0**00***000*00**00***0**00*00**";
             // 提案手法　入力データ個数分の分散
             Configuration.Stdlist = new StdList[DistinctDataNum];
             // 収束した　VTの値を保存する　　ちょう

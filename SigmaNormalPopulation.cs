@@ -38,22 +38,26 @@ namespace XCS
 		// すべてのClassifier表示(確認用)
 		public override void Show()
 		{
-			StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-				+ "AS_" + Configuration.ASName + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-				+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
-			//StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_" + Configuration.Seed + "CnoiseWidth" + Configuration.NoiseWidth
-			//	+ "AS_" + "CS" + "ET_" + Configuration.ExpThreshold + "DS_" + Configuration.DifferenceSigma + "LS_" + Configuration.LookBackSigma
-			//	+ "DE_" + Configuration.DifferenceEpsilon + "LE_" + Configuration.LookBackEpsilon + ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
-			sw.WriteLine( "state,action,prediction,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality,convergence,convergencetime" );
-			foreach( SigmaNormalClassifier C in this.CList )
-			{
-				//Console.WriteLine( "state: " + C.C.state + " action: " + C.A + " Prediction: " + C.P + " Epsilon: " + C.Epsilon + " Fitness" + C.F + " Numerosity: " + C.N + " Experience: " + C.Exp + " TimeStamp: " + C.Ts + " ASsize: " + C.As + " Accuracy: " + C.Kappa + "Epsilon_0: " + C.Epsilon_0 );
-				//Console.WriteLine();
-
-				sw.WriteLine( C.C.state + "," /*+ C.A + ","*/ + C.P + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt( C.S / ( C.St - 1 ) ) + "," + C.GenerateTime + "," + C.C.Generality + "," + ( C.IsConvergenceEpsilon() ? 1 : 0 ) + "," + C.ConvergenceTime );
-			}
-			sw.Close();
-		}
+			StreamWriter sw = new StreamWriter( "./Population_" + Configuration.T + "_"+ ".csv", true, System.Text.Encoding.GetEncoding( "shift_jis" ) );
+            sw.WriteLine("state,起床,就寝,お茶,園芸,入浴,おやつ,新聞,リハビリ,prediction,average reward,epsilon,fitness,numerosity,experience,timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality");
+            foreach (Classifier C in this.CList)
+            {
+                string classifierState = "";
+                for (int i = 0; i < C.C.state.Length; i++)
+                {
+                    if (i % 4 == 0)
+                    {
+                        classifierState = classifierState + "," + C.C.state[i];
+                    }
+                    else
+                    {
+                        classifierState += C.C.state[i];
+                    }
+                }
+                sw.WriteLine(classifierState + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality);
+            }
+            sw.Close();
+        }
 
 		// Situationに合ったClassifierをMatchSetに渡す
 		public override List<Classifier> MatchSituation( State S )
