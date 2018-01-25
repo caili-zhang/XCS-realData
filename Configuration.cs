@@ -286,7 +286,7 @@ namespace XCS
 		
         public static StreamWriter Problem;
 
-        public static String PPPP { get; set; }
+        public static String pppp;
         
 
 		/// <summary>

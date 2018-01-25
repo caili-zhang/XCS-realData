@@ -151,53 +151,7 @@ namespace XCS
 
                     }
                     #endregion
-
-                    #region tatumi 160106 XCS-SAC  VTが全部収束したら　加重平均でe0更新
-                    //if (Configuration.IsConvergenceVT)
-                    //{
-                    //    //tatumi 160106 XCS-SAC  VTが全部収束したら　加重平均でe0更新
-                    //    if (C.Exp > 2 && SNC.IsConvergenceEpsilon())//0120 cho 
-                    //    {
-
-                    //        C.Epsilon = SNC.EpsilonList[0];
-                    //    }
-
-                    //    double WeightedSum = 0;
-                    //    int WeightedCount = 0;
-                    //    foreach (StdList SL in Configuration.Stdlist)
-                    //    {
-                    //        if (SL.IsIncluded(C.C.state))
-                    //        {
-                    //            if (!double.IsNaN(SL.S))
-                    //            {
-                    //                WeightedSum += (SL.T - 1) * Math.Pow(SL.S, 2);
-                    //                WeightedCount += SL.T;
-                    //            }
-                    //        }
-                    //    }
-                    //    // 下駄適応済み
-                    //    if (WeightedCount > 1)
-                    //    {
-                    //        WeightedSum = Math.Sqrt(WeightedSum / (WeightedCount - 1)) + Configuration.Epsilon_0;
-                    //    }
-                    //    else
-                    //    {
-                    //        WeightedSum = Configuration.Epsilon_0;
-                    //    }
-                    //    C.Epsilon_0 = WeightedSum;
-                    //}
-                    //else
-                    //{
-                    //    if (C.Exp < Configuration.Beta)
-                    //    {
-                    //        C.Epsilon += (Math.Abs(P - C.P) - C.Epsilon) / C.Exp;
-                    //    }
-                    //    else
-                    //    {
-                    //        C.Epsilon += Configuration.Beta * (Math.Abs(P - C.P) - C.Epsilon);
-                    //    }
-                    //}
-                    #endregion
+                    
                 }
                 else //SigmaNormalClassifier　ではない場合
                 {
@@ -366,6 +320,7 @@ namespace XCS
                         }
                     }
                 }
+
                 if (Subsumber_cl != null)
                 {
                     // 削除中にforeachできない
@@ -375,15 +330,15 @@ namespace XCS
                     copyActionSet.Remove(Subsumber_cl);
                     for (int index = 0; index < copyActionSet.Count; index++)
                     {
-                        Classifier C = copyActionSet[index];
+                        Classifier Cl = copyActionSet[index];
 
-                        if (Subsumber_cl.IsMoreGeneral(C))
+                        if (Subsumber_cl.IsMoreGeneral(Cl))
                         {
-                            SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)C;
+                            SigmaNormalClassifier Snc_ko = (SigmaNormalClassifier)Cl;
                             SigmaNormalClassifier Snc_oya = (SigmaNormalClassifier)Subsumber_cl;
 
                             // e0 の値を３位まで見る、近いものは差がないとみなす
-                            var subsumed = Math.Round(C.Epsilon_0, 3);
+                            var subsumed = Math.Round(Cl.Epsilon_0, 3);
                             var subsumer = Math.Round(Subsumber_cl.Epsilon_0, 3);
 
                             if ((subsumer <= (subsumed + subsumer / 10))
@@ -391,15 +346,49 @@ namespace XCS
                             && Snc_oya.IsConvergenceEpsilon()
                                 )
                             {
-
+                                SigmaNormalClassifier C = (SigmaNormalClassifier)Cl;
                                 if (C.C.state.Substring(16, 4).Equals("0***") & C.C.state.Substring(28, 4).Equals("*0**"))//"bath0 rehabi1"
                                 {
-                                    Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
-                                        C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
 
-                                    Configuration.Problem.WriteLine(Snc_oya.C.state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
-                                        Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
-                                        Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
+                                    string classifierState = "";
+                                    string oya_state = "";
+                                    for (int cl_i = 0; cl_i < C.C.state.Length; cl_i++)
+                                    {
+                                        if (cl_i % 4 == 0)
+                                        {
+                                            classifierState = classifierState + "," + C.C.state[cl_i];
+                                        }
+                                        else
+                                        {
+                                            classifierState += C.C.state[cl_i];
+                                        }
+                                    }
+
+                                    for (int cl_i = 0; cl_i < Snc_oya.C.state.Length; cl_i++)
+                                    {
+                                        if (cl_i % 4 == 0)
+                                        {
+                                            oya_state = oya_state + "," + Snc_oya.C.state[cl_i];
+                                        }
+                                        else
+                                        {
+                                            oya_state += Snc_oya.C.state[cl_i];
+                                        }
+                                    }
+                                    Configuration.Problem.WriteLine(classifierState + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F +
+                                        "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 +
+                                        "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality
+                                        + "," + (C.IsConvergenceEpsilon() ? 1 : 0) + ", AS subsumed");
+
+                                    //Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," +
+                                    //    C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", AS subsumed");
+                                    Configuration.Problem.WriteLine(oya_state + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," + Snc_oya.F +
+                                        "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," + Snc_oya.Epsilon_0 +
+                                        "," + Snc_oya.St + "," + Snc_oya.M + "," + Math.Sqrt(Snc_oya.S / (Snc_oya.St - 1)) + "," + Snc_oya.GenerateTime + "," + Snc_oya.C.Generality
+                                        + "," + (Snc_oya.IsConvergenceEpsilon() ? 1 : 0) + ", AS subsumer");
+                                    //Configuration.Problem.WriteLine(oya_state + "," + Configuration.T + "," + Snc_oya.P + "," + Snc_oya.M + "," + Snc_oya.Epsilon + "," +
+                                    //    Snc_oya.F + "," + Snc_oya.N + "," + Snc_oya.Exp + "," + Snc_oya.Ts + "," + Snc_oya.As + "," + Snc_oya.Kappa + "," +
+                                    //    Snc_oya.Epsilon_0 + "," + Snc_oya.St + "," + Snc_oya.GenerateTime + ", AS subsumer");
                                 }
                                 Subsumber_cl.N += C.N;
                                 //包摂された分類子を削除
@@ -527,15 +516,34 @@ namespace XCS
                 {
 
                     Child_1.Crossover(Child_2);
+                    SigmaNormalClassifier snc_1 = (SigmaNormalClassifier)Child_1;
                     if (Child_1.C.state == "00000000000000000000000000000000")
                     {
                         Console.ReadLine();
                     }
-                    if (Child_1.C.state.Substring(16, 4) == "0***" & Child_1.C.state.Substring(28,4) == "*0**")//"bath0 rehabi1"
+                    //交叉する分類子を出す
+                    if (Child_1.C.state.Substring(16, 4) == "0***" & Child_1.C.state.Substring(28, 4) == "*0**")//"bath0 rehabi1"
                     {
-                        Configuration.Problem.WriteLine(Child_1.C.state + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + "," +
-                            Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0
-                            + "," + Child_1.St + "," + Child_1.GenerateTime + ", crossOver");
+                        string classifierState = "";
+                        for (int cl_i = 0; cl_i < Child_1.C.state.Length; cl_i++)
+                        {
+                            if (cl_i % 4 == 0)
+                            {
+                                classifierState = classifierState + "," + Child_1.C.state[cl_i];
+                            }
+                            else
+                            {
+                                classifierState += Child_1.C.state[cl_i];
+                            }
+                        }
+                        Configuration.Problem.WriteLine(classifierState + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F +
+                                        "," + Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0 +
+                                        "," + Child_1.St + "," + Child_1.M + "," + Math.Sqrt(Child_1.S / (Child_1.St - 1)) + "," + Child_1.GenerateTime + "," + Child_1.C.Generality
+                                        + "," + (snc_1.IsConvergenceEpsilon() ? 1 : 0) + ", crossOver");
+
+                        //Configuration.Problem.WriteLine(classifierState + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + "," +
+                        //    Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0
+                        //    + "," + Child_1.St + "," + Child_1.GenerateTime + ", crossOver");
                     }
                     Child_1.P = (Parent_1.P + Parent_2.P) / 2;
                     //Child_1.Epsilon = Parent_1.Epsilon + Parent_2.Epsilon;
@@ -556,11 +564,30 @@ namespace XCS
 
                 // bothChild
                 Child_1.Mutation(Situation);
+                
                 if (Child_1.C.state.Substring(16, 4) == "0***" & Child_1.C.state.Substring(28,4) == "*0**")//"bath0 rehabi1"
                 {
-                    Configuration.Problem.WriteLine(Child_1.C.state + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + "," +
-                        Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0
-                        + "," + Child_1.St + "," + Child_1.GenerateTime + ", Mutation");
+                    SigmaNormalClassifier snc_1 = (SigmaNormalClassifier)Child_1;
+                    string classifierState = "";
+                    for (int cl_i = 0; cl_i < Child_1.C.state.Length; cl_i++)
+                    {
+                        if (cl_i % 4 == 0)
+                        {
+                            classifierState = classifierState + "," + Child_1.C.state[cl_i];
+                        }
+                        else
+                        {
+                            classifierState += Child_1.C.state[cl_i];
+                        }
+                    }
+                    Configuration.Problem.WriteLine(classifierState + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F +
+                                        "," + Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0 +
+                                        "," + Child_1.St + "," + Child_1.M + "," + Math.Sqrt(Child_1.S / (Child_1.St - 1)) + "," + Child_1.GenerateTime + "," + Child_1.C.Generality
+                                        + "," + (snc_1.IsConvergenceEpsilon() ? 1 : 0) + ", Mutation");
+
+                    //Configuration.Problem.WriteLine(classifierState + "," + Configuration.T + "," + Child_1.P + "," + Child_1.M + "," + Child_1.Epsilon + "," + Child_1.F + "," +
+                    //    Child_1.N + "," + Child_1.Exp + "," + Child_1.Ts + "," + Child_1.As + "," + Child_1.Kappa + "," + Child_1.Epsilon_0
+                    //    + "," + Child_1.St + "," + Child_1.GenerateTime + ", Mutation");
                 }
                 Child_2.Mutation(Situation);
 

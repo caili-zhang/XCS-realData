@@ -18,6 +18,14 @@ namespace XCS
         // すべてをリストアップ用
         public IntegralState(string S)
         {
+            
+            if (S.Length == 32)
+            {
+                this.state = S;
+                this.Length = S.Length;
+                this.NumberOfSharp = 0;
+                return;
+            }
             //８＊４のビット列にする
             string state = "";
             for (int i = 0; i < S.Length; i++)

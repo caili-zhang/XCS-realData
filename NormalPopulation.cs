@@ -166,21 +166,53 @@ namespace XCS
                 {
                     if (C.N > 1)
                     {
+                        string classifierState = "";
+                        for (int cl_i = 0; cl_i < C.C.state.Length; cl_i++)
+                        {
+                            if (cl_i % 4 == 0)
+                            {
+                                classifierState = classifierState + "," + C.C.state[cl_i];
+                            }
+                            else
+                            {
+                                classifierState += C.C.state[cl_i];
+                            }
+                        }
+
                         if (C.C.state.Substring(16, 4).Equals("0***") & C.C.state.Substring(28, 4).Equals("*0**"))//"bath0 rehabi1"
                         {
-                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + ","
-                                + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop -1");
+                            SigmaNormalClassifier snc = (SigmaNormalClassifier)C;
+                            Configuration.Problem.WriteLine(classifierState + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F +
+                                        "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 +
+                                        "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality
+                                        + "," + (snc.IsConvergenceEpsilon() ? 1 : 0) + ", pop -1");
                         }
 
                         C.N--;
                     }
                     else
                     {
-
+                        string classifierState = "";
+                        for (int cl_i = 0; cl_i < C.C.state.Length; cl_i++)
+                        {
+                            if (cl_i % 4 == 0)
+                            {
+                                classifierState = classifierState + "," + C.C.state[cl_i];
+                            }
+                            else
+                            {
+                                classifierState += C.C.state[cl_i];
+                            }
+                        }
                         if (C.C.state.Substring(16, 4).Equals("0***") & C.C.state.Substring(28, 4).Equals("*0**"))//"bath0 rehabi1"
                         {
-                            Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + ","
-                                + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop delete");
+                            SigmaNormalClassifier snc = (SigmaNormalClassifier)C;
+                            Configuration.Problem.WriteLine(classifierState + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F +
+                                        "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 +
+                                        "," + C.St + "," + C.M + "," + Math.Sqrt(C.S / (C.St - 1)) + "," + C.GenerateTime + "," + C.C.Generality
+                                        + "," + (snc.IsConvergenceEpsilon() ? 1 : 0) + ", pop delete");
+                            //Configuration.Problem.WriteLine(classifierState + "," + Configuration.T + "," + C.P + "," + C.M + ","
+                            //    + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime + ", in pop delete");
                         }
                         this.Remove(C);
                     }

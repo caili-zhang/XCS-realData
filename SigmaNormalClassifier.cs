@@ -20,8 +20,9 @@ namespace XCS
 		private bool ConvergenceFlag = false;
 		public int ConvergenceTime = -1;
 
-		// Covering
-		public SigmaNormalClassifier( State S,/* List<char> Actions,*/ int ExpThreshold )
+        
+        // Covering
+        public SigmaNormalClassifier( State S,/* List<char> Actions,*/ int ExpThreshold )
 		{
 			// Covering済みConditionセット
 			this.C = S;
@@ -50,9 +51,6 @@ namespace XCS
 			}
 			this.ConvergenceFlag = false;
 		}
-
-		
-
 		// コピーコンストラクタ
 		public SigmaNormalClassifier( SigmaNormalClassifier C )
 		{
@@ -65,12 +63,9 @@ namespace XCS
 			this.Exp = C.Exp;
 			this.Ts = C.Ts;
 			this.As = C.As;
-			this.Kappa = C.Kappa;
-            
-           
+            this.Kappa = C.Kappa;  
             this.Epsilon_0 = C.Epsilon_0;
             
-			
 			this.St = C.St;
 			this.M = C.M;
 			this.S = C.S;
@@ -124,8 +119,10 @@ namespace XCS
 
 		public override void Crossover( Classifier C )
 		{
-			double x = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
-			double y = Configuration.MT.NextDouble() * ( this.C.Length + 1 );
+            
+                // xy は０ー７の値
+            double x = Configuration.MT.NextDouble() * 8;
+            double y = Configuration.MT.NextDouble() * 8;
 
 			if( x > y )
 			{
@@ -135,6 +132,8 @@ namespace XCS
 			}
 
 			int i = 0;
+            x = (int)x * 4;
+            y = (int)y * 4;
 			do
 			{
 				if( x <= i && i < y )
@@ -143,6 +142,28 @@ namespace XCS
 				}
 				i++;
 			} while( i < y );
+
+            //state 創る
+            State stateMaker =new IntegralState(Configuration.Possible_range);
+            //sigmaclassifier 創る　
+            Classifier  clMaker = new SigmaNormalClassifier(stateMaker,Configuration.ExpThreshold);
+
+            if (!clMaker.IsMoreGeneral(this) | !clMaker.IsMoreGeneral(this))
+            {
+                int j = 0;
+                x = (int)x * 4;
+                y = (int)y * 4;
+                do
+                {
+                    if (x <= j && i < y)
+                    {
+                        this.C.Switch(C.C, j);
+                    }
+                    i++;
+                } while (i < j);
+            }
+
+
             if (this.C.state == "00000000000000000000000000000000")
             {
                 Crossover(C);
@@ -154,9 +175,11 @@ namespace XCS
 			int i = 0;
 
 			string state = "";
+            
 			do
 			{
-				if( Configuration.MT.NextDouble() < Configuration.Myu )
+				if(Configuration.Possible_range[i]!='*'&
+                        Configuration.MT.NextDouble() < Configuration.Myu )
 				{
 					// 0とstateの切り替え
 					if( this.C.state[i] == '0' )
@@ -195,10 +218,13 @@ namespace XCS
                         {
                             if (C.C.state[4] == '0' & C.C.state[7] == '1')//"bath0 rehabi1"
                             {
-                                Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime+", in GA");
-                                Configuration.Problem.WriteLine(this.C.state + "," + Configuration.T + "," + this.P + "," + this.M + "," + this.Epsilon + "," + this.F + "," + this.N + "," + this.Exp + "," + this.Ts + "," + this.As + "," + this.Kappa + "," + this.Epsilon_0 + "," + this.St + "," + this.GenerateTime + ", in GA");
+                                Configuration.Problem.WriteLine(C.C.state + "," + Configuration.T + "," + C.P + "," + 
+                                    C.M + "," + C.Epsilon + "," + C.F + "," + C.N + "," + C.Exp + "," + C.Ts + "," + 
+                                    C.As + "," + C.Kappa + "," + C.Epsilon_0 + "," + C.St + "," + C.GenerateTime+", in GA");
+                                Configuration.Problem.WriteLine(this.C.state + "," + Configuration.T + "," + this.P + "," + this.M + 
+                                    "," + this.Epsilon + "," + this.F + "," + this.N + "," + this.Exp + "," + this.Ts + "," + this.As 
+                                    + "," + this.Kappa + "," + this.Epsilon_0 + "," + this.St + "," + this.GenerateTime + ", in GA");
                             }
-
                             return true;
 
                         }

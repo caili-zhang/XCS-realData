@@ -335,7 +335,11 @@ namespace XCS
                 Configuration.Epsilon_0 += Configuration.NoiseWidth;
             }
 
-            Configuration.Problem.WriteLine("state ,iter,P , cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
+            //Configuration.Problem.WriteLine("state ,iter,P , cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
+            Configuration.Problem.WriteLine("state,起床,就寝,お茶,園芸,入浴,おやつ,新聞,リハビリ," +
+                    "prediction,average reward,epsilon,fitness,numerosity,experience," +
+                    "timestamp,actionsetsize,accuracy,epsilon_0,selectTime,mean,std,generateTime,generality" +
+                    "convergen");
             StreamWriter goodsleep1 = new StreamWriter("./goodsleep_rule1.csv");
             goodsleep1.WriteLine("state ,iter,P , cl.M ,cl.Epsilon , cl.F , cl.N , cl.Exp , cl.Ts ,cl.As , cl.Kappa ,cl.Epsilon_0 , cl.St , cl.GenerateTime");
 

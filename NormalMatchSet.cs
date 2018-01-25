@@ -39,11 +39,29 @@ namespace XCS
                     {
                         CC = new NormalClassifier(state);
                     }
-                    
+
+
+                    string classifierState = "";
+                    for (int cl_i = 0; cl_i < CC.C.state.Length; cl_i++)
+                    {
+                        if (cl_i % 4 == 0)
+                        {
+                            classifierState = classifierState + "," + CC.C.state[cl_i];
+                        }
+                        else
+                        {
+                            classifierState += CC.C.state[cl_i];
+                        }
+                    }
                     if (CC.C.state.Substring(16,4).Equals("0***") & CC.C.state.Substring(28,4).Equals("*0**"))//"bath0 rehabi1"
                     {
-                        Configuration.Problem.WriteLine(CC.C.state + "," + Configuration.T + "," + CC.P + "," + CC.M + "," + CC.Epsilon + "," + CC.F + "," +
-                            CC.N + "," + CC.Exp + "," + CC.Ts + "," + CC.As + "," + CC.Kappa + "," + CC.Epsilon_0 + "," + CC.St + "," + CC.GenerateTime + ", covering");
+                        SigmaNormalClassifier snc = (SigmaNormalClassifier)CC;
+                        Configuration.Problem.WriteLine(classifierState + "," + CC.P + "," + CC.M + "," + CC.Epsilon + "," + CC.F +
+                                    "," + CC.N + "," + CC.Exp + "," + CC.Ts + "," + CC.As + "," + CC.Kappa + "," + CC.Epsilon_0 +
+                                    "," + CC.St + "," + CC.M + "," + Math.Sqrt(CC.S / (CC.St - 1)) + "," + CC.GenerateTime + "," + CC.C.Generality
+                                    + "," + (snc.IsConvergenceEpsilon() ? 1 : 0) + ", covering");
+                        //Configuration.Problem.WriteLine(classifierState + "," + Configuration.T + "," + CC.P + "," + CC.M + "," + CC.Epsilon + "," + CC.F + "," +
+                        //    CC.N + "," + CC.Exp + "," + CC.Ts + "," + CC.As + "," + CC.Kappa + "," + CC.Epsilon_0 + "," + CC.St + "," + CC.GenerateTime + ", covering");
                     }
                     P.Add(CC);
                     // 整理
